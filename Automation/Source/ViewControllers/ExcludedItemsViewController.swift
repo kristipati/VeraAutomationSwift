@@ -17,6 +17,9 @@ class ExcludedItemsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.tableView.estimatedRowHeight = 44
+        self.tableView.rowHeight = UITableViewAutomaticDimension;
+
         if self.showScenes == true {
             if let scenes = AppDelegate.appDelegate().veraAPI.excludedScenes {
                 idsToExclude += scenes
