@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B17" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="z4o-1u-zHz">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+    </dependencies>
+    <scenes>
+        <!--Locks View Controller-->
+        <scene sceneID="0Ge-QT-4R6">
+            <objects>
+                <collectionViewController id="h0r-1f-Kbz" customClass="LocksViewController" customModule="Automation" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="06T-HQ-ceH">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="077-bs-jet">
+                            <size key="itemSize" width="150" height="150"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="5" minY="5" maxX="5" maxY="5"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="LockCell" id="bze-F1-wxO" customClass="LockCell" customModule="Automation" customModuleProvider="target">
+                                <rect key="frame" x="5" y="69" width="150" height="150"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="140" translatesAutoresizingMaskIntoConstraints="NO" id="OEZ-xb-gRI">
+                                            <rect key="frame" x="5" y="15" width="140" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="140" translatesAutoresizingMaskIntoConstraints="NO" id="5N7-cX-P0N">
+                                            <rect key="frame" x="5" y="119" width="140" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NEx-nX-tq3">
+                                            <rect key="frame" x="96" y="55" width="40" height="40"/>
+                                            <state key="normal" image="lock_large">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="lockAction:" destination="bze-F1-wxO" eventType="touchUpInside" id="XyA-cv-XjS"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w0R-49-qvx">
+                                            <rect key="frame" x="14" y="55" width="40" height="40"/>
+                                            <state key="normal" image="unlock_large">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="unlockAction:" destination="bze-F1-wxO" eventType="touchUpInside" id="UnX-1w-I3Q"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="NEx-nX-tq3" secondAttribute="trailing" constant="14" id="4Cb-28-49S"/>
+                                    <constraint firstAttribute="bottom" secondItem="5N7-cX-P0N" secondAttribute="bottom" constant="10" id="74v-fF-M92"/>
+                                    <constraint firstAttribute="trailing" secondItem="OEZ-xb-gRI" secondAttribute="trailing" constant="5" id="IeC-lF-t2D"/>
+                                    <constraint firstItem="5N7-cX-P0N" firstAttribute="leading" secondItem="bze-F1-wxO" secondAttribute="leading" constant="5" id="OHd-1O-Ydk"/>
+                                    <constraint firstItem="w0R-49-qvx" firstAttribute="leading" secondItem="bze-F1-wxO" secondAttribute="leading" constant="14" id="PGa-Uw-fkh"/>
+                                    <constraint firstAttribute="trailing" secondItem="5N7-cX-P0N" secondAttribute="trailing" constant="5" id="UR7-P9-88f"/>
+                                    <constraint firstItem="OEZ-xb-gRI" firstAttribute="top" secondItem="bze-F1-wxO" secondAttribute="top" constant="15" id="Yia-nn-Dx7"/>
+                                    <constraint firstAttribute="centerY" secondItem="NEx-nX-tq3" secondAttribute="centerY" id="jxN-Uf-823"/>
+                                    <constraint firstItem="OEZ-xb-gRI" firstAttribute="leading" secondItem="bze-F1-wxO" secondAttribute="leading" constant="5" id="sPX-Um-iTW"/>
+                                    <constraint firstItem="NEx-nX-tq3" firstAttribute="centerY" secondItem="w0R-49-qvx" secondAttribute="centerY" id="vy9-20-8KP"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="statusLabel" destination="5N7-cX-P0N" id="WV8-WI-IIp"/>
+                                    <outlet property="titleLabel" destination="OEZ-xb-gRI" id="chc-Qt-KQZ"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="h0r-1f-Kbz" id="Awu-yv-ap4"/>
+                            <outlet property="delegate" destination="h0r-1f-Kbz" id="moC-Du-TgS"/>
+                        </connections>
+                    </collectionView>
+                    <navigationItem key="navigationItem" id="H2n-RH-Yb7"/>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YzV-J5-XVM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1157" y="266"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="oxG-JD-1b6">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="z4o-1u-zHz" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="WiE-Fw-BBK">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="h0r-1f-Kbz" kind="relationship" relationship="rootViewController" id="I8P-ZX-aCd"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IlA-8z-C3H" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="345" y="266"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="lock_large" width="40" height="40"/>
+        <image name="unlock_large" width="40" height="40"/>
+    </resources>
+</document>

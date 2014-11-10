@@ -1,0 +1,45 @@
+/* 
+  Localizable.strings
+  Automation
+
+  Created by Scott Gruby on 10/5/14.
+  Copyright (c) 2014 Gruby Solutions. All rights reserved.
+*/
+
+"SWITCHES_TITLE" = "Switches";
+"AUDIO_TITLE" = "Audio";
+"SCENES_TITLE" = "Scenes";
+"ON_TITLE" = "On";
+"LOCK_TITLE" = "Locks";
+"CLIMATE_TITLE" = "Climate";
+"SETTINGS_TITLE" = "Settings";
+"USERNAME_PLACEHOLDER" = "Username";
+"PASSWORD_PLACEHOLDER" = "Password";
+"LOGIN_TITLE" = "Login";
+"CANCEL_TITLE" = "Cancel";
+"LOGIN_ALERT_TITLE" = "Enter username and password to login";
+"EXCLUDED_DEVICES_TITLE" = "Excluded Devices";
+"EXCLUDED_SCENES_TITLE" = "Excluded Scenes";
+"SHOW_AUDIO_TAB" = "Show Audio Tab";
+"ON_LABEL" = "On";
+"OFF_LABEL" = "Off";
+"LOCKED_LABEL" = "Locked";
+"UNLOCKED_LABEL" = "Unlocked";
+"COMMAND_SENT_TITLE" = "Command Sent";
+"COMMAND_SENT_MESSAGE_ON_%@" = "%@ has been turned on.";
+"COMMAND_SENT_MESSAGE_OFF_%@" = "%@ has been turned off.";
+"COMMAND_SENT_MESSAGE_LEVEL_%@_%ld" = "%@ has been set to %d%%.";
+"COMMAND_SENT_VOLUME_UP_%@" = "%@ volume has been increased.";
+"COMMAND_SENT_VOLUME_DOWN_%@" = "%@ volume has been decreased.";
+"COMMAND_SENT_INPUT_%@_%d" = "%@ has been set to server %d.";
+"COMMAND_RUN_SCENE_MESSAGE_%@" = "Running %@";
+"COMMAND_SENT_LOCKING_%@" = "Locking %@";
+"COMMAND_SENT_UNLOCKING_%@" = "Unlocking %@";
+"COMMAND_SENT_FAN_MODE_AUTO_%@" = "%@ fan set to auto.";
+"COMMAND_SENT_FAN_MODE_ON_%@" = "%@ fan set to on.";
+"COMMAND_SENT_HVAC_OFF_%@" = "%@ set to off.";
+"COMMAND_SENT_HVAC_AUTO_%@" = "%@ set to auto.";
+"COMMAND_SENT_HVAC_HEAT_%@" = "%@ set to heat.";
+"COMMAND_SENT_HVAC_COOL_%@" = "%@ set to cool.";
+"COMMAND_SENT_HEAT_TEMPERATURE_%@_%d" = "%@ heating set to %d.";
+"COMMAND_SENT_COOL_TEMPERATURE_%@_%d" = "%@ cooling set to %d.";
