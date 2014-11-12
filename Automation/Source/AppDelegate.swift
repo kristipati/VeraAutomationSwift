@@ -338,7 +338,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         }
         
         self.queryingVera = true
-        self.veraAPI.getUnitInformation{ (success) -> Void in
+        self.veraAPI.getUnitInformation{ (success, fullload) -> Void in
             self.queryingVera = false
             if success == true {
                 let tabbarController = self.window!.rootViewController as UITabBarController
@@ -348,7 +348,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                     })
                 }
                 self.lastUnitCheck = NSDate()
-                NSNotificationCenter.defaultCenter().postNotificationName(VeraUnitInfoUpdated, object: nil)
+                NSNotificationCenter.defaultCenter().postNotificationName(VeraUnitInfoUpdated, object: nil, userInfo: [VeraUnitInfoFullLoad:fullload])
             } else {
                 Swell.info("Did not get unit info");
                 if self.handlingLogin == false {
@@ -406,11 +406,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             
             self.veraAPI.excludedDevices = array
             
+            var fullload = false
+            
             if let unit = self.veraAPI.getVeraUnit() {
-                unit.fullload = true
+                fullload = true
             }
             
-            NSNotificationCenter.defaultCenter().postNotificationName(VeraUnitInfoUpdated, object: nil)
+            NSNotificationCenter.defaultCenter().postNotificationName(VeraUnitInfoUpdated, object: nil, userInfo: [VeraUnitInfoFullLoad:fullload])
         }
     }
 
@@ -427,11 +429,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             
             self.veraAPI.excludedScenes = array
 
+            var fullload = false
             if let unit = self.veraAPI.getVeraUnit() {
-                unit.fullload = true
+                fullload = true
             }
 
-            NSNotificationCenter.defaultCenter().postNotificationName(VeraUnitInfoUpdated, object: nil)
+            NSNotificationCenter.defaultCenter().postNotificationName(VeraUnitInfoUpdated, object: nil, userInfo: [VeraUnitInfoFullLoad:fullload])
         }
     }
     

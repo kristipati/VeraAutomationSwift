@@ -31,7 +31,7 @@ class AudioListViewController: UITableViewController {
         self.tableView.rowHeight = UITableViewAutomaticDimension;
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "unitInfoUpdated:", name: Vera.VeraUnitInfoUpdated, object: nil)
-        self.loadRooms()
+        self.loadRooms(true)
         self.tableView.reloadData()
     }
 
@@ -53,18 +53,22 @@ class AudioListViewController: UITableViewController {
     }
 
     func unitInfoUpdated(notification: NSNotification) {
-        self.loadRooms()
+        var fullload = false
+        if let info = notification.userInfo as? Dictionary<String, AnyObject> {
+            if let tempFullLoad = info[VeraUnitInfoFullLoad] as? Bool {
+                fullload = tempFullLoad
+            }
+        }
+        self.loadRooms(fullload)
     }
     
-    func loadRooms() {
-        if let unit = AppDelegate.appDelegate().veraAPI.getVeraUnit() {
-            if unit.fullload == true {
-                self.navigationController?.popToRootViewControllerAnimated(false)
-                if let indexPath = self.tableView.indexPathForSelectedRow() {
-                    self.tableView.deselectRowAtIndexPath(indexPath, animated: false)
-                }
-                self.tableView.reloadData()
+    func loadRooms(fullload: Bool) {
+        if fullload == true {
+            self.navigationController?.popToRootViewControllerAnimated(false)
+            if let indexPath = self.tableView.indexPathForSelectedRow() {
+                self.tableView.deselectRowAtIndexPath(indexPath, animated: false)
             }
+            self.tableView.reloadData()
         }
     }
 

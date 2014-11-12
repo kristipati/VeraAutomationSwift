@@ -70,7 +70,7 @@
 		D21CB85219E1FEAF0054A7D4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D21CB85319E1FEAF0054A7D4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		D21CB85519E1FEAF0054A7D4 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		D21CB85F19E1FF0E0054A7D4 /* Defines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
+		D21CB85F19E1FF0E0054A7D4 /* Defines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Defines.h; path = Automation/Defines.h; sourceTree = "<group>"; };
 		D21CB86119E1FF970054A7D4 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		D21CB86819E2058E0054A7D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Switches.storyboard; sourceTree = "<group>"; };
 		D21CB86B19E20BBE0054A7D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Audio.storyboard; sourceTree = "<group>"; };
@@ -220,6 +220,7 @@
 			children = (
 				D2EE377C19EB0BE900630C86 /* CurrentRelease.txt */,
 				D2CEE4C319F8AA4D00D59BAF /* ToDo.txt */,
+				D21CB85F19E1FF0E0054A7D4 /* Defines.h */,
 				D2843B3819E0E798007CC520 /* Automation */,
 				D2843B3719E0E798007CC520 /* Products */,
 			);
@@ -242,7 +243,6 @@
 				D21CB84D19E1FEAF0054A7D4 /* Resources */,
 				D21CB85419E1FEAF0054A7D4 /* Source */,
 				D2843B3919E0E798007CC520 /* Supporting Files */,
-				D21CB85F19E1FF0E0054A7D4 /* Defines.h */,
 				D2E0DAD519F74E5500E79615 /* Vera.xcodeproj */,
 			);
 			path = Automation;

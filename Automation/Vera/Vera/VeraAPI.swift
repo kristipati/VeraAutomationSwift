@@ -10,6 +10,7 @@ import Foundation
 import Alamofire
 
 public let VeraUnitInfoUpdated = "com.grubysolutions.veraautomation.infoupdated"
+public let VeraUnitInfoFullLoad = "com.grubysolutions.veraautomation.infoupdated.fullload"
 
 public class VeraAPI {
     public var username : String?
@@ -97,7 +98,7 @@ public class VeraAPI {
         return self.user?.units?.first
     }
     
-    public func getUnitInformation(completionHandler:(success:Bool) -> Void) {
+    public func getUnitInformation(completionHandler:(success:Bool, fullload: Bool) -> Void) {
         if let prefix = self.requestPrefix() {
             if let unit = self.getVeraUnit() {
                 var requestString = prefix + "lu_sdata&timeout=10&minimumdelay=2000"
@@ -116,32 +117,33 @@ public class VeraAPI {
                     Swell.info("ResponseString: \(responseString)")
                     if responseString != nil {
                         var newUnit:Unit?
+                        var fullload = false
                         newUnit <<<< responseString!
                         if newUnit != nil {
                             unit.dataversion = newUnit!.dataversion
                             unit.loadtime = newUnit!.loadtime
 
-                            if let fullload = newUnit!.fullload {
-                                if fullload == true {
+                            if let tempFullload = newUnit!.fullload {
+                                if tempFullload == true {
                                     unit.rooms = newUnit?.rooms
                                     unit.devices = newUnit?.devices
                                     unit.scenes = newUnit?.scenes
-                                    unit.fullload = true
+                                    fullload = true
                                 } else {
                                     unit.updateUnitInfo(newUnit!)
-                                    unit.fullload = false
+                                    fullload = false
                                 }
                             }
                         }
 
-                        completionHandler(success:(newUnit != nil))
+                        completionHandler(success:(newUnit != nil), fullload: fullload)
                     }
                 }
             } else {
-                completionHandler(success:false)
+                completionHandler(success:false, fullload: false)
             }
         } else {
-            completionHandler(success:false)
+            completionHandler(success:false, fullload: false)
         }
     }
     

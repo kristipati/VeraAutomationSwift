@@ -25,13 +25,18 @@ class ScenesViewController: UICollectionViewController {
     }
 
     func unitInfoUpdated(notification: NSNotification) {
-        if let unit = AppDelegate.appDelegate().veraAPI.getVeraUnit() {
-            if unit.fullload == true {
-                self.room = nil
-                self.scenes = nil
-                self.title = nil
-                self.navigationItem.leftBarButtonItem = nil
+        var fullload = false
+        if let info = notification.userInfo as? Dictionary<String, AnyObject> {
+            if let tempFullLoad = info[VeraUnitInfoFullLoad] as? Bool {
+                fullload = tempFullLoad
             }
+        }
+
+        if fullload == true {
+            self.room = nil
+            self.scenes = nil
+            self.title = nil
+            self.navigationItem.leftBarButtonItem = nil
         }
         self.collectionView.reloadData()
     }
