@@ -18,7 +18,7 @@ class ExcludedItemsViewController: UITableViewController {
         super.viewDidLoad()
 
         self.tableView.estimatedRowHeight = 44
-        self.tableView.rowHeight = UITableViewAutomaticDimension;
+        self.tableView.rowHeight = UITableViewAutomaticDimension
 
         if self.showScenes == true {
             if let scenes = AppDelegate.appDelegate().veraAPI.excludedScenes {
@@ -121,6 +121,9 @@ class ExcludedItemsViewController: UITableViewController {
                 }
             }
         }
+        
+        cell.selectionStyle = .None
+        
         return cell
     }
     
@@ -153,7 +156,7 @@ class ExcludedItemsViewController: UITableViewController {
             }
         }
 
-        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None)
     }
 }
 
