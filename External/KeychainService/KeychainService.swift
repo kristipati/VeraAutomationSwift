@@ -70,17 +70,20 @@ class KeychainService: NSObject {
         // Search for the keychain items
         let status: OSStatus = SecItemCopyMatching(keychainQuery, &dataTypeRef)
         
-        let opaque = dataTypeRef?.toOpaque()
-        
         var contentsOfKeychain: NSString?
-        
-        if let op = opaque? {
-            let retrievedData = Unmanaged<NSData>.fromOpaque(op).takeUnretainedValue()
+
+        if status == errSecSuccess {
+            let opaque = dataTypeRef?.toOpaque()
             
-            // Convert the data retrieved from the keychain into a string
-            contentsOfKeychain = NSString(data: retrievedData, encoding: NSUTF8StringEncoding)
-        } else {
-            Swell.info("Nothing was retrieved from the keychain for \(key). Status code \(status)")
+            
+            if let op = opaque? {
+                let retrievedData = Unmanaged<NSData>.fromOpaque(op).takeUnretainedValue()
+                
+                // Convert the data retrieved from the keychain into a string
+                contentsOfKeychain = NSString(data: retrievedData, encoding: NSUTF8StringEncoding)
+            } else {
+                Swell.info("Nothing was retrieved from the keychain for \(key). Status code \(status)")
+            }
         }
         
         return contentsOfKeychain
