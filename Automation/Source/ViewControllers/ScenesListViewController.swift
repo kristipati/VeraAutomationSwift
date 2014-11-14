@@ -17,7 +17,7 @@ class ScenesListViewController: UITableViewController {
     override func awakeFromNib() {
         super.awakeFromNib()
         if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
-            self.clearsSelectionOnViewWillAppear = false
+            self.clearsSelectionOnViewWillAppear = true
             self.preferredContentSize = CGSize(width: 320.0, height: 600.0)
         }
 
