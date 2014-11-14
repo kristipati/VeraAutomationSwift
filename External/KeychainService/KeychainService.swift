@@ -84,6 +84,8 @@ class KeychainService: NSObject {
             } else {
                 Swell.info("Nothing was retrieved from the keychain for \(key). Status code \(status)")
             }
+        } else {
+            Swell.info("Couldn't retrieve item from keychain: \(status)")
         }
         
         return contentsOfKeychain
