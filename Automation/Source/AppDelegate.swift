@@ -195,7 +195,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             self.checkViewControllers()
         }
     }
-    
+
+    func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
+        if viewController.isKindOfClass(UINavigationController) {
+            if let navController = viewController as? UINavigationController {
+               navController.popToRootViewControllerAnimated(true)
+            }
+        } else if let splitViewController = viewController as? UISplitViewController {
+            if let navController = splitViewController.viewControllers.first as? UINavigationController {
+                navController.popToRootViewControllerAnimated(true)
+            }
+        }
+    }
+
     func saveTabOrder (viewControllers: [UIViewController]) {
         var orderViewControllerArray = [String]()
         for viewController in viewControllers {
