@@ -43,6 +43,7 @@
 		D2E0DAEF19F74F8A00E79615 /* Vera.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2E0DADB19F74E5600E79615 /* Vera.framework */; };
 		D2E3597D1A104A0F00F30C32 /* LockCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E3597C1A104A0F00F30C32 /* LockCell.swift */; };
 		D2E3597F1A105E5500F30C32 /* ThermostatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E3597E1A105E5500F30C32 /* ThermostatCell.swift */; };
+		D2ED11371A15BC4D00B8F25B /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2ED11361A15BC4D00B8F25B /* ArrayExtension.swift */; };
 		D2EE377E19EB0BE900630C86 /* CurrentRelease.txt in Resources */ = {isa = PBXBuildFile; fileRef = D2EE377C19EB0BE900630C86 /* CurrentRelease.txt */; };
 		D2EE378A19EB281F00630C86 /* SwellAll.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2EE378919EB281F00630C86 /* SwellAll.swift */; };
 /* End PBXBuildFile section */
@@ -105,6 +106,7 @@
 		D2E0DAD519F74E5500E79615 /* Vera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Vera.xcodeproj; path = Vera/Vera.xcodeproj; sourceTree = "<group>"; };
 		D2E3597C1A104A0F00F30C32 /* LockCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockCell.swift; sourceTree = "<group>"; };
 		D2E3597E1A105E5500F30C32 /* ThermostatCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThermostatCell.swift; sourceTree = "<group>"; };
+		D2ED11361A15BC4D00B8F25B /* ArrayExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
 		D2EE377C19EB0BE900630C86 /* CurrentRelease.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CurrentRelease.txt; sourceTree = "<group>"; };
 		D2EE378919EB281F00630C86 /* SwellAll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwellAll.swift; path = External/Swell/SwellAll.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -145,6 +147,7 @@
 			children = (
 				D21CB85519E1FEAF0054A7D4 /* AppDelegate.swift */,
 				D28002AE1A09B5C6005894C3 /* VeraUIExtension.swift */,
+				D2ED11361A15BC4D00B8F25B /* ArrayExtension.swift */,
 				D232108B1A07231400353F51 /* Cells */,
 				D23210741A07230500353F51 /* ViewControllers */,
 			);
@@ -401,6 +404,7 @@
 				D21CB85C19E1FEAF0054A7D4 /* AppDelegate.swift in Sources */,
 				D23210821A07230500353F51 /* ClimateViewController.swift in Sources */,
 				D2A2A6DD1A0FFA4800BE65EE /* OnDeviceCell.swift in Sources */,
+				D2ED11371A15BC4D00B8F25B /* ArrayExtension.swift in Sources */,
 				D23210851A07230500353F51 /* OnViewController.swift in Sources */,
 				D232108A1A07230500353F51 /* SwitchesViewController.swift in Sources */,
 				D27B15AD1A0730B5003790CE /* BaseCell.swift in Sources */,
