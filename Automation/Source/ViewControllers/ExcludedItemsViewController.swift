@@ -103,7 +103,7 @@ class ExcludedItemsViewController: UITableViewController {
         if self.showScenes == true {
             if let scenes = AppDelegate.appDelegate().veraAPI.scenesForRoom(room, showExcluded: true) {
                 let scene = scenes[indexPath.row]
-                cell.textLabel.text = scene.name
+                cell.textLabel!.text = scene.name
                 if let id = scene.id {
                     if contains(idsToExclude, id) == true {
                         cell.accessoryType = .Checkmark
@@ -113,7 +113,7 @@ class ExcludedItemsViewController: UITableViewController {
         } else {
             if let devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: true, categories: .Switch, .DimmableLight) {
                 let device = devices[indexPath.row]
-                cell.textLabel.text = device.name
+                cell.textLabel!.text = device.name
                 if let id = device.id {
                     if contains(idsToExclude, id) == true {
                         cell.accessoryType = .Checkmark

@@ -38,7 +38,7 @@ class ScenesViewController: UICollectionViewController {
             self.title = nil
             self.navigationItem.leftBarButtonItem = nil
         }
-        self.collectionView.reloadData()
+        self.collectionView!.reloadData()
     }
 
     // MARK: UICollectionViewDataSource

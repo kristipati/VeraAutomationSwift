@@ -42,7 +42,7 @@ class OnViewController: UICollectionViewController {
         
         self.devices = devices
         
-        self.collectionView.reloadData()
+        self.collectionView!.reloadData()
     }
     
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

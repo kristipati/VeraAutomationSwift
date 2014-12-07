@@ -86,7 +86,7 @@ class ScenesListViewController: UITableViewController {
         
         if let roomsWithScenes = AppDelegate.appDelegate().veraAPI.roomsWithScenes() {
             let room = roomsWithScenes[indexPath.row]
-            cell.textLabel.text = room.name
+            cell.textLabel!.text = room.name
         }
         
         cell.accessoryType = .DisclosureIndicator

@@ -42,7 +42,7 @@ class LocksViewController: UICollectionViewController, LockProtocol {
         
         self.devices = devices
         
-        self.collectionView.reloadData()
+        self.collectionView!.reloadData()
     }
 
 

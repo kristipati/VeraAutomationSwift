@@ -30,7 +30,7 @@ class SettingsViewController: UITableViewController {
         switch indexPath.row {
         case 0:
             let cell = tableView.dequeueReusableCellWithIdentifier("ExcludedDevicesCellIdentifier", forIndexPath: indexPath) as UITableViewCell
-            cell.textLabel.text = NSLocalizedString("EXCLUDED_DEVICES_TITLE", comment: "")
+            cell.textLabel!.text = NSLocalizedString("EXCLUDED_DEVICES_TITLE", comment: "")
             cell.accessoryView = nil
             cell.accessoryType = .DisclosureIndicator
             cell.selectionStyle = .Default
@@ -38,7 +38,7 @@ class SettingsViewController: UITableViewController {
 
         case 1:
             let cell = tableView.dequeueReusableCellWithIdentifier("ExcludedScenesCellIdentifier", forIndexPath: indexPath) as UITableViewCell
-            cell.textLabel.text = NSLocalizedString("EXCLUDED_SCENES_TITLE", comment: "")
+            cell.textLabel!.text = NSLocalizedString("EXCLUDED_SCENES_TITLE", comment: "")
             cell.accessoryView = nil
             cell.accessoryType = .DisclosureIndicator
             cell.selectionStyle = .Default
@@ -50,7 +50,7 @@ class SettingsViewController: UITableViewController {
             cell.accessoryView = self.audioSwitch
             self.audioSwitch.on = NSUserDefaults.standardUserDefaults().boolForKey(kShowAudioTabDefault)
             self.audioSwitch.addTarget(self, action: "audioTabChanged", forControlEvents: .ValueChanged)
-            cell.textLabel.text = NSLocalizedString("SHOW_AUDIO_TAB", comment: "")
+            cell.textLabel!.text = NSLocalizedString("SHOW_AUDIO_TAB", comment: "")
             cell.selectionStyle = .None
             return cell
             

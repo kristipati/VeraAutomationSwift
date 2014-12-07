@@ -83,7 +83,7 @@ class SwitchesListViewController: UITableViewController {
 
         if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.Switch, Vera.Device.Category.DimmableLight) {
             let room = roomsWithSwitches[indexPath.row]
-            cell.textLabel.text = room.name
+            cell.textLabel!.text = room.name
         }
         
         cell.accessoryType = .DisclosureIndicator

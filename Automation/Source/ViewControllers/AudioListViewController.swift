@@ -86,7 +86,7 @@ class AudioListViewController: UITableViewController {
         
         if let roomsWithAudio = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.Audio) {
             let room = roomsWithAudio[indexPath.row]
-            cell.textLabel.text = room.name
+            cell.textLabel!.text = room.name
         }
         
         cell.accessoryType = .DisclosureIndicator

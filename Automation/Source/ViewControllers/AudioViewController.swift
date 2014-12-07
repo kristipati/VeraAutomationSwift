@@ -45,7 +45,7 @@ class AudioViewController: UICollectionViewController, AudioProtocol {
             self.title = nil
             self.navigationItem.leftBarButtonItem = nil
         }
-        self.collectionView.reloadData()
+        self.collectionView!.reloadData()
     }
 
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

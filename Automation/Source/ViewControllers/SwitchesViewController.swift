@@ -43,7 +43,7 @@ class SwitchesViewController: UICollectionViewController, SwitchProtocol {
             self.title = nil
             self.navigationItem.leftBarButtonItem = nil
         }
-        self.collectionView.reloadData()
+        self.collectionView!.reloadData()
     }
 
     // MARK: UICollectionViewDataSource
