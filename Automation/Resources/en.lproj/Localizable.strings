@@ -25,6 +25,7 @@
 "OFF_LABEL" = "Off";
 "LOCKED_LABEL" = "Locked";
 "UNLOCKED_LABEL" = "Unlocked";
+"LOGOUT_LABEL" = "Logout";
 "COMMAND_SENT_TITLE" = "Command Sent";
 "COMMAND_SENT_MESSAGE_ON_%@" = "%@ has been turned on.";
 "COMMAND_SENT_MESSAGE_OFF_%@" = "%@ has been turned off.";

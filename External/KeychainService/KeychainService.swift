@@ -55,6 +55,10 @@ class KeychainService: NSObject {
         }
     }
     
+    class func remove(key: NSString) {
+        self.save(key, data: nil)
+    }
+    
     class func load(key: NSString) -> NSString? {
         // Instantiate a new default keychain query
         // Tell the query to return a result

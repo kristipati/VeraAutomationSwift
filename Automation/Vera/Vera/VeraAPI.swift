@@ -51,7 +51,7 @@ public class VeraAPI {
         
     }
     
-    func resetAPI () {
+    public func resetAPI () {
         self.username = nil
         self.password = nil
         self.auth = nil

@@ -37,6 +37,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     var window: UIWindow?
     var initialTabViewControllers = [UIViewController]()
 
+    func logout() {
+        KeychainService.remove(kPassword)
+        KeychainService.remove(kUsername)
+        self.veraAPI.resetAPI()
+    }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
@@ -346,6 +351,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     func updateVeraInfo() {
         // We must have a username and password
         if self.queryingVera == true || self.veraAPI.username == nil || self.veraAPI.password == nil || (self.lastUnitCheck != nil && NSDate().timeIntervalSinceDate(self.lastUnitCheck!) < sTimeForCheck) {
+            if self.veraAPI.username == nil && self.veraAPI.password == nil {
+                self.handleLogin()
+            }
             return
         }
         

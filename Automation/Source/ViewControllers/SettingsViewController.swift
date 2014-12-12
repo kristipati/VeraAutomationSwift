@@ -20,45 +20,71 @@ class SettingsViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete method implementation.
         // Return the number of rows in the section.
-        return 3
+        if (section == 0) {
+            return 3;
+        } else if (section == 1) {
+            return 1;
+        }
+        return 0
+    }
+
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        // Return the number of rows in the section.
+        return 2
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        if indexPath.section == 1 {
+            AppDelegate.appDelegate().logout()
+        }
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
-        switch indexPath.row {
-        case 0:
-            let cell = tableView.dequeueReusableCellWithIdentifier("ExcludedDevicesCellIdentifier", forIndexPath: indexPath) as UITableViewCell
-            cell.textLabel!.text = NSLocalizedString("EXCLUDED_DEVICES_TITLE", comment: "")
-            cell.accessoryView = nil
-            cell.accessoryType = .DisclosureIndicator
-            cell.selectionStyle = .Default
-            return cell
-
+        switch indexPath.section {
+            case 0:
+                switch indexPath.row {
+                case 0:
+                    let cell = tableView.dequeueReusableCellWithIdentifier("ExcludedDevicesCellIdentifier", forIndexPath: indexPath) as UITableViewCell
+                    cell.textLabel!.text = NSLocalizedString("EXCLUDED_DEVICES_TITLE", comment: "")
+                    cell.accessoryView = nil
+                    cell.accessoryType = .DisclosureIndicator
+                    cell.selectionStyle = .Default
+                    return cell
+                    
+                case 1:
+                    let cell = tableView.dequeueReusableCellWithIdentifier("ExcludedScenesCellIdentifier", forIndexPath: indexPath) as UITableViewCell
+                    cell.textLabel!.text = NSLocalizedString("EXCLUDED_SCENES_TITLE", comment: "")
+                    cell.accessoryView = nil
+                    cell.accessoryType = .DisclosureIndicator
+                    cell.selectionStyle = .Default
+                    return cell
+                    
+                case 2:
+                    let cell = tableView.dequeueReusableCellWithIdentifier("ToggleCellIdentifier", forIndexPath: indexPath) as UITableViewCell
+                    cell.accessoryType = .None
+                    cell.accessoryView = self.audioSwitch
+                    self.audioSwitch.on = NSUserDefaults.standardUserDefaults().boolForKey(kShowAudioTabDefault)
+                    self.audioSwitch.addTarget(self, action: "audioTabChanged", forControlEvents: .ValueChanged)
+                    cell.textLabel!.text = NSLocalizedString("SHOW_AUDIO_TAB", comment: "")
+                    cell.selectionStyle = .None
+                    return cell
+                    
+                default:
+                    return UITableViewCell()
+            }
+            
         case 1:
-            let cell = tableView.dequeueReusableCellWithIdentifier("ExcludedScenesCellIdentifier", forIndexPath: indexPath) as UITableViewCell
-            cell.textLabel!.text = NSLocalizedString("EXCLUDED_SCENES_TITLE", comment: "")
+            let cell = tableView.dequeueReusableCellWithIdentifier("LogoutCellIdentifier", forIndexPath: indexPath) as UITableViewCell
+            cell.textLabel!.text = NSLocalizedString("LOGOUT_LABEL", comment: "")
             cell.accessoryView = nil
-            cell.accessoryType = .DisclosureIndicator
-            cell.selectionStyle = .Default
-            return cell
-
-        case 2:
-            let cell = tableView.dequeueReusableCellWithIdentifier("ToggleCellIdentifier", forIndexPath: indexPath) as UITableViewCell
             cell.accessoryType = .None
-            cell.accessoryView = self.audioSwitch
-            self.audioSwitch.on = NSUserDefaults.standardUserDefaults().boolForKey(kShowAudioTabDefault)
-            self.audioSwitch.addTarget(self, action: "audioTabChanged", forControlEvents: .ValueChanged)
-            cell.textLabel!.text = NSLocalizedString("SHOW_AUDIO_TAB", comment: "")
             cell.selectionStyle = .None
             return cell
-            
         default:
             return UITableViewCell()
         }
-
-
     }
     
     func audioTabChanged() {
