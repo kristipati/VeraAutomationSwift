@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/isair/JSONHelper.svg?branch=master)](https://travis-ci.org/isair/JSONHelper) [![Coverage Status](https://coveralls.io/repos/isair/JSONHelper/badge.png)](https://coveralls.io/r/isair/JSONHelper)
+[![Build Status](https://travis-ci.org/isair/JSONHelper.svg?branch=master)](https://travis-ci.org/isair/JSONHelper) [![Coverage Status](https://coveralls.io/repos/isair/JSONHelper/badge.png)](https://coveralls.io/r/isair/JSONHelper) [![Stories in Ready](https://badge.waffle.io/isair/JSONHelper.png?label=ready&title=Ready)](https://waffle.io/isair/JSONHelper) [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/isair/JSONHelper?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 JSONHelper
 ==========
