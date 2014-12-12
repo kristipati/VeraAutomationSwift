@@ -39,6 +39,29 @@ public class Unit : Deserializable, Printable {
         scenes <<<<* data["scenes"]
         loadtime <<< data["loadtime"]
         dataversion <<< data["dataversion"]
+        
+        if serialNumber == nil {
+            serialNumber <<< data["PK_Device"]
+        }
+        
+        if ipAddress == nil {
+            ipAddress <<< data["InternalIP"]
+        }
+        
+        if (forwardServers == nil) {
+            var serverDevice:String?
+            serverDevice <<< data["Server_Relay"]
+            if serverDevice != nil {
+                var server = ForwardServer(data:data)
+                forwardServers = [server]
+            } else {
+                serverDevice <<< data["Server_Device"]
+                if serverDevice != nil {
+                    var server = ForwardServer(data:data)
+                    forwardServers = [server]
+                }
+            }
+        }
     }
 
     public var description: String {
@@ -46,7 +69,17 @@ public class Unit : Deserializable, Printable {
         if name != nil {
             desc += name!
         }
-        
+
+        desc += "\nSerial Number: \n"
+        if serialNumber != nil {
+            desc += serialNumber!
+        }
+
+        desc += "\nIP Address: \n"
+        if ipAddress != nil {
+            desc += ipAddress!
+        }
+
         desc += "\nRooms: \n"
         if rooms != nil {
             for room in rooms! {

@@ -15,6 +15,14 @@ class ForwardServer : Deserializable {
     required init(data: [String: AnyObject]) {
         hostName <<< data["hostName"]
         primary <<< data["primary"]
+        
+        if hostName == nil {
+            hostName <<< data["Server_Relay"]
+        }
+
+        if hostName == nil {
+            hostName <<< data["Server_Device"]
+        }
     }
     
 }

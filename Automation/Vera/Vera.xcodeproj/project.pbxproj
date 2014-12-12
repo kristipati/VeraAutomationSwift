@@ -19,6 +19,8 @@
 		D2E0DAFD19F7502400E79615 /* JSONHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E0DAFC19F7502400E79615 /* JSONHelper.swift */; };
 		D2E0DB0019F750ED00E79615 /* SwellAll.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E0DAFF19F750ED00E79615 /* SwellAll.swift */; };
 		D2E0DB0219F7510F00E79615 /* Set.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E0DB0119F7510F00E79615 /* Set.swift */; };
+		D2EB6C691A3A3BC1001F658A /* CryptoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2EB6C641A3A3B9C001F658A /* CryptoSwift.framework */; };
+		D2EB6C6B1A3A3FE3001F658A /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2EB6C6A1A3A3FE3001F658A /* Auth.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +45,27 @@
 			remoteGlobalIDString = F8111E3219A95C8B0040E7D1;
 			remoteInfo = Alamofire;
 		};
+		D2EB6C631A3A3B9C001F658A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2EB6C5E1A3A3B9C001F658A /* CryptoSwift.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 754BE45519693E190098E6F3;
+			remoteInfo = CryptoSwift;
+		};
+		D2EB6C651A3A3B9C001F658A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2EB6C5E1A3A3B9C001F658A /* CryptoSwift.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 754BE46019693E190098E6F3;
+			remoteInfo = CryptoSwiftTests;
+		};
+		D2EB6C671A3A3BAC001F658A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2EB6C5E1A3A3B9C001F658A /* CryptoSwift.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 754BE45419693E190098E6F3;
+			remoteInfo = CryptoSwift;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +83,8 @@
 		D2E0DAFC19F7502400E79615 /* JSONHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONHelper.swift; path = "../../External/JSONHelper/JSONHelper/Pod Classes/JSONHelper.swift"; sourceTree = "<group>"; };
 		D2E0DAFF19F750ED00E79615 /* SwellAll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwellAll.swift; path = ../../External/Swell/SwellAll.swift; sourceTree = "<group>"; };
 		D2E0DB0119F7510F00E79615 /* Set.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Set.swift; path = ../../External/Set/Set.swift; sourceTree = "<group>"; };
+		D2EB6C5E1A3A3B9C001F658A /* CryptoSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CryptoSwift.xcodeproj; path = ../../External/CryptoSwift/CryptoSwift.xcodeproj; sourceTree = "<group>"; };
+		D2EB6C6A1A3A3FE3001F658A /* Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +93,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D244CC4219F75C5800CC78A9 /* Alamofire.framework in Frameworks */,
+				D2EB6C691A3A3BC1001F658A /* CryptoSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,6 +186,7 @@
 				D2E0DAE719F74EC600E79615 /* Room.swift */,
 				D2E0DAE919F74ED000E79615 /* Device.swift */,
 				D2E0DAEB19F74EDA00E79615 /* Scene.swift */,
+				D2EB6C6A1A3A3FE3001F658A /* Auth.swift */,
 			);
 			path = DataModel;
 			sourceTree = "<group>";
@@ -167,12 +194,30 @@
 		D2E0DAFE19F750D400E79615 /* External */ = {
 			isa = PBXGroup;
 			children = (
+				D2EB6C5C1A3A3B8B001F658A /* CryptoSwift */,
 				D244CC1919F7572700CC78A9 /* Swell */,
 				D244CC1A19F7573000CC78A9 /* Set */,
 				D244CC1B19F7573C00CC78A9 /* JSONHelper */,
 				D244CC1C19F7574500CC78A9 /* Alamofire */,
 			);
 			name = External;
+			sourceTree = "<group>";
+		};
+		D2EB6C5C1A3A3B8B001F658A /* CryptoSwift */ = {
+			isa = PBXGroup;
+			children = (
+				D2EB6C5E1A3A3B9C001F658A /* CryptoSwift.xcodeproj */,
+			);
+			name = CryptoSwift;
+			sourceTree = "<group>";
+		};
+		D2EB6C5F1A3A3B9C001F658A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2EB6C641A3A3B9C001F658A /* CryptoSwift.framework */,
+				D2EB6C661A3A3B9C001F658A /* CryptoSwiftTests.xctest */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -201,6 +246,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D2EB6C681A3A3BAC001F658A /* PBXTargetDependency */,
 				D244CC4119F75C4E00CC78A9 /* PBXTargetDependency */,
 			);
 			name = Vera;
@@ -237,6 +283,10 @@
 					ProductGroup = D244CC3819F75C4300CC78A9 /* Products */;
 					ProjectRef = D244CC3719F75C4300CC78A9 /* Alamofire.xcodeproj */;
 				},
+				{
+					ProductGroup = D2EB6C5F1A3A3B9C001F658A /* Products */;
+					ProjectRef = D2EB6C5E1A3A3B9C001F658A /* CryptoSwift.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -258,6 +308,20 @@
 			fileType = wrapper.cfbundle;
 			path = AlamofireTests.xctest;
 			remoteRef = D244CC3E19F75C4300CC78A9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D2EB6C641A3A3B9C001F658A /* CryptoSwift.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CryptoSwift.framework;
+			remoteRef = D2EB6C631A3A3B9C001F658A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D2EB6C661A3A3B9C001F658A /* CryptoSwiftTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = CryptoSwiftTests.xctest;
+			remoteRef = D2EB6C651A3A3B9C001F658A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -283,6 +347,7 @@
 				D2E0DAE419F74EA800E79615 /* User.swift in Sources */,
 				D2E0DB0019F750ED00E79615 /* SwellAll.swift in Sources */,
 				D2E0DAEA19F74ED000E79615 /* Device.swift in Sources */,
+				D2EB6C6B1A3A3FE3001F658A /* Auth.swift in Sources */,
 				D2E0DAEC19F74EDA00E79615 /* Scene.swift in Sources */,
 				D2E0DAFD19F7502400E79615 /* JSONHelper.swift in Sources */,
 				D2E0DAE319F74EA800E79615 /* Unit.swift in Sources */,
@@ -297,6 +362,11 @@
 			isa = PBXTargetDependency;
 			name = Alamofire;
 			targetProxy = D244CC4019F75C4E00CC78A9 /* PBXContainerItemProxy */;
+		};
+		D2EB6C681A3A3BAC001F658A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CryptoSwift;
+			targetProxy = D2EB6C671A3A3BAC001F658A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

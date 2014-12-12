@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import CryptoSwift
 
 public let VeraUnitInfoUpdated = "com.grubysolutions.veraautomation.infoupdated"
 public let VeraUnitInfoFullLoad = "com.grubysolutions.veraautomation.infoupdated.fullload"
@@ -18,6 +19,10 @@ public class VeraAPI {
     public var excludedScenes: [Int]?
     public var excludedDevices: [Int]?
     var user : User?
+    var auth: Auth?
+    var sessionToken: String?
+    
+    let passwordSeed = "oZ7QE6LcLJp6fiWzdqZc"
     
     struct ActivityManager {
         
@@ -49,11 +54,80 @@ public class VeraAPI {
     func resetAPI () {
         self.username = nil
         self.password = nil
+        self.auth = nil
+        self.sessionToken = nil
     }
     
+    func sessionTokenHeaders()->Dictionary<String, String>? {
+        if let token = self.sessionToken {
+            return ["MMSSession":token]
+        }
+        
+        return nil
+    }
+
+    func authTokenHeaders()->Dictionary<String, String>? {
+        var dict: [String:String] = [:]
+        if let token = self.auth?.authToken {
+            dict["MMSAuth"] = token
+        }
+
+        if let token = self.auth?.authSigToken {
+            dict["MMSAuthSig"] = token
+        }
+
+        if dict.isEmpty {
+            return nil
+        }
+        
+        return dict
+    }
+    
+    private func getTokenForServer(server: String, completionHandler: (token:String?)->Void) {
+        self.requestWithActivityIndicator(.GET, URLString: "https://\(server)/info/session/token", headers: self.authTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+            Swell.info("Response with session token: \(response)")
+            Swell.info("ResponseString: \(responseString)")
+            
+            if let statusCode = response?.statusCode {
+                if statusCode / 200 == 1 {
+                    completionHandler(token: responseString)
+                    return
+                }
+            }
+
+            completionHandler(token: nil)
+        }
+    }
+
+    
     public func getUnitsInformationForUser(completionHandler: (success:Bool)->Void) {
-        var serverNumber = 1
-        if self.username != nil {
+        if self.username != nil && self.password != nil {
+            // Try the UI7 commands
+            var stringToHash = self.username!.lowercaseString + self.password! + self.passwordSeed
+            if let hashedString = stringToHash.sha1() {
+                let requestString = "https://us-autha11.mios.com/autha/auth/username/\(self.username!.lowercaseString)?SHA1Password=\(hashedString)&PK_Oem=1"
+
+                self.requestWithActivityIndicator(.GET, URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                    Swell.info("Response: \(response)")
+                    Swell.info("ResponseString: \(responseString)")
+                    if responseString != nil {
+                        self.auth <<<< responseString!
+                        Swell.info("Auth: \(self.auth)")
+                    }
+                    
+                    if (self.auth?.authToken != nil && self.auth?.authSigToken != nil && self.auth?.serverAccount != nil) {
+                        // Get the session token
+                        self.getTokenForServer(self.auth!.serverAccount!, completionHandler: { (token: String?) -> Void in
+                            self.getUI7UnitsInformation(self.auth!.serverAccount!, token: token!, completionHandler:{ (success) -> Void in
+                                
+                                })
+                        })
+                    }
+
+                }
+            }
+            
+            var serverNumber = 1
             self.getUnitsInformationForUser(server: serverNumber) { (success) -> Void in
                 if success == false {
                     serverNumber++
@@ -67,6 +141,54 @@ public class VeraAPI {
             }
         } else {
             completionHandler(success: false)
+        }
+    }
+    
+    private func getUI7UnitsInformation(server: String, token: String, completionHandler: (success: Bool) -> Void) {
+        if self.auth?.authToken != nil {
+            if let data = NSData(base64EncodedString: self.auth!.authToken!, options: NSDataBase64DecodingOptions(0)) {
+                let decodedString = NSString(data: data, encoding: NSUTF8StringEncoding) as String
+                var localAuth: Auth?
+                localAuth <<<< decodedString
+                Swell.info("localAuth: \(localAuth)")
+
+                if localAuth != nil {
+                    self.auth?.account = localAuth?.account
+                }
+                Swell.info("JSON: \(decodedString)")
+
+                if (self.auth?.account != nil && self.auth?.serverAccount != nil) {
+                    let requestString = "https://\(self.auth!.serverAccount!)/account/account/account/\(self.auth!.account!)/devices"
+                    self.requestWithActivityIndicator(.GET, URLString: requestString, headers: ["MMSSession":token]).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                        Swell.info("UI7 Response: \(response)")
+                        Swell.info("UI7 ResponseString: \(responseString)")
+                        if responseString != nil {
+                            var tempUser:User?
+                            tempUser <<<< responseString!
+                            
+                            self.user = tempUser
+                            if let unit = self.getVeraUnit() {
+                                if (unit.forwardServers?.first?.hostName != nil ) {
+                                    // Get us a new token
+                                    self.getTokenForServer(unit.forwardServers!.first!.hostName!, completionHandler: { (token: String?) -> Void in
+                                        Swell.info("Token for device server: \(token)")
+                                        if (token != nil) {
+                                            // Now we can ask for the relay server
+                                            let requestString = "https://\(unit.forwardServers!.first!.hostName!)/device/device/device/\(unit.serialNumber!)"
+                                            self.requestWithActivityIndicator(.GET, URLString: requestString, headers: ["MMSSession":token!]).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                                                
+                                                Swell.info("Device response: \(responseString)")
+                                            }
+                                        }
+                                    })
+                                }
+                            }
+                        }
+                        
+                        completionHandler(success: self.user != nil)
+                    }
+                }
+            }
         }
     }
     
@@ -112,7 +234,7 @@ public class VeraAPI {
                 }
                 
                 Swell.info("request: \(requestString)")
-                self.requestWithActivityIndicator(.GET, URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                self.requestWithActivityIndicator(.GET, URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
                     Swell.info("Response: \(response)")
                     Swell.info("ResponseString: \(responseString)")
                     if responseString != nil {
@@ -163,12 +285,20 @@ public class VeraAPI {
         return nil
     }
 
-    func requestWithActivityIndicator(method: Alamofire.Method, URLString: URLStringConvertible, parameters: [String: AnyObject]? = nil, encoding: Alamofire.ParameterEncoding = .URL) -> Request {
+    func requestWithActivityIndicator(method: Alamofire.Method, URLString: URLStringConvertible, parameters: [String: AnyObject]? = nil, encoding: Alamofire.ParameterEncoding = .URL, headers: Dictionary<String, String>? = nil) -> Request {
         
         Swell.info("Sending request: \(URLString)")
         
         ActivityManager.addActivity()
-        let request = Alamofire.request(method, URLString, parameters: parameters, encoding: encoding);
+        let mutableURLRequest = NSMutableURLRequest(URL: NSURL(string: URLString.URLString)!)
+        mutableURLRequest.HTTPMethod = method.rawValue
+        if let theHeaders = headers {
+            for (key, value) in theHeaders {
+                mutableURLRequest.setValue(value, forHTTPHeaderField: key)
+            }
+        }
+
+        let request = Alamofire.request(encoding.encode(mutableURLRequest, parameters: parameters).0)
         
         var time = dispatch_time(DISPATCH_TIME_NOW, Int64(30.0 * Double(NSEC_PER_SEC)))
         dispatch_after(time, dispatch_get_main_queue(), { (_) in
@@ -232,7 +362,7 @@ public class VeraAPI {
                 }
 
                 if requestString != nil {
-                    self.requestWithActivityIndicator(.GET, URLString: requestString!).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                    self.requestWithActivityIndicator(.GET, URLString: requestString!, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
                         completionHandler(error)
                     }
                 }
@@ -246,7 +376,7 @@ public class VeraAPI {
 
                 let requestString = prefix + "lu_action&serviceId=urn:micasaverde-com:serviceId:HomeAutomationGateway1&action=RunScene&SceneNum=\(sceneID)"
                 
-                self.requestWithActivityIndicator(.GET, URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                self.requestWithActivityIndicator(.GET, URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
                     completionHandler(error)
                 }
             }
@@ -270,7 +400,7 @@ public class VeraAPI {
                     requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:micasaverde-com:serviceId:SwitchPower1&action=SetTarget&newTargetValue=\(on == true ? 1 : 0)"
                 }
 
-                self.requestWithActivityIndicator(.GET, URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                self.requestWithActivityIndicator(.GET, URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
                     completionHandler(error)
                 }
             }
@@ -287,7 +417,7 @@ public class VeraAPI {
                 
                 let requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:micasaverde-com:serviceId:Volume1&action=\(newAction)"
                 
-                self.requestWithActivityIndicator(.GET, URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                self.requestWithActivityIndicator(.GET, URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
                     completionHandler(error)
                 }
             }
@@ -299,7 +429,7 @@ public class VeraAPI {
             if let deviceID = device.id {
                 let requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:micasaverde-com:serviceId:InputSelection1&action=Input\(input)"
                 
-                self.requestWithActivityIndicator(.GET, URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                self.requestWithActivityIndicator(.GET, URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
                     completionHandler(error)
                 }
             }
@@ -311,7 +441,7 @@ public class VeraAPI {
             if let deviceID = device.id {
                 let requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:micasaverde-com:serviceId:DoorLock1&action=SetTarget&newTargetValue=\(locked == true ? 1 : 0)"
                 
-                self.requestWithActivityIndicator(.GET, URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                self.requestWithActivityIndicator(.GET, URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
                     completionHandler(error)
                 }
             }
@@ -363,7 +493,7 @@ public class VeraAPI {
                 }
                 
                 if requestString.isEmpty == false {
-                    self.requestWithActivityIndicator(.GET, URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                    self.requestWithActivityIndicator(.GET, URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
                         completionHandler(error)
                     }
                 }

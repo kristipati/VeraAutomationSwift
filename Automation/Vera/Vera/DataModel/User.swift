@@ -11,7 +11,12 @@ import Foundation
 class User : Deserializable {
     var units:[Unit]?
     required init(data: [String: AnyObject]) {
-        units <<<<* data["units"]
+        if (data["units"] != nil) {
+            units <<<<* data["units"]
+        }
+        else if (data["Devices"] != nil) {
+            units <<<<* data["Devices"]
+        }
     }
 
 }
