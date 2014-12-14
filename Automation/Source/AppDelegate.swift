@@ -12,6 +12,7 @@ import Vera
 let kTabOrderDefault = "Tab Order"
 let kSelectedTabDefault = "Selected Tab"
 let kShowAudioTabDefault = "Show Audio Tab"
+let kUseUI5Default = "Use UI5"
 let kUsername = "username"
 let kPassword = "password"
 
@@ -41,12 +42,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         KeychainService.remove(kPassword)
         KeychainService.remove(kUsername)
         self.veraAPI.resetAPI()
+        self.veraAPI.useUI5 = NSUserDefaults.standardUserDefaults().boolForKey(kUseUI5Default)
     }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
         self.veraAPI.excludedDevices = NSUserDefaults.standardUserDefaults().arrayForKey(kExcludedDevices) as [Int]?
         self.veraAPI.excludedScenes = NSUserDefaults.standardUserDefaults().arrayForKey(kExcludedScenes) as [Int]?
+        self.veraAPI.useUI5 = NSUserDefaults.standardUserDefaults().boolForKey(kUseUI5Default)
         
         let tabbarController = self.window!.rootViewController as UITabBarController
         tabbarController.delegate = self

@@ -13,11 +13,35 @@ import CryptoSwift
 public let VeraUnitInfoUpdated = "com.grubysolutions.veraautomation.infoupdated"
 public let VeraUnitInfoFullLoad = "com.grubysolutions.veraautomation.infoupdated.fullload"
 
+public class JSON : Deserializable {
+    var data:[String: AnyObject]?
+    
+    public required init(data: [String: AnyObject]) {
+        self.data = data
+    }
+
+    private subscript(key: String) -> AnyObject? {
+        get {
+            if self.data != nil {
+                return self.data![key]
+            }
+            
+            return nil
+        }
+        set {
+            if self.data != nil {
+                self.data![key] = newValue
+            }
+        }
+    }
+}
+
 public class VeraAPI {
     public var username : String?
     public var password : String?
     public var excludedScenes: [Int]?
     public var excludedDevices: [Int]?
+    public var useUI5 = false
     var user : User?
     var auth: Auth?
     var sessionToken: String?
@@ -68,14 +92,17 @@ public class VeraAPI {
 
     func authTokenHeaders()->Dictionary<String, String>? {
         var dict: [String:String] = [:]
-        if let token = self.auth?.authToken {
-            dict["MMSAuth"] = token
+        if let localAuth = self.auth {
+            if let localAuthToken = localAuth.authToken {
+                dict["MMSAuth"] = localAuthToken
+            }
+
+            if let localAuthSigToken = localAuth.authSigToken {
+                dict["MMSAuthSig"] = localAuthSigToken
+            }
         }
 
-        if let token = self.auth?.authSigToken {
-            dict["MMSAuthSig"] = token
-        }
-
+        Swell.info("Auth Token Headers: \(dict)")
         if dict.isEmpty {
             return nil
         }
@@ -83,7 +110,7 @@ public class VeraAPI {
         return dict
     }
     
-    private func getTokenForServer(server: String, completionHandler: (token:String?)->Void) {
+    private func getSessionTokenForServer(server: String, completionHandler: (token:String?)->Void) {
         self.requestWithActivityIndicator(.GET, URLString: "https://\(server)/info/session/token", headers: self.authTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
             Swell.info("Response with session token: \(response)")
             Swell.info("ResponseString: \(responseString)")
@@ -98,101 +125,135 @@ public class VeraAPI {
             completionHandler(token: nil)
         }
     }
+    
+    private func getAuthenticationToken(completionhandler: (auth: Auth?)->Void) {
+        var stringToHash = self.username!.lowercaseString + self.password! + self.passwordSeed
+        if let hashedString = stringToHash.sha1() {
+            let requestString = "https://us-autha11.mios.com/autha/auth/username/\(self.username!.lowercaseString)?SHA1Password=\(hashedString)&PK_Oem=1"
+            self.requestWithActivityIndicator(.GET, URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                if (responseString != nil) {
+                    var auth:Auth?
+                    auth <<<< responseString!
+                    Swell.info("Auth response: \(responseString)")
+                    completionhandler(auth: auth)
+                } else {
+                    completionhandler(auth: nil)
+                }
+            }
+            
+        } else {
+            completionhandler(auth: nil)
+        }
+    }
+
+    private func getVeraDevices(completionHandler:(device: String?, internalIP: String?, serverDevice: String?)->Void) {
+        if (self.auth != nil && self.auth!.authToken != nil) {
+            if let data = NSData(base64EncodedString: self.auth!.authToken!, options: NSDataBase64DecodingOptions(0)) {
+                let decodedString = NSString(data: data, encoding: NSUTF8StringEncoding) as String
+                var tempAuth:Auth?
+                tempAuth <<<< decodedString
+                if (tempAuth != nil) {
+                    self.auth?.account = tempAuth?.account
+                }
+                Swell.info("JSON: \(decodedString)")
+            }
+            
+            if (self.auth?.account != nil && self.auth?.serverAccount != nil) {
+                let requestString = "https://\(self.auth!.serverAccount!)/account/account/account/\(self.auth!.account!)/devices"
+                self.getSessionTokenForServer(self.auth!.serverAccount!, completionHandler: { (token) -> Void in
+                    if (token != nil) {
+                        self.requestWithActivityIndicator(.GET, URLString: requestString, headers:["MMSSession":token!]).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                            Swell.info("Response for localtor: \(responseString)")
+                            if (responseString != nil) {
+                                var tempUser:User?
+                                tempUser <<<< responseString!
+                                self.user = tempUser
+                            }
+                            
+                            // Grab the device info
+                            
+                            if let unit = self.getVeraUnit() {
+                                if (unit.serverDevice != nil && unit.serialNumber != nil) {
+                                    self.getSessionTokenForServer(unit.serverDevice!, completionHandler: { (token) -> Void in
+                                        if (token != nil) {
+                                            let requestString = "https://\(unit.serverDevice!)/device/device/device/\(unit.serialNumber!)"
+                                            self.requestWithActivityIndicator(.GET, URLString: requestString, headers:["MMSSession":token!]).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                                                if (responseString != nil) {
+                                                    var tempUnit:Unit?
+                                                    tempUnit <<<< responseString!
+                                                    if (tempUnit != nil) {
+                                                        unit.ipAddress = tempUnit!.ipAddress
+                                                        unit.serverRelay = tempUnit!.serverRelay
+                                                    }
+                                                }
+                                                Swell.info("serverRelay: \(unit.serverRelay)")
+                                                if (unit.serverRelay != nil) {
+                                                    self.getSessionTokenForServer(unit.serverRelay!, completionHandler: { (token) -> Void in
+                                                        self.sessionToken = token
+                                                        completionHandler(device: nil, internalIP: nil, serverDevice: nil)
+                                                    })
+                                                } else {
+                                                    completionHandler(device: nil, internalIP: nil, serverDevice: nil)
+                                                }
+                                            }
+                                        } else {
+                                            completionHandler(device: nil, internalIP: nil, serverDevice: nil)
+                                        }
+                                    })
+                                } else {
+                                    completionHandler(device: nil, internalIP: nil, serverDevice: nil)
+                                }
+                            } else {
+                                completionHandler(device: nil, internalIP: nil, serverDevice: nil)
+                            }
+                        }
+                    } else {
+                        completionHandler(device: nil, internalIP: nil, serverDevice: nil)
+                    }
+                })
+            }
+            
+        } else {
+            completionHandler(device: nil, internalIP: nil, serverDevice: nil)
+        }
+
+
+        
+
+        
+   
+    }
 
     
     public func getUnitsInformationForUser(completionHandler: (success:Bool)->Void) {
         if self.username != nil && self.password != nil {
-            // Try the UI7 commands
-            var stringToHash = self.username!.lowercaseString + self.password! + self.passwordSeed
-            if let hashedString = stringToHash.sha1() {
-                let requestString = "https://us-autha11.mios.com/autha/auth/username/\(self.username!.lowercaseString)?SHA1Password=\(hashedString)&PK_Oem=1"
-
-                self.requestWithActivityIndicator(.GET, URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-                    Swell.info("Response: \(response)")
-                    Swell.info("ResponseString: \(responseString)")
-                    if responseString != nil {
-                        self.auth <<<< responseString!
-                        Swell.info("Auth: \(self.auth)")
-                    }
-                    
-                    if (self.auth?.authToken != nil && self.auth?.authSigToken != nil && self.auth?.serverAccount != nil) {
-                        // Get the session token
-                        self.getTokenForServer(self.auth!.serverAccount!, completionHandler: { (token: String?) -> Void in
-                            self.getUI7UnitsInformation(self.auth!.serverAccount!, token: token!, completionHandler:{ (success) -> Void in
-                                
-                                })
+            if self.useUI5 {
+                var serverNumber = 1
+                self.getUnitsInformationForUser(server: serverNumber) { (success) -> Void in
+                    if success == false {
+                        serverNumber++
+                        self.getUnitsInformationForUser(server: serverNumber, completionHandler: { (success) -> Void in
+                            completionHandler(success:success)
                         })
+                        
+                    } else {
+                        completionHandler(success:true)
                     }
-
                 }
-            }
-            
-            var serverNumber = 1
-            self.getUnitsInformationForUser(server: serverNumber) { (success) -> Void in
-                if success == false {
-                    serverNumber++
-                    self.getUnitsInformationForUser(server: serverNumber, completionHandler: { (success) -> Void in
-                        completionHandler(success:success)
+            } else {
+                self.getAuthenticationToken({ (auth) -> Void in
+                    self.auth = auth
+                    self.getVeraDevices({ (device, internalIP, serverDevice) -> Void in
+//                        Swell.info("Auth: \(self.auth)")
+                        completionHandler(success: false)
                     })
-
-                } else {
-                    completionHandler(success:true)
-                }
+                })
             }
         } else {
             completionHandler(success: false)
         }
     }
-    
-    private func getUI7UnitsInformation(server: String, token: String, completionHandler: (success: Bool) -> Void) {
-        if self.auth?.authToken != nil {
-            if let data = NSData(base64EncodedString: self.auth!.authToken!, options: NSDataBase64DecodingOptions(0)) {
-                let decodedString = NSString(data: data, encoding: NSUTF8StringEncoding) as String
-                var localAuth: Auth?
-                localAuth <<<< decodedString
-                Swell.info("localAuth: \(localAuth)")
-
-                if localAuth != nil {
-                    self.auth?.account = localAuth?.account
-                }
-                Swell.info("JSON: \(decodedString)")
-
-                if (self.auth?.account != nil && self.auth?.serverAccount != nil) {
-                    let requestString = "https://\(self.auth!.serverAccount!)/account/account/account/\(self.auth!.account!)/devices"
-                    self.requestWithActivityIndicator(.GET, URLString: requestString, headers: ["MMSSession":token]).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-                        Swell.info("UI7 Response: \(response)")
-                        Swell.info("UI7 ResponseString: \(responseString)")
-                        if responseString != nil {
-                            var tempUser:User?
-                            tempUser <<<< responseString!
-                            
-                            self.user = tempUser
-                            if let unit = self.getVeraUnit() {
-                                if (unit.forwardServers?.first?.hostName != nil ) {
-                                    // Get us a new token
-                                    self.getTokenForServer(unit.forwardServers!.first!.hostName!, completionHandler: { (token: String?) -> Void in
-                                        Swell.info("Token for device server: \(token)")
-                                        if (token != nil) {
-                                            // Now we can ask for the relay server
-                                            let requestString = "https://\(unit.forwardServers!.first!.hostName!)/device/device/device/\(unit.serialNumber!)"
-                                            self.requestWithActivityIndicator(.GET, URLString: requestString, headers: ["MMSSession":token!]).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-                                                
-                                                Swell.info("Device response: \(responseString)")
-                                            }
-                                        }
-                                    })
-                                }
-                            }
-                        }
-                        
-                        completionHandler(success: self.user != nil)
-                    }
-                }
-            }
-        }
-    }
-    
-    private func getUnitsInformationForUser(#server: Int, completionHandler: (success: Bool) -> Void) {
+       private func getUnitsInformationForUser(#server: Int, completionHandler: (success: Bool) -> Void) {
         if self.username == nil {
             completionHandler(success: false)
             return;
@@ -270,6 +331,18 @@ public class VeraAPI {
     }
     
     func requestPrefix() -> String? {
+        if self.useUI5 == false {
+            if (self.sessionToken != nil) {
+                if let unit = self.getVeraUnit() {
+                    if unit.serverRelay != nil {
+                        return "https://\(unit.serverRelay!)/relay/relay/relay/device/\(unit.serialNumber!)/port_3480/data_request?id="
+                    }
+                }
+            }
+            
+            return nil
+        }
+        
         if let unit = self.getVeraUnit() {
             if unit.ipAddress != nil && unit.ipAddress!.isEmpty == false {
                 return "http://\(unit.ipAddress!):3480/data_request?id="

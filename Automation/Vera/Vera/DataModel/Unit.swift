@@ -11,10 +11,10 @@ import Foundation
 
 public class Unit : Deserializable, Printable {
 
-    var serialNumber:String?
+    public var serialNumber:String?
     var firmwareVersion:String?
     var name:String?
-    var ipAddress:String?
+    public var ipAddress:String?
     var users:[String]?
     var activeServer:String?
     var forwardServers:[ForwardServer]?
@@ -24,6 +24,8 @@ public class Unit : Deserializable, Printable {
     public var rooms:[Room]?
     public var devices:[Device]?
     public var scenes:[Scene]?
+    public var serverDevice:String?
+    public var serverRelay:String?
     
     public required init(data: [String: AnyObject]) {
         serialNumber <<< data["serialNumber"]
@@ -48,20 +50,8 @@ public class Unit : Deserializable, Printable {
             ipAddress <<< data["InternalIP"]
         }
         
-        if (forwardServers == nil) {
-            var serverDevice:String?
-            serverDevice <<< data["Server_Relay"]
-            if serverDevice != nil {
-                var server = ForwardServer(data:data)
-                forwardServers = [server]
-            } else {
-                serverDevice <<< data["Server_Device"]
-                if serverDevice != nil {
-                    var server = ForwardServer(data:data)
-                    forwardServers = [server]
-                }
-            }
-        }
+        serverDevice <<< data["Server_Device"]
+        serverRelay <<< data["Server_Relay"]
     }
 
     public var description: String {

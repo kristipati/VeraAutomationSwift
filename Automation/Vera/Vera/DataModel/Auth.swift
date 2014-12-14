@@ -27,8 +27,6 @@ public class Auth : Deserializable, Printable {
                 account = "\(accountNumber!)"
             }
         }
-        
-        Swell.info("Init Auth: \(data)")
     }
     
     public var description: String {
