@@ -102,7 +102,6 @@ public class VeraAPI {
             }
         }
 
-        Swell.info("Auth Token Headers: \(dict)")
         if dict.isEmpty {
             return nil
         }
@@ -216,12 +215,6 @@ public class VeraAPI {
         } else {
             completionHandler(device: nil, internalIP: nil, serverDevice: nil)
         }
-
-
-        
-
-        
-   
     }
 
     
@@ -244,8 +237,11 @@ public class VeraAPI {
                 self.getAuthenticationToken({ (auth) -> Void in
                     self.auth = auth
                     self.getVeraDevices({ (device, internalIP, serverDevice) -> Void in
-//                        Swell.info("Auth: \(self.auth)")
-                        completionHandler(success: false)
+                        var success = false
+                        if (self.auth != nil && self.auth?.authSigToken != nil && self.auth?.authToken != nil) {
+                            success = true
+                        }
+                        completionHandler(success: success)
                     })
                 })
             }
@@ -319,6 +315,8 @@ public class VeraAPI {
                             }
                         }
 
+                        Swell.info("Unit: \(unit)")
+                        
                         completionHandler(success:(newUnit != nil), fullload: fullload)
                     }
                 }

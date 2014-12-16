@@ -375,8 +375,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             } else {
                 Swell.info("Did not get unit info");
                 if self.handlingLogin == false {
-                    self.handlingLogin = true
-                    self.presentLogin()
+                    self.handleLogin()
                 }
             }
         }
