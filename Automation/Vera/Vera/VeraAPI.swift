@@ -277,62 +277,13 @@ public class VeraAPI {
         return self.user?.units?.first
     }
     
-    public func getUnitInformation(completionHandler:(success:Bool, fullload: Bool) -> Void) {
-        if let prefix = self.requestPrefix() {
-            if let unit = self.getVeraUnit() {
-                var requestString = prefix + "lu_sdata&timeout=10&minimumdelay=2000"
-
-                if unit.loadtime > 0 {
-                    requestString += "&loadtime=\(unit.loadtime)"
-                }
-                
-                if unit.dataversion > 0 {
-                    requestString += "&dataversion=\(unit.dataversion)"
-                }
-                
-                Swell.info("request: \(requestString)")
-                self.requestWithActivityIndicator(.GET, URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-                    Swell.info("Response: \(response)")
-                    Swell.info("ResponseString: \(responseString)")
-                    if responseString != nil {
-                        var newUnit:Unit?
-                        var fullload = false
-                        newUnit <<<< responseString!
-                        if newUnit != nil {
-                            unit.dataversion = newUnit!.dataversion
-                            unit.loadtime = newUnit!.loadtime
-
-                            if let tempFullload = newUnit!.fullload {
-                                if tempFullload == true {
-                                    unit.rooms = newUnit?.rooms
-                                    unit.devices = newUnit?.devices
-                                    unit.scenes = newUnit?.scenes
-                                    fullload = true
-                                } else {
-                                    unit.updateUnitInfo(newUnit!)
-                                    fullload = false
-                                }
-                            }
-                        }
-
-                        Swell.info("Unit: \(unit)")
-                        
-                        completionHandler(success:(newUnit != nil), fullload: fullload)
-                    }
-                }
-            } else {
-                completionHandler(success:false, fullload: false)
-            }
-        } else {
-            completionHandler(success:false, fullload: false)
-        }
-    }
-    
-    func requestPrefix() -> String? {
+    func requestPrefix(localPrefix: Bool) -> String? {
         if self.useUI5 == false {
             if (self.sessionToken != nil) {
                 if let unit = self.getVeraUnit() {
-                    if unit.serverRelay != nil {
+                    if (localPrefix == true && unit.ipAddress != nil && unit.ipAddress!.isEmpty == false) {
+                        return "http://\(unit.ipAddress!):3480/data_request?id="
+                    } else if unit.serverRelay != nil {
                         return "https://\(unit.serverRelay!)/relay/relay/relay/device/\(unit.serialNumber!)/port_3480/data_request?id="
                     }
                 }
@@ -342,7 +293,7 @@ public class VeraAPI {
         }
         
         if let unit = self.getVeraUnit() {
-            if unit.ipAddress != nil && unit.ipAddress!.isEmpty == false {
+            if localPrefix == true || (unit.ipAddress != nil && unit.ipAddress!.isEmpty == false) {
                 return "http://\(unit.ipAddress!):3480/data_request?id="
             } else {
                 if let forwardServer = unit.forwardServers?.first {
@@ -371,7 +322,7 @@ public class VeraAPI {
 
         let request = Alamofire.request(encoding.encode(mutableURLRequest, parameters: parameters).0)
         
-        var time = dispatch_time(DISPATCH_TIME_NOW, Int64(30.0 * Double(NSEC_PER_SEC)))
+        var time = dispatch_time(DISPATCH_TIME_NOW, Int64(10.0 * Double(NSEC_PER_SEC)))
         dispatch_after(time, dispatch_get_main_queue(), { (_) in
             self.checkForRequestCompletion(request)
         })
@@ -385,8 +336,7 @@ public class VeraAPI {
                 request.cancel()
         }
     }
-    
-    // Mark methods that operate on the first unit
+
     public func scenesForRoom(room: Room, showExcluded: Bool = false)->[Scene]? {
         if let unit = self.getVeraUnit() {
             return unit.scenesForRoom(room, excluded: showExcluded == true ? nil : self.excludedScenes)
@@ -416,10 +366,86 @@ public class VeraAPI {
         
         return nil
     }
-    
-    public func setDeviceStatus(device: Device, newDeviceStatus: Int?, newDeviceLevel: Int?, completionHandler:(NSError?)->Void) -> Void {
 
-        if let prefix = self.requestPrefix() {
+    // Mark methods that operate on the first unit
+    public func getUnitInformation(completionHandler:(success:Bool, fullload: Bool) -> Void) {
+        self.getUnitInformation(true, completionHandler: { (success, fullload) -> Void in
+            if (success == false) {
+                self.getUnitInformation(false, completionHandler: { (success, fullload) -> Void in
+                    completionHandler(success: success, fullload: fullload)
+                })
+            } else {
+                completionHandler(success: success, fullload: fullload)
+            }
+        })
+    }
+    
+    func getUnitInformation(useLocalServer:Bool, completionHandler:(success:Bool, fullload: Bool) -> Void) {
+        if let prefix = self.requestPrefix(useLocalServer) {
+            if let unit = self.getVeraUnit() {
+                var requestString = prefix + "lu_sdata&timeout=10&minimumdelay=2000"
+                
+                if unit.loadtime > 0 {
+                    requestString += "&loadtime=\(unit.loadtime)"
+                }
+                
+                if unit.dataversion > 0 {
+                    requestString += "&dataversion=\(unit.dataversion)"
+                }
+                
+                Swell.info("request: \(requestString)")
+                self.requestWithActivityIndicator(.GET, URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                    Swell.info("Response: \(response)")
+                    Swell.info("ResponseString: \(responseString)")
+                    if responseString != nil {
+                        var newUnit:Unit?
+                        var fullload = false
+                        newUnit <<<< responseString!
+                        if newUnit != nil {
+                            unit.dataversion = newUnit!.dataversion
+                            unit.loadtime = newUnit!.loadtime
+                            
+                            if let tempFullload = newUnit!.fullload {
+                                if tempFullload == true {
+                                    unit.rooms = newUnit?.rooms
+                                    unit.devices = newUnit?.devices
+                                    unit.scenes = newUnit?.scenes
+                                    fullload = true
+                                } else {
+                                    unit.updateUnitInfo(newUnit!)
+                                    fullload = false
+                                }
+                            }
+                        }
+                        
+                        Swell.info("Unit: \(unit)")
+                        
+                        completionHandler(success:(newUnit != nil), fullload: fullload)
+                    }
+                }
+            } else {
+                completionHandler(success:false, fullload: false)
+            }
+        } else {
+            completionHandler(success:false, fullload: false)
+        }
+    }
+
+    public func setDeviceStatus(device: Device, newDeviceStatus: Int?, newDeviceLevel: Int?, completionHandler:(NSError?)->Void) -> Void {
+        self.setDeviceStatus(true, device: device, newDeviceStatus: newDeviceStatus, newDeviceLevel: newDeviceLevel) { (error) -> Void in
+            if (error == nil) {
+                completionHandler(error)
+            } else {
+                self.setDeviceStatus(false, device: device, newDeviceStatus: newDeviceStatus, newDeviceLevel: newDeviceLevel) { (error) -> Void in
+                    completionHandler(error)
+                }
+            }
+        }
+    }
+    
+    func setDeviceStatus(useLocalServer:Bool, device: Device, newDeviceStatus: Int?, newDeviceLevel: Int?, completionHandler:(NSError?)->Void) -> Void {
+
+        if let prefix = self.requestPrefix(useLocalServer) {
             if let deviceID = device.id {
                 var newStatus = 0
                 var newLevel = 0
@@ -442,7 +468,19 @@ public class VeraAPI {
     }
 
     public func runScene(scene: Scene, completionHandler:(NSError?)->Void) -> Void {
-        if let prefix = self.requestPrefix() {
+        self.runScene(true, scene:scene) { (error) -> Void in
+            if (error == nil) {
+                completionHandler(error)
+            } else {
+                self.runScene(false, scene:scene) { (error) -> Void in
+                    completionHandler(error)
+                }
+            }
+        }
+    }
+    
+    func runScene(useLocalServer:Bool, scene: Scene, completionHandler:(NSError?)->Void) -> Void {
+        if let prefix = self.requestPrefix(useLocalServer) {
             if let sceneID = scene.id {
 
                 let requestString = prefix + "lu_action&serviceId=urn:micasaverde-com:serviceId:HomeAutomationGateway1&action=RunScene&SceneNum=\(sceneID)"
@@ -455,7 +493,19 @@ public class VeraAPI {
     }
 
     public func setAudioPower(device: Device, on: Bool, completionHandler:(NSError?)->Void) -> Void {
-        if let prefix = self.requestPrefix() {
+        self.setAudioPower(true, device:device, on:on) { (error) -> Void in
+            if (error == nil) {
+                completionHandler(error)
+            } else {
+                self.setAudioPower(false, device:device, on:on) { (error) -> Void in
+                    completionHandler(error)
+                }
+            }
+        }
+    }
+    
+    func setAudioPower(useLocalServer:Bool, device: Device, on: Bool, completionHandler:(NSError?)->Void) -> Void {
+        if let prefix = self.requestPrefix(useLocalServer) {
             if let deviceID = device.id {
                 
                 var requestString = ""
@@ -479,7 +529,19 @@ public class VeraAPI {
     }
 
     public func changeAudioVolume(device: Device, increase: Bool, completionHandler:(NSError?)->Void) -> Void {
-        if let prefix = self.requestPrefix() {
+        self.changeAudioVolume(true, device:device, increase:increase) { (error) -> Void in
+            if (error == nil) {
+                completionHandler(error)
+            } else {
+                self.changeAudioVolume(false, device:device, increase:increase) { (error) -> Void in
+                    completionHandler(error)
+                }
+            }
+        }
+    }
+    
+    func changeAudioVolume(useLocalServer:Bool, device: Device, increase: Bool, completionHandler:(NSError?)->Void) -> Void {
+        if let prefix = self.requestPrefix(useLocalServer) {
             if let deviceID = device.id {
                 var newAction = "Up"
                 if increase == false {
@@ -496,7 +558,19 @@ public class VeraAPI {
     }
 
     public func setAudioInput(device: Device, input: Int, completionHandler:(NSError?)->Void) -> Void {
-        if let prefix = self.requestPrefix() {
+        self.setAudioInput(true, device:device, input:input) { (error) -> Void in
+            if (error == nil) {
+                completionHandler(error)
+            } else {
+                self.setAudioInput(false, device:device, input:input) { (error) -> Void in
+                    completionHandler(error)
+                }
+            }
+        }
+    }
+    
+    func setAudioInput(useLocalServer:Bool, device: Device, input: Int, completionHandler:(NSError?)->Void) -> Void {
+        if let prefix = self.requestPrefix(useLocalServer) {
             if let deviceID = device.id {
                 let requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:micasaverde-com:serviceId:InputSelection1&action=Input\(input)"
                 
@@ -508,7 +582,19 @@ public class VeraAPI {
     }
 
     public func setLockState(device: Device, locked: Bool, completionHandler:(NSError?)->Void) -> Void {
-        if let prefix = self.requestPrefix() {
+        self.setLockState(true, device:device, locked:locked) { (error) -> Void in
+            if (error == nil) {
+                completionHandler(error)
+            } else {
+                self.setLockState(false, device:device, locked:locked) { (error) -> Void in
+                    completionHandler(error)
+                }
+            }
+        }
+    }
+    
+    func setLockState(useLocalServer:Bool, device: Device, locked: Bool, completionHandler:(NSError?)->Void) -> Void {
+        if let prefix = self.requestPrefix(useLocalServer) {
             if let deviceID = device.id {
                 let requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:micasaverde-com:serviceId:DoorLock1&action=SetTarget&newTargetValue=\(locked == true ? 1 : 0)"
                 
@@ -518,9 +604,21 @@ public class VeraAPI {
             }
         }
     }
-    
+
     public func changeHVAC(device: Device, fanMode: Device.FanMode?, hvacMode: Device.HVACMode?, coolTemp: Int?, heatTemp: Int?, completionHandler:(NSError?)->Void) -> Void {
-        if let prefix = self.requestPrefix() {
+        self.changeHVAC(true, device:device, fanMode:fanMode, hvacMode:hvacMode, coolTemp: coolTemp, heatTemp: heatTemp) { (error) -> Void in
+            if (error == nil) {
+                completionHandler(error)
+            } else {
+                self.changeHVAC(false, device:device, fanMode:fanMode, hvacMode:hvacMode, coolTemp: coolTemp, heatTemp: heatTemp) { (error) -> Void in
+                    completionHandler(error)
+                }
+            }
+        }
+    }
+    
+    func changeHVAC(useLocalServer:Bool, device: Device, fanMode: Device.FanMode?, hvacMode: Device.HVACMode?, coolTemp: Int?, heatTemp: Int?, completionHandler:(NSError?)->Void) -> Void {
+        if let prefix = self.requestPrefix(useLocalServer) {
             if let deviceID = device.id {
                 var requestString = ""
                 
