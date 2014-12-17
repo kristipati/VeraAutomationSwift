@@ -106,7 +106,7 @@ public enum ParameterEncoding {
             let method = Method(rawValue: mutableURLRequest.HTTPMethod)
             if method != nil && encodesParametersInURL(method!) {
                 if let URLComponents = NSURLComponents(URL: mutableURLRequest.URL!, resolvingAgainstBaseURL: false) {
-                    URLComponents.percentEncodedQuery = (URLComponents.query != nil ? URLComponents.query! + "&" : "") + query(parameters!)
+                    URLComponents.percentEncodedQuery = (URLComponents.percentEncodedQuery != nil ? URLComponents.percentEncodedQuery! + "&" : "") + query(parameters!)
                     mutableURLRequest.URL = URLComponents.URL
                 }
             } else {
@@ -984,7 +984,7 @@ extension Manager {
 
     private func upload(uploadable: Uploadable) -> Request {
         var uploadTask: NSURLSessionUploadTask!
-        var stream: NSInputStream?
+        var HTTPBodyStream: NSInputStream?
 
         switch uploadable {
         case .Data(let request, let data):
@@ -993,12 +993,13 @@ extension Manager {
             uploadTask = session.uploadTaskWithRequest(request, fromFile: fileURL)
         case .Stream(let request, var stream):
             uploadTask = session.uploadTaskWithStreamedRequest(request)
+            HTTPBodyStream = stream
         }
 
         let request = Request(session: session, task: uploadTask)
-        if stream != nil {
+        if HTTPBodyStream != nil {
             request.delegate.taskNeedNewBodyStream = { _, _ in
-                return stream
+                return HTTPBodyStream
             }
         }
         delegate[request.delegate.task] = request.delegate
@@ -1160,7 +1161,7 @@ extension Request {
     public class func suggestedDownloadDestination(directory: NSSearchPathDirectory = .DocumentDirectory, domain: NSSearchPathDomainMask = .UserDomainMask) -> DownloadFileDestination {
 
         return { (temporaryURL, response) -> (NSURL) in
-            if let directoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
+            if let directoryURL = NSFileManager.defaultManager().URLsForDirectory(directory, inDomains: domain)[0] as? NSURL {
                 return directoryURL.URLByAppendingPathComponent(response.suggestedFilename!)
             }
 
@@ -1257,27 +1258,31 @@ extension Request: DebugPrintable {
         if let cookieStorage = session.configuration.HTTPCookieStorage {
             if let cookies = cookieStorage.cookiesForURL(URL) as? [NSHTTPCookie] {
                 if !cookies.isEmpty {
-                    let string = cookies.reduce(""){ $0 + "\($1.name)=\($1.value);" }
+                    let string = cookies.reduce(""){ $0 + "\($1.name)=\($1.value ?? String());" }
                     components.append("-b \"\(string.substringToIndex(string.endIndex.predecessor()))\"")
                 }
             }
         }
 
-        for (field, value) in request.allHTTPHeaderFields! {
-            switch field {
-            case "Cookie":
-                continue
-            default:
-                components.append("-H \"\(field): \(value)\"")
+        if request.allHTTPHeaderFields != nil {
+            for (field, value) in request.allHTTPHeaderFields! {
+                switch field {
+                case "Cookie":
+                    continue
+                default:
+                    components.append("-H \"\(field): \(value)\"")
+                }
             }
         }
 
-        for (field, value) in session.configuration.HTTPAdditionalHeaders! {
-            switch field {
-            case "Cookie":
-                continue
-            default:
-                components.append("-H \"\(field): \(value)\"")
+        if session.configuration.HTTPAdditionalHeaders != nil {
+            for (field, value) in session.configuration.HTTPAdditionalHeaders! {
+                switch field {
+                case "Cookie":
+                    continue
+                default:
+                    components.append("-H \"\(field): \(value)\"")
+                }
             }
         }
         
