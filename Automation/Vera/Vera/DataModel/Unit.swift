@@ -70,6 +70,11 @@ public class Unit : Deserializable, Printable {
             desc += ipAddress!
         }
 
+        desc += "\nServer Relay: \n"
+        if serverRelay != nil {
+            desc += serverRelay!
+        }
+
         desc += "\nRooms: \n"
         if rooms != nil {
             for room in rooms! {
