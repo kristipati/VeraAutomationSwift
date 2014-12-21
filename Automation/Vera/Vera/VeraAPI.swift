@@ -46,6 +46,7 @@ public class VeraAPI {
     var auth: Auth?
     var sessionToken: String?
     var manager: Alamofire.Manager?
+    var reachability: Reachability?
     
     let passwordSeed = "oZ7QE6LcLJp6fiWzdqZc"
     
