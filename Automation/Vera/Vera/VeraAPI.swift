@@ -45,6 +45,7 @@ public class VeraAPI {
     var user : User?
     var auth: Auth?
     var sessionToken: String?
+    var manager: Alamofire.Manager?
     
     let passwordSeed = "oZ7QE6LcLJp6fiWzdqZc"
     
@@ -72,7 +73,9 @@ public class VeraAPI {
     }
 
     public init() {
+        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         
+        self.manager = Alamofire.Manager(configuration: configuration)
     }
     
     public func resetAPI () {
@@ -185,10 +188,11 @@ public class VeraAPI {
                                                         unit.serverRelay = tempUnit!.serverRelay
                                                     }
                                                 }
-                                                Swell.info("serverRelay: \(unit.serverRelay)")
+                                                Swell.info("unit: \(unit)")
                                                 if (unit.serverRelay != nil) {
                                                     self.getSessionTokenForServer(unit.serverRelay!, completionHandler: { (token) -> Void in
                                                         self.sessionToken = token
+                                                        Swell.info("Session token: \(token)")
                                                         completionHandler(device: nil, internalIP: nil, serverDevice: nil)
                                                     })
                                                 } else {
@@ -282,11 +286,13 @@ public class VeraAPI {
             if (self.sessionToken != nil) {
                 if let unit = self.getVeraUnit() {
                     if (localPrefix == true && unit.ipAddress != nil && unit.ipAddress!.isEmpty == false) {
-                        return "http://\(unit.ipAddress!):3480/data_request?id="
+                        return "http://\(unit.ipAddress!)/port_3480/data_request?id="
                     } else if unit.serverRelay != nil {
                         return "https://\(unit.serverRelay!)/relay/relay/relay/device/\(unit.serialNumber!)/port_3480/data_request?id="
                     }
                 }
+            } else {
+                Swell.info("Session token is nil in requestPrefix")
             }
             
             return nil
@@ -320,9 +326,9 @@ public class VeraAPI {
             }
         }
 
-        let request = Alamofire.request(encoding.encode(mutableURLRequest, parameters: parameters).0)
+        let request = self.manager!.request(encoding.encode(mutableURLRequest, parameters: parameters).0)
         
-        var time = dispatch_time(DISPATCH_TIME_NOW, Int64(10.0 * Double(NSEC_PER_SEC)))
+        var time = dispatch_time(DISPATCH_TIME_NOW, Int64(30.0 * Double(NSEC_PER_SEC)))
         dispatch_after(time, dispatch_get_main_queue(), { (_) in
             self.checkForRequestCompletion(request)
         })
@@ -464,6 +470,8 @@ public class VeraAPI {
                     }
                 }
             }
+        } else {
+            completionHandler(NSError(domain: NSURLErrorDomain, code: NSURLErrorCannotConnectToHost, userInfo: nil))
         }
     }
 
@@ -489,6 +497,8 @@ public class VeraAPI {
                     completionHandler(error)
                 }
             }
+        } else {
+            completionHandler(NSError(domain: NSURLErrorDomain, code: NSURLErrorCannotConnectToHost, userInfo: nil))
         }
     }
 
@@ -525,6 +535,8 @@ public class VeraAPI {
                     completionHandler(error)
                 }
             }
+        } else {
+            completionHandler(NSError(domain: NSURLErrorDomain, code: NSURLErrorCannotConnectToHost, userInfo: nil))
         }
     }
 
@@ -554,6 +566,8 @@ public class VeraAPI {
                     completionHandler(error)
                 }
             }
+        } else {
+            completionHandler(NSError(domain: NSURLErrorDomain, code: NSURLErrorCannotConnectToHost, userInfo: nil))
         }
     }
 
@@ -578,6 +592,8 @@ public class VeraAPI {
                     completionHandler(error)
                 }
             }
+        } else {
+            completionHandler(NSError(domain: NSURLErrorDomain, code: NSURLErrorCannotConnectToHost, userInfo: nil))
         }
     }
 
@@ -602,6 +618,8 @@ public class VeraAPI {
                     completionHandler(error)
                 }
             }
+        } else {
+            completionHandler(NSError(domain: NSURLErrorDomain, code: NSURLErrorCannotConnectToHost, userInfo: nil))
         }
     }
 
@@ -667,6 +685,8 @@ public class VeraAPI {
                     }
                 }
             }
+        } else {
+            completionHandler(NSError(domain: NSURLErrorDomain, code: NSURLErrorCannotConnectToHost, userInfo: nil))
         }
 
     }
