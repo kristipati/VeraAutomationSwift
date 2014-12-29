@@ -363,6 +363,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         self.queryingVera = true
         self.veraAPI.getUnitInformation{ (success, fullload) -> Void in
             self.queryingVera = false
+            self.lastUnitCheck = NSDate()
             if success == true {
                 let tabbarController = self.window!.rootViewController as UITabBarController
                 if let presentedController = tabbarController.presentedViewController {
@@ -370,7 +371,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                         
                     })
                 }
-                self.lastUnitCheck = NSDate()
                 NSNotificationCenter.defaultCenter().postNotificationName(VeraUnitInfoUpdated, object: nil, userInfo: [VeraUnitInfoFullLoad:fullload])
             } else {
                 Swell.info("Did not get unit info");
