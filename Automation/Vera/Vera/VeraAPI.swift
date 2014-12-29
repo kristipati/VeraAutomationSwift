@@ -77,6 +77,8 @@ public class VeraAPI {
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         
         self.manager = Alamofire.Manager(configuration: configuration)
+        self.reachability = Reachability.reachabilityForLocalWiFi()
+        self.reachability?.startNotifier()
     }
     
     public func resetAPI () {
@@ -286,6 +288,14 @@ public class VeraAPI {
         if self.useUI5 == false {
             if (self.sessionToken != nil) {
                 if let unit = self.getVeraUnit() {
+                    if (localPrefix == true) {
+                        if self.reachability != nil {
+                            if (self.reachability!.currentReachabilityStatus().value != ReachableViaWiFi.value) {
+                                return nil
+                            }
+                        }
+                    }
+                    
                     if (localPrefix == true && unit.ipAddress != nil && unit.ipAddress!.isEmpty == false) {
                         return "http://\(unit.ipAddress!)/port_3480/data_request?id="
                     } else if unit.serverRelay != nil {
