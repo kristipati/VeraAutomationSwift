@@ -1,6 +1,6 @@
 // Alamofire.swift
 //
-// Copyright (c) 2014 Alamofire (http://alamofire.org)
+// Copyright (c) 2014–2015 Alamofire (http://alamofire.org)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -152,7 +152,7 @@ public enum ParameterEncoding {
     }
 
     func escape(string: String) -> String {
-        let legalURLCharactersToBeEscaped: CFStringRef = ":/?&=;+!@#$()',*"
+        let legalURLCharactersToBeEscaped: CFStringRef = ":&=;+!@#$()',*"
         return CFURLCreateStringByAddingPercentEscapes(nil, string, nil, legalURLCharactersToBeEscaped, CFStringBuiltInEncodings.UTF8.rawValue)
     }
 }
@@ -211,6 +211,8 @@ extension NSURLRequest: URLRequestConvertible {
 
 /**
     Responsible for creating and managing `Request` objects, as well as their underlying `NSURLSession`.
+
+    When finished with a manager, be sure to call either `session.finishTasksAndInvalidate()` or `session.invalidateAndCancel()` before deinitialization.
 */
 public class Manager {
 
@@ -221,46 +223,7 @@ public class Manager {
         struct Singleton {
             static var configuration: NSURLSessionConfiguration = {
                 var configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-
-                configuration.HTTPAdditionalHeaders = {
-                    // Accept-Encoding HTTP Header; see http://tools.ietf.org/html/rfc7230#section-4.2.3
-                    let acceptEncoding: String = "gzip;q=1.0,compress;q=0.5"
-
-                    // Accept-Language HTTP Header; see http://tools.ietf.org/html/rfc7231#section-5.3.5
-                    let acceptLanguage: String = {
-                        var components: [String] = []
-                        for (index, languageCode) in enumerate(NSLocale.preferredLanguages() as [String]) {
-                            let q = 1.0 - (Double(index) * 0.1)
-                            components.append("\(languageCode);q=\(q)")
-                            if q <= 0.5 {
-                                break
-                            }
-                        }
-
-                        return join(",", components)
-                    }()
-
-                    // User-Agent Header; see http://tools.ietf.org/html/rfc7231#section-5.5.3
-                    let userAgent: String = {
-                        if let info = NSBundle.mainBundle().infoDictionary {
-                            let executable: AnyObject = info[kCFBundleExecutableKey] ?? "Unknown"
-                            let bundle: AnyObject = info[kCFBundleIdentifierKey] ?? "Unknown"
-                            let version: AnyObject = info[kCFBundleVersionKey] ?? "Unknown"
-                            let os: AnyObject = NSProcessInfo.processInfo().operatingSystemVersionString ?? "Unknown"
-
-                            var mutableUserAgent = NSMutableString(string: "\(executable)/\(bundle) (\(version); OS \(os))") as CFMutableString
-                            let transform = NSString(string: "Any-Latin; Latin-ASCII; [:^ASCII:] Remove") as CFString
-                            if CFStringTransform(mutableUserAgent, nil, transform, 0) == 1 {
-                                return mutableUserAgent as NSString
-                            }
-                        }
-                        return "Alamofire"
-                    }()
-
-                    return ["Accept-Encoding": acceptEncoding,
-                            "Accept-Language": acceptLanguage,
-                            "User-Agent": userAgent]
-                }()
+                configuration.HTTPAdditionalHeaders = Manager.defaultHTTPHeaders()
 
                 return configuration
             }()
@@ -269,6 +232,52 @@ public class Manager {
         }
 
         return Singleton.instance
+    }
+
+    /**
+        Creates default values for the "Accept-Encoding", "Accept-Language" and "User-Agent" headers.
+
+        :returns: The default header values.
+    */
+    public class func defaultHTTPHeaders() -> [String: String] {
+
+        // Accept-Encoding HTTP Header; see http://tools.ietf.org/html/rfc7230#section-4.2.3
+        let acceptEncoding: String = "gzip;q=1.0,compress;q=0.5"
+
+        // Accept-Language HTTP Header; see http://tools.ietf.org/html/rfc7231#section-5.3.5
+        let acceptLanguage: String = {
+            var components: [String] = []
+            for (index, languageCode) in enumerate(NSLocale.preferredLanguages() as [String]) {
+                let q = 1.0 - (Double(index) * 0.1)
+                components.append("\(languageCode);q=\(q)")
+                if q <= 0.5 {
+                    break
+                }
+            }
+
+            return join(",", components)
+        }()
+
+        // User-Agent Header; see http://tools.ietf.org/html/rfc7231#section-5.5.3
+        let userAgent: String = {
+            if let info = NSBundle.mainBundle().infoDictionary {
+                let executable: AnyObject = info[kCFBundleExecutableKey] ?? "Unknown"
+                let bundle: AnyObject = info[kCFBundleIdentifierKey] ?? "Unknown"
+                let version: AnyObject = info[kCFBundleVersionKey] ?? "Unknown"
+                let os: AnyObject = NSProcessInfo.processInfo().operatingSystemVersionString ?? "Unknown"
+
+                var mutableUserAgent = NSMutableString(string: "\(executable)/\(bundle) (\(version); OS \(os))") as CFMutableString
+                let transform = NSString(string: "Any-Latin; Latin-ASCII; [:^ASCII:] Remove") as CFString
+                if CFStringTransform(mutableUserAgent, nil, transform, 0) == 1 {
+                    return mutableUserAgent as NSString
+                }
+            }
+            return "Alamofire"
+        }()
+
+        return ["Accept-Encoding": acceptEncoding,
+                "Accept-Language": acceptLanguage,
+                "User-Agent": userAgent]
     }
 
     private let delegate: SessionDelegate
@@ -287,10 +296,6 @@ public class Manager {
     required public init(configuration: NSURLSessionConfiguration? = nil) {
         self.delegate = SessionDelegate()
         self.session = NSURLSession(configuration: configuration, delegate: delegate, delegateQueue: nil)
-    }
-
-    deinit {
-        self.session.invalidateAndCancel()
     }
 
     // MARK: -
@@ -1026,6 +1031,21 @@ extension Manager {
     public func upload(URLRequest: URLRequestConvertible, file: NSURL) -> Request {
         return upload(.File(URLRequest.URLRequest, file))
     }
+  
+    /**
+        Creates a request for uploading a file to the specified URL request.
+  
+        If `startRequestsImmediately` is `true`, the request will have `resume()` called before being returned.
+  
+        :param: method The HTTP method.
+        :param: URLString The URL string.
+        :param: file The file to upload
+  
+        :returns: The created upload request.
+    */
+    public func upload(method: Method, _ URLString: URLStringConvertible, file: NSURL) -> Request {
+        return upload(URLRequest(method, URLString), file: file)
+    }
 
     // MARK: Data
 
@@ -1041,6 +1061,21 @@ extension Manager {
     */
     public func upload(URLRequest: URLRequestConvertible, data: NSData) -> Request {
         return upload(.Data(URLRequest.URLRequest, data))
+    }
+  
+    /**
+        Creates a request for uploading data to the specified URL request.
+  
+        If `startRequestsImmediately` is `true`, the request will have `resume()` called before being returned.
+  
+        :param: method The HTTP method.
+        :param: URLString The URL string.
+        :param: data The data to upload
+  
+        :returns: The created upload request.
+    */
+    public func upload(method: Method, _ URLString: URLStringConvertible, data: NSData) -> Request {
+        return upload(URLRequest(method, URLString), data: data)
     }
 
     // MARK: Stream
@@ -1058,6 +1093,21 @@ extension Manager {
     public func upload(URLRequest: URLRequestConvertible, stream: NSInputStream) -> Request {
         return upload(.Stream(URLRequest.URLRequest, stream))
     }
+  
+    /**
+        Creates a request for uploading a stream to the specified URL request.
+  
+        If `startRequestsImmediately` is `true`, the request will have `resume()` called before being returned.
+  
+        :param: method The HTTP method.
+        :param: URLString The URL string.
+        :param: stream The stream to upload.
+
+        :returns: The created upload request.
+    */
+    public func upload(method: Method, _ URLString: URLStringConvertible, stream: NSInputStream) -> Request {
+        return upload(URLRequest(method, URLString), stream: stream)
+    }
 }
 
 extension Request {
@@ -1068,12 +1118,10 @@ extension Request {
         // MARK: NSURLSessionTaskDelegate
 
         func URLSession(session: NSURLSession!, task: NSURLSessionTask!, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
-            if uploadProgress != nil {
-                uploadProgress(bytesSent, totalBytesSent, totalBytesExpectedToSend)
-            }
-
             progress.totalUnitCount = totalBytesExpectedToSend
             progress.completedUnitCount = totalBytesSent
+
+            uploadProgress?(bytesSent, totalBytesSent, totalBytesExpectedToSend)
         }
     }
 }
@@ -1086,7 +1134,7 @@ extension Manager {
         case ResumeData(NSData)
     }
 
-    private func download(downloadable: Downloadable, destination: (NSURL, NSHTTPURLResponse) -> (NSURL)) -> Request {
+    private func download(downloadable: Downloadable, destination: Request.DownloadFileDestination) -> Request {
         var downloadTask: NSURLSessionDownloadTask!
 
         switch downloadable {
@@ -1114,6 +1162,19 @@ extension Manager {
     // MARK: Request
 
     /**
+        Creates a download request using the shared manager instance for the specified method and URL string.
+
+        :param: method The HTTP method.
+        :param: URLString The URL string.
+        :param: destination The closure used to determine the destination of the downloaded file.
+
+        :returns: The created download request.
+    */
+    public func download(method: Method, _ URLString: URLStringConvertible, destination: Request.DownloadFileDestination) -> Request {
+        return download(URLRequest(method, URLString), destination: destination)
+    }
+
+    /**
         Creates a request for downloading from the specified URL request.
 
         If `startRequestsImmediately` is `true`, the request will have `resume()` called before being returned.
@@ -1123,7 +1184,7 @@ extension Manager {
 
         :returns: The created download request.
     */
-    public func download(URLRequest: URLRequestConvertible, destination: (NSURL, NSHTTPURLResponse) -> (NSURL)) -> Request {
+    public func download(URLRequest: URLRequestConvertible, destination: Request.DownloadFileDestination) -> Request {
         return download(.Request(URLRequest.URLRequest), destination: destination)
     }
 
@@ -1195,19 +1256,19 @@ extension Request {
         }
 
         func URLSession(session: NSURLSession!, downloadTask: NSURLSessionDownloadTask!, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+            progress.totalUnitCount = totalBytesExpectedToWrite
+            progress.completedUnitCount = totalBytesWritten
+
             downloadTaskDidWriteData?(session, downloadTask, bytesWritten, totalBytesWritten, totalBytesExpectedToWrite)
 
             downloadProgress?(bytesWritten, totalBytesWritten, totalBytesExpectedToWrite)
-
-            progress.totalUnitCount = totalBytesExpectedToWrite
-            progress.completedUnitCount = totalBytesWritten
         }
 
         func URLSession(session: NSURLSession!, downloadTask: NSURLSessionDownloadTask!, didResumeAtOffset fileOffset: Int64, expectedTotalBytes: Int64) {
-            downloadTaskDidResumeAtOffset?(session, downloadTask, fileOffset, expectedTotalBytes)
-
             progress.totalUnitCount = expectedTotalBytes
             progress.completedUnitCount = fileOffset
+
+            downloadTaskDidResumeAtOffset?(session, downloadTask, fileOffset, expectedTotalBytes)
         }
     }
 }
@@ -1255,6 +1316,9 @@ extension Request: DebugPrintable {
             }
         }
 
+        // Temporarily disabled on OS X due to build failure for CocoaPods
+        // See https://github.com/CocoaPods/swift/issues/24
+        #if !os(OSX)
         if let cookieStorage = session.configuration.HTTPCookieStorage {
             if let cookies = cookieStorage.cookiesForURL(URL) as? [NSHTTPCookie] {
                 if !cookies.isEmpty {
@@ -1263,6 +1327,7 @@ extension Request: DebugPrintable {
                 }
             }
         }
+        #endif
 
         if request.allHTTPHeaderFields != nil {
             for (field, value) in request.allHTTPHeaderFields! {
@@ -1326,7 +1391,7 @@ extension Request {
     /**
         Adds a handler to be called once the request has finished.
 
-    :param: completionHandler A closure to be executed once the request has finished. The closure takes 4 arguments: the URL request, the URL response, if one was received, the string, if one could be created from the URL response and data, and any error produced while creating the string.
+        :param: completionHandler A closure to be executed once the request has finished. The closure takes 4 arguments: the URL request, the URL response, if one was received, the string, if one could be created from the URL response and data, and any error produced while creating the string.
 
         :returns: The request.
     */
@@ -1361,7 +1426,7 @@ extension Request {
     */
     public class func JSONResponseSerializer(options: NSJSONReadingOptions = .AllowFragments) -> Serializer {
         return { (request, response, data) in
-            if data == nil {
+            if data == nil || data?.length == 0 {
                 return (nil, nil)
             }
 
@@ -1410,7 +1475,7 @@ extension Request {
     */
     public class func propertyListResponseSerializer(options: NSPropertyListReadOptions = 0) -> Serializer {
         return { (request, response, data) in
-            if data == nil {
+            if data == nil || data?.length == 0 {
                 return (nil, nil)
             }
 
@@ -1469,7 +1534,7 @@ private func URLRequest(method: Method, URL: URLStringConvertible) -> NSURLReque
     :returns: The created request.
 */
 public func request(method: Method, URLString: URLStringConvertible, parameters: [String: AnyObject]? = nil, encoding: ParameterEncoding = .URL) -> Request {
-    return request(encoding.encode(URLRequest(method, URLString), parameters: parameters).0)
+    return Manager.sharedInstance.request(method, URLString, parameters: parameters, encoding: encoding)
 }
 
 /**
@@ -1499,7 +1564,7 @@ public func request(URLRequest: URLRequestConvertible) -> Request {
     :returns: The created upload request.
 */
 public func upload(method: Method, URLString: URLStringConvertible, file: NSURL) -> Request {
-    return Manager.sharedInstance.upload(URLRequest(method, URLString), file: file)
+    return Manager.sharedInstance.upload(method, URLString, file: file)
 }
 
 /**
@@ -1526,7 +1591,7 @@ public func upload(URLRequest: URLRequestConvertible, file: NSURL) -> Request {
     :returns: The created upload request.
 */
 public func upload(method: Method, URLString: URLStringConvertible, data: NSData) -> Request {
-    return Manager.sharedInstance.upload(URLRequest(method, URLString), data: data)
+    return Manager.sharedInstance.upload(method, URLString, data: data)
 }
 
 /**
@@ -1553,7 +1618,7 @@ public func upload(URLRequest: URLRequestConvertible, data: NSData) -> Request {
     :returns: The created upload request.
 */
 public func upload(method: Method, URLString: URLStringConvertible, stream: NSInputStream) -> Request {
-    return Manager.sharedInstance.upload(URLRequest(method, URLString), stream: stream)
+    return Manager.sharedInstance.upload(method, URLString, stream: stream)
 }
 
 /**
@@ -1582,7 +1647,7 @@ public func upload(URLRequest: URLRequestConvertible, stream: NSInputStream) -> 
     :returns: The created download request.
 */
 public func download(method: Method, URLString: URLStringConvertible, destination: Request.DownloadFileDestination) -> Request {
-    return Manager.sharedInstance.download(URLRequest(method, URLString), destination: destination)
+    return Manager.sharedInstance.download(method, URLString, destination: destination)
 }
 
 /**
