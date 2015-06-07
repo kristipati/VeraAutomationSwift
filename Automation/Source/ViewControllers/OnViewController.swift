@@ -54,7 +54,7 @@ class OnViewController: UICollectionViewController {
     }
 
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("OnCellIdentifier", forIndexPath: indexPath) as OnDeviceCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("OnCellIdentifier", forIndexPath: indexPath) as! OnDeviceCell
         
         if indexPath.row < self.devices?.count {
             let device = self.devices![indexPath.row]

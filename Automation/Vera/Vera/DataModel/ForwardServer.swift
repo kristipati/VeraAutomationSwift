@@ -13,15 +13,15 @@ class ForwardServer : Deserializable {
     var primary:Bool?
     
     required init(data: [String: AnyObject]) {
-        hostName <<< data["hostName"]
-        primary <<< data["primary"]
+        hostName <-- data["hostName"]
+        primary <-- data["primary"]
         
         if hostName == nil {
-            hostName <<< data["Server_Relay"]
+            hostName <-- data["Server_Relay"]
         }
 
         if hostName == nil {
-            hostName <<< data["Server_Device"]
+            hostName <-- data["Server_Device"]
         }
     }
     

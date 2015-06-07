@@ -47,7 +47,7 @@ class SettingsViewController: UITableViewController {
             case 0:
                 switch indexPath.row {
                 case 0:
-                    let cell = tableView.dequeueReusableCellWithIdentifier("ExcludedDevicesCellIdentifier", forIndexPath: indexPath) as UITableViewCell
+                    let cell = tableView.dequeueReusableCellWithIdentifier("ExcludedDevicesCellIdentifier", forIndexPath: indexPath) as! UITableViewCell
                     cell.textLabel!.text = NSLocalizedString("EXCLUDED_DEVICES_TITLE", comment: "")
                     cell.accessoryView = nil
                     cell.accessoryType = .DisclosureIndicator
@@ -55,7 +55,7 @@ class SettingsViewController: UITableViewController {
                     return cell
                     
                 case 1:
-                    let cell = tableView.dequeueReusableCellWithIdentifier("ExcludedScenesCellIdentifier", forIndexPath: indexPath) as UITableViewCell
+                    let cell = tableView.dequeueReusableCellWithIdentifier("ExcludedScenesCellIdentifier", forIndexPath: indexPath) as! UITableViewCell
                     cell.textLabel!.text = NSLocalizedString("EXCLUDED_SCENES_TITLE", comment: "")
                     cell.accessoryView = nil
                     cell.accessoryType = .DisclosureIndicator
@@ -63,7 +63,7 @@ class SettingsViewController: UITableViewController {
                     return cell
                     
                 case 2:
-                    let cell = tableView.dequeueReusableCellWithIdentifier("ToggleCellIdentifier", forIndexPath: indexPath) as UITableViewCell
+                    let cell = tableView.dequeueReusableCellWithIdentifier("ToggleCellIdentifier", forIndexPath: indexPath) as! UITableViewCell
                     cell.accessoryType = .None
                     cell.accessoryView = self.audioSwitch
                     self.audioSwitch.on = NSUserDefaults.standardUserDefaults().boolForKey(kShowAudioTabDefault)
@@ -79,7 +79,7 @@ class SettingsViewController: UITableViewController {
         case 1:
             switch (indexPath.row) {
             case 0:
-                let cell = tableView.dequeueReusableCellWithIdentifier("LogoutCellIdentifier", forIndexPath: indexPath) as UITableViewCell
+                let cell = tableView.dequeueReusableCellWithIdentifier("LogoutCellIdentifier", forIndexPath: indexPath) as! UITableViewCell
                 cell.textLabel!.text = NSLocalizedString("LOGOUT_LABEL", comment: "")
                 cell.accessoryView = nil
                 cell.accessoryType = .None
@@ -87,7 +87,7 @@ class SettingsViewController: UITableViewController {
                 return cell
                 
             case 1:
-                let cell = tableView.dequeueReusableCellWithIdentifier("ToggleCellIdentifier", forIndexPath: indexPath) as UITableViewCell
+                let cell = tableView.dequeueReusableCellWithIdentifier("ToggleCellIdentifier", forIndexPath: indexPath) as! UITableViewCell
                 cell.accessoryType = .None
                 cell.accessoryView = self.ui5Switch
                 self.ui5Switch.on = NSUserDefaults.standardUserDefaults().boolForKey(kUseUI5Default)

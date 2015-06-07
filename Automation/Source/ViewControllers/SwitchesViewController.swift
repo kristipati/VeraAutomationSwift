@@ -57,7 +57,7 @@ class SwitchesViewController: UICollectionViewController, SwitchProtocol {
     }
 
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("DeviceCell", forIndexPath: indexPath) as DeviceCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("DeviceCell", forIndexPath: indexPath) as! DeviceCell
     
         if indexPath.row < self.devices?.count {
             let device = self.devices![indexPath.row]

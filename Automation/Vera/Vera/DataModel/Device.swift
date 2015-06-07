@@ -125,11 +125,11 @@ public class Device: Deserializable, Printable {
     var altID: Int?
     
     public required init(data: [String: AnyObject]) {
-        id <<< data["id"]
-        parentID <<< data["parent"]
-        name <<< data["name"]
+        id <-- data["id"]
+        parentID <-- data["parent"]
+        name <-- data["name"]
         var tempCategory:Int?
-        tempCategory <<< data["category"]
+        tempCategory <-- data["category"]
         if tempCategory != nil {
             category = Category(rawValue: tempCategory!)
             
@@ -141,20 +141,20 @@ public class Device: Deserializable, Printable {
                 }
             }
         }
-        subcategory <<< data["subcategory"]
-        status <<< data["status"]
-        state <<< data["state"]
-        comment <<< data["comment"]
-        roomID <<< data["room"]
-        armed <<< data["armed"]
-        temperature <<< data["temperature"]
-        humidity <<< data["humidity"]
-        batteryLevel <<< data["batterylevel"]
-        pinCodes <<< data["pincodes"]
+        subcategory <-- data["subcategory"]
+        status <-- data["status"]
+        state <-- data["state"]
+        comment <-- data["comment"]
+        roomID <-- data["room"]
+        armed <-- data["armed"]
+        temperature <-- data["temperature"]
+        humidity <-- data["humidity"]
+        batteryLevel <-- data["batterylevel"]
+        pinCodes <-- data["pincodes"]
         
         var tempInt: Int?
         
-        tempInt <<< data["locked"]
+        tempInt <-- data["locked"]
         if let lockedState = tempInt {
             if lockedState == 1 {
                 locked = true
@@ -164,28 +164,28 @@ public class Device: Deserializable, Printable {
             }
         }
         
-        tripped <<< data["tripped"]
-        lastTripped <<< data["lasttrip"]
-        level <<< data["level"]
-        ip <<< data["ip"]
-        vendorStatusCode <<< data["vendorstatuscode"]
-        vendorStatusData <<< data["vendorstatusdata"]
-        vendorStatus <<< data["vendorstatus"]
-        memoryUsed <<< data["memoryUsed"]
-        memoryFree <<< data["memoryFree"]
-        memoryAvailable <<< data["memoryAvailable"]
-        objectStatusMap <<< data["objectstatusmap"]
-        systemVeraRestart <<< data["systemVeraRestart"]
-        systemLuupRestart <<< data["systemLuupRestart"]
-        heatTemperatureSetPoint <<< data["heatsp"]
-        coolTemperatureSetPoint <<< data["coolsp"]
-        conditionSatisfied <<< data["conditionsatisfied"]
-        detailedArmMode <<< data["detailedarmmode"]
-        armMode <<< data["armmode"]
-        hvacState <<< data["hvacstate"]
-        altID <<< data["altid"]
+        tripped <-- data["tripped"]
+        lastTripped <-- data["lasttrip"]
+        level <-- data["level"]
+        ip <-- data["ip"]
+        vendorStatusCode <-- data["vendorstatuscode"]
+        vendorStatusData <-- data["vendorstatusdata"]
+        vendorStatus <-- data["vendorstatus"]
+        memoryUsed <-- data["memoryUsed"]
+        memoryFree <-- data["memoryFree"]
+        memoryAvailable <-- data["memoryAvailable"]
+        objectStatusMap <-- data["objectstatusmap"]
+        systemVeraRestart <-- data["systemVeraRestart"]
+        systemLuupRestart <-- data["systemLuupRestart"]
+        heatTemperatureSetPoint <-- data["heatsp"]
+        coolTemperatureSetPoint <-- data["coolsp"]
+        conditionSatisfied <-- data["conditionsatisfied"]
+        detailedArmMode <-- data["detailedarmmode"]
+        armMode <-- data["armmode"]
+        hvacState <-- data["hvacstate"]
+        altID <-- data["altid"]
         var mode:String?
-        mode <<< data["mode"]
+        mode <-- data["mode"]
         if mode != nil {
             switch mode!.lowercaseString {
             case "off":
@@ -201,7 +201,7 @@ public class Device: Deserializable, Printable {
             }
         }
         
-        mode <<< data["fanmode"]
+        mode <-- data["fanmode"]
         if mode != nil {
             switch mode!.lowercaseString {
             case "auto":

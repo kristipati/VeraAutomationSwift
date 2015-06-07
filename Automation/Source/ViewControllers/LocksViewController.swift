@@ -57,7 +57,7 @@ class LocksViewController: UICollectionViewController, LockProtocol {
     }
     
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("LockCell", forIndexPath: indexPath) as LockCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("LockCell", forIndexPath: indexPath) as! LockCell
         
         if indexPath.row < self.devices?.count {
             let device = self.devices![indexPath.row]

@@ -62,7 +62,7 @@ class SFSwiftNotification: UIView, UICollisionBehaviorDelegate, UIDynamicAnimato
         var newFrame = self.frame
         newFrame.inset(dx: 20, dy: 0)
         label = UILabel(frame: newFrame)
-        label.text = title
+        label.text = title as? String
         label.textAlignment = NSTextAlignment.Center
         label.minimumScaleFactor = 0.5
         label.adjustsFontSizeToFitWidth = true
@@ -170,7 +170,7 @@ class SFSwiftNotification: UIView, UICollisionBehaviorDelegate, UIDynamicAnimato
         )
     }
     
-    func dynamicAnimatorDidPause(animator: UIDynamicAnimator!) {
+    func dynamicAnimatorDidPause(animator: UIDynamicAnimator) {
         
         hide(delay:self.delay)
     }

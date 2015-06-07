@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     var notifyView:SFSwiftNotification?
     
     class func appDelegate() -> AppDelegate {
-        return UIApplication.sharedApplication().delegate as AppDelegate
+        return UIApplication.sharedApplication().delegate as! AppDelegate
     }
     
     var window: UIWindow?
@@ -47,11 +47,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
-        self.veraAPI.excludedDevices = NSUserDefaults.standardUserDefaults().arrayForKey(kExcludedDevices) as [Int]?
-        self.veraAPI.excludedScenes = NSUserDefaults.standardUserDefaults().arrayForKey(kExcludedScenes) as [Int]?
+        self.veraAPI.excludedDevices = NSUserDefaults.standardUserDefaults().arrayForKey(kExcludedDevices) as! [Int]?
+        self.veraAPI.excludedScenes = NSUserDefaults.standardUserDefaults().arrayForKey(kExcludedScenes) as! [Int]?
         self.veraAPI.useUI5 = NSUserDefaults.standardUserDefaults().boolForKey(kUseUI5Default)
         
-        let tabbarController = self.window!.rootViewController as UITabBarController
+        let tabbarController = self.window!.rootViewController as! UITabBarController
         tabbarController.delegate = self
         
         let switchesStoryboard = UIStoryboard(name: "Switches", bundle: nil)
@@ -62,43 +62,43 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let climateStoryboard = UIStoryboard(name: "Climate", bundle: nil)
         let settingsStoryboard = UIStoryboard(name: "Settings", bundle: nil)
         
-        let switchesSplitViewController = switchesStoryboard.instantiateInitialViewController() as UISplitViewController
+        let switchesSplitViewController = switchesStoryboard.instantiateInitialViewController() as! UISplitViewController
         switchesSplitViewController.tabBarItem.image = UIImage(named: "lightbulb")
         switchesSplitViewController.tabBarItem.title = NSLocalizedString("SWITCHES_TITLE", comment:"")
         switchesSplitViewController.delegate = self
         switchesSplitViewController.preferredDisplayMode = .AllVisible
         switchesSplitViewController.getBaseViewController().title = switchesSplitViewController.tabBarItem.title
         
-        let audioSplitViewController = audioStoryboard.instantiateInitialViewController() as UISplitViewController
+        let audioSplitViewController = audioStoryboard.instantiateInitialViewController() as! UISplitViewController
         audioSplitViewController.tabBarItem.image = UIImage(named: "radio")
         audioSplitViewController.tabBarItem.title = NSLocalizedString("AUDIO_TITLE", comment:"")
         audioSplitViewController.delegate = self
         audioSplitViewController.preferredDisplayMode = .AllVisible
         audioSplitViewController.getBaseViewController().title = audioSplitViewController.tabBarItem.title
         
-        let scenesSplitViewController = scenesStoryboard.instantiateInitialViewController() as UISplitViewController
+        let scenesSplitViewController = scenesStoryboard.instantiateInitialViewController() as! UISplitViewController
         scenesSplitViewController.tabBarItem.image = UIImage(named: "scene")
         scenesSplitViewController.tabBarItem.title = NSLocalizedString("SCENES_TITLE", comment:"")
         scenesSplitViewController.delegate = self
         scenesSplitViewController.preferredDisplayMode = .AllVisible
         scenesSplitViewController.getBaseViewController().title = scenesSplitViewController.tabBarItem.title
         
-        let onViewController = onStoryboard.instantiateInitialViewController() as UIViewController
+        let onViewController = onStoryboard.instantiateInitialViewController() as! UIViewController
         onViewController.tabBarItem.image = UIImage(named: "power")
         onViewController.tabBarItem.title = NSLocalizedString("ON_TITLE", comment:"")
         onViewController.getBaseViewController().title = onViewController.tabBarItem.title
 
-        let locksViewController = locksStoryboard.instantiateInitialViewController() as UIViewController
+        let locksViewController = locksStoryboard.instantiateInitialViewController() as! UIViewController
         locksViewController.tabBarItem.image = UIImage(named: "lock")
         locksViewController.tabBarItem.title = NSLocalizedString("LOCK_TITLE", comment:"")
         locksViewController.getBaseViewController().title = locksViewController.tabBarItem.title
 
-        let climateViewController = climateStoryboard.instantiateInitialViewController() as UIViewController
+        let climateViewController = climateStoryboard.instantiateInitialViewController() as! UIViewController
         climateViewController.tabBarItem.image = UIImage(named: "climate")
         climateViewController.tabBarItem.title = NSLocalizedString("CLIMATE_TITLE", comment:"")
         climateViewController.getBaseViewController().title = climateViewController.tabBarItem.title
 
-        let settingsViewController = settingsStoryboard.instantiateInitialViewController() as UIViewController
+        let settingsViewController = settingsStoryboard.instantiateInitialViewController() as! UIViewController
         settingsViewController.tabBarItem.image = UIImage(named: "gear")
         settingsViewController.tabBarItem.title = NSLocalizedString("SETTINGS_TITLE", comment:"")
         settingsViewController.getBaseViewController().title = settingsViewController.tabBarItem.title
@@ -199,7 +199,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
     func tabBarController(tabBarController: UITabBarController, didEndCustomizingViewControllers viewControllers: [AnyObject], changed: Bool) {
         if (changed == true) {
-            self.saveTabOrder(viewControllers as [UIViewController])
+            self.saveTabOrder(viewControllers as! [UIViewController])
             self.checkViewControllers()
         }
     }
@@ -219,7 +219,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     func saveTabOrder (viewControllers: [UIViewController]) {
         var orderViewControllerArray = [String]()
         for viewController in viewControllers {
-            orderViewControllerArray.append(viewController.getBaseViewControllerName())
+            orderViewControllerArray.append(viewController.getBaseViewControllerName() as String)
         }
 
         NSUserDefaults.standardUserDefaults().setObject(orderViewControllerArray, forKey: kTabOrderDefault)
@@ -229,13 +229,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     // Make sure that none of the split view controllers roll over to the more part of the tab bar controller
     func checkViewControllers () {
         if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
-            let tabbarController = self.window!.rootViewController as UITabBarController
+            let tabbarController = self.window!.rootViewController as! UITabBarController
             var splitViewControllerArray = [UIViewController]()
             var otherViewControllerArray = [UIViewController]()
             var rearrangeViewControllers = false
             
             for index in 0..<tabbarController.viewControllers!.count {
-                let viewController = tabbarController.viewControllers![index] as UIViewController
+                let viewController = tabbarController.viewControllers![index] as! UIViewController
                 if let splitViewController = viewController as? UISplitViewController {
                     if index > 3 {
                         rearrangeViewControllers = true
@@ -276,8 +276,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         var username:NSString? = KeychainService.load(kUsername)
         
         if password != nil && password!.length > 0 && username != nil && username!.length > 0 {
-            veraAPI.username = username
-            veraAPI.password = password
+            veraAPI.username = username as? String
+            veraAPI.password = password as? String
             
             veraAPI.getUnitsInformationForUser{ (success) -> Void in
                 if success == true {
@@ -300,8 +300,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
         let loginAction = UIAlertAction(title: NSLocalizedString("LOGIN_TITLE", comment: ""), style: .Default) { (_) in
             self.handlingLogin = false
-            let loginTextField = alertController.textFields![0] as UITextField
-            let passwordTextField = alertController.textFields![1] as UITextField
+            let loginTextField = alertController.textFields![0] as! UITextField
+            let passwordTextField = alertController.textFields![1] as! UITextField
 
             var password = passwordTextField.text
             var username = loginTextField.text
@@ -327,7 +327,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         alertController.addTextFieldWithConfigurationHandler { (textField) in
             textField.placeholder = NSLocalizedString("USERNAME_PLACEHOLDER", comment: "")
-            textField.text = KeychainService.load(kUsername)
+            textField.text = KeychainService.load(kUsername) as? String
             NSNotificationCenter.defaultCenter().addObserverForName(UITextFieldTextDidChangeNotification, object: textField, queue: NSOperationQueue.mainQueue()) { (notification) in
                 loginAction.enabled = textField.text != ""
             }
@@ -335,7 +335,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         alertController.addTextFieldWithConfigurationHandler { (textField) in
             textField.placeholder = NSLocalizedString("PASSWORD_PLACEHOLDER", comment: "")
-            textField.text = KeychainService.load(kPassword)
+            textField.text = KeychainService.load(kPassword) as? String
             textField.secureTextEntry = true
         }
         
@@ -346,7 +346,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             loginAction.enabled = true
         }
         
-        let tabbarController = self.window!.rootViewController as UITabBarController
+        let tabbarController = self.window!.rootViewController as! UITabBarController
         tabbarController.presentViewController(alertController, animated: true, completion: nil)
 
     }
@@ -365,7 +365,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             self.queryingVera = false
             self.lastUnitCheck = NSDate()
             if success == true {
-                let tabbarController = self.window!.rootViewController as UITabBarController
+                let tabbarController = self.window!.rootViewController as! UITabBarController
                 if let presentedController = tabbarController.presentedViewController {
                     presentedController.dismissViewControllerAnimated(true, completion: { () -> Void in
                         
@@ -383,12 +383,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     func showHideAudioTab() {
         let show = NSUserDefaults.standardUserDefaults().boolForKey(kShowAudioTabDefault)
-        let tabbarController = self.window!.rootViewController as UITabBarController
+        let tabbarController = self.window!.rootViewController as! UITabBarController
         var newViewControllerArray = tabbarController.viewControllers
         if newViewControllerArray != nil {
             var indexToRemove:Int?
             for index in 0..<newViewControllerArray!.count {
-                let viewController = newViewControllerArray![index] as UIViewController
+                let viewController = newViewControllerArray![index] as! UIViewController
                 if viewController.getBaseViewController().isKindOfClass(AudioListViewController) {
                     indexToRemove = index
                     break
@@ -467,7 +467,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     }
     
     func showMessageWithTitle(title: NSString) {
-        let tabbarController = self.window!.rootViewController as UITabBarController
+        let tabbarController = self.window!.rootViewController as! UITabBarController
         let notifyFrame = CGRectMake(0, 0, CGRectGetMaxX(tabbarController.view.frame), 64)
         if self.notifyView != nil {
             self.notifyView!.hide()
@@ -480,7 +480,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         self.notifyView!.backgroundColor = UIColor(red: 10.0/255.0, green: 243.0/255.0, blue: 237.0/255.0, alpha: 1.0)
         self.notifyView!.label.textColor = UIColor.blackColor()
 
-        self.notifyView!.label.text = title
+        self.notifyView!.label.text = title as String
         self.notifyView!.animate(0)
     }
 
@@ -496,7 +496,7 @@ extension UIViewController {
         }
         
         if let splitViewController = viewController as? UISplitViewController {
-            viewController = splitViewController.viewControllers.first as UIViewController
+            viewController = splitViewController.viewControllers.first as! UIViewController
         }
         
         if let navController = viewController as? UINavigationController {

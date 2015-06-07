@@ -15,8 +15,8 @@ public class Room: Deserializable, Printable, Hashable {
     var id:Int?
     
     public required init(data: [String: AnyObject]) {
-        name <<< data["name"]
-        id <<< data["id"]
+        name <-- data["name"]
+        id <-- data["id"]
     }
     
     public var description: String {

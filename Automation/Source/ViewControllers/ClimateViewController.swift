@@ -54,7 +54,7 @@ class ClimateViewController: UICollectionViewController, ThermostatProtocol {
     }
     
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ClimateCell", forIndexPath: indexPath) as ThermostatCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ClimateCell", forIndexPath: indexPath) as! ThermostatCell
         
         if indexPath.row < self.devices?.count {
             let device = self.devices![indexPath.row]

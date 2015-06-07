@@ -12,10 +12,10 @@ class User : Deserializable {
     var units:[Unit]?
     required init(data: [String: AnyObject]) {
         if (data["units"] != nil) {
-            units <<<<* data["units"]
+            units <-- data["units"]
         }
         else if (data["Devices"] != nil) {
-            units <<<<* data["Devices"]
+            units <-- data["Devices"]
         }
     }
 

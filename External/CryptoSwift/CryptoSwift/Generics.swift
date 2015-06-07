@@ -34,35 +34,39 @@ func integerFromBitsArray<T: UnsignedIntegerType>(bits: [Bit]) -> T
     return bitPattern
 }
 
-/** initialize integer from array of bytes */
-func integerWithBytes<T: IntegerType>(bytes: [Byte]) -> T {
-    var totalBytes = Swift.min(bytes.count, sizeof(T))
-    // get slice of Int
-    var start = Swift.max(bytes.count - sizeof(T),0)
-    var intarr = [Byte](bytes[start..<(start + totalBytes)])
-    
-    // pad size if necessary
-    while (intarr.count < sizeof(T)) {
-        intarr.insert(0 as Byte, atIndex: 0)
+/// Initialize integer from array of bytes.
+/// This method may be slow
+func integerWithBytes<T: IntegerType where T:ByteConvertible, T: BitshiftOperationsType>(bytes: [UInt8]) -> T {
+    var bytes = bytes.reverse()
+    if bytes.count < sizeof(T) {
+        let paddingCount = sizeof(T) - bytes.count
+        if (paddingCount > 0) {
+            bytes += [UInt8](count: paddingCount, repeatedValue: 0)
+        }
     }
-    intarr = intarr.reverse()
     
-    var i:T = 0
-    var data = NSData(bytes: intarr, length: intarr.count)
-    data.getBytes(&i, length: sizeofValue(i));
-    return i
+    if sizeof(T) == 1 {
+        return T(truncatingBitPattern: UInt64(bytes[0]))
+    }
+    
+    var result: T = 0
+    for byte in bytes.reverse() {
+        result = result << 8 | T(byte)
+    }
+    return result
 }
 
-/** array of bytes, little-endian representation */
-func arrayOfBytes<T>(value:T, length:Int? = nil) -> [Byte] {
-    let totalBytes = length ?? (sizeofValue(value) * 8)
+/// Array of bytes, little-endian representation. Don't use if not necessary.
+/// I found this method slow
+func arrayOfBytes<T>(value:T, length:Int? = nil) -> [UInt8] {
+    let totalBytes = length ?? sizeof(T)
     var v = value
     
     var valuePointer = UnsafeMutablePointer<T>.alloc(1)
     valuePointer.memory = value
     
-    var bytesPointer = UnsafeMutablePointer<Byte>(valuePointer)
-    var bytes = [Byte](count: totalBytes, repeatedValue: 0)
+    var bytesPointer = UnsafeMutablePointer<UInt8>(valuePointer)
+    var bytes = [UInt8](count: totalBytes, repeatedValue: 0)
     for j in 0..<min(sizeof(T),totalBytes) {
         bytes[totalBytes - 1 - j] = (bytesPointer + j).memory
     }
@@ -77,13 +81,13 @@ func arrayOfBytes<T>(value:T, length:Int? = nil) -> [Byte] {
 
 // helper to be able tomake shift operation on T
 func <<<T:SignedIntegerType>(lhs: T, rhs: Int) -> Int {
-    let a = lhs as Int
+    let a = lhs as! Int
     let b = rhs
     return a << b
 }
 
 func <<<T:UnsignedIntegerType>(lhs: T, rhs: Int) -> UInt {
-    let a = lhs as UInt
+    let a = lhs as! UInt
     let b = rhs
     return a << b
 }

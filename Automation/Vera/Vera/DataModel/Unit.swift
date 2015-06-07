@@ -28,30 +28,30 @@ public class Unit : Deserializable, Printable {
     public var serverRelay:String?
     
     public required init(data: [String: AnyObject]) {
-        serialNumber <<< data["serialNumber"]
-        firmwareVersion <<< data["FirmwareVersion"]
-        name <<< data["name"]
-        ipAddress <<< data["ipAddress"]
-        users <<<* data["users"]
-        activeServer <<< data["active_server"]
-        forwardServers <<<<* data["forwardServers"]
-        rooms <<<<* data["rooms"]
-        fullload <<< data["full"]
-        devices <<<<* data["devices"]
-        scenes <<<<* data["scenes"]
-        loadtime <<< data["loadtime"]
-        dataversion <<< data["dataversion"]
+        serialNumber <-- data["serialNumber"]
+        firmwareVersion <-- data["FirmwareVersion"]
+        name <-- data["name"]
+        ipAddress <-- data["ipAddress"]
+        users <-- data["users"]
+        activeServer <-- data["active_server"]
+        forwardServers <-- data["forwardServers"]
+        rooms <-- data["rooms"]
+        fullload <-- data["full"]
+        devices <-- data["devices"]
+        scenes <-- data["scenes"]
+        loadtime <-- data["loadtime"]
+        dataversion <-- data["dataversion"]
         
         if serialNumber == nil {
-            serialNumber <<< data["PK_Device"]
+            serialNumber <-- data["PK_Device"]
         }
         
         if ipAddress == nil {
-            ipAddress <<< data["InternalIP"]
+            ipAddress <-- data["InternalIP"]
         }
         
-        serverDevice <<< data["Server_Device"]
-        serverRelay <<< data["Server_Relay"]
+        serverDevice <-- data["Server_Device"]
+        serverRelay <-- data["Server_Relay"]
     }
 
     public var description: String {

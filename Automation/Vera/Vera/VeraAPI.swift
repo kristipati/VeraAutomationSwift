@@ -138,7 +138,7 @@ public class VeraAPI {
             self.requestWithActivityIndicator(.GET, URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
                 if (responseString != nil) {
                     var auth:Auth?
-                    auth <<<< responseString!
+                    auth <-- responseString!
                     Swell.info("Auth response: \(responseString)")
                     completionhandler(auth: auth)
                 } else {
@@ -154,9 +154,9 @@ public class VeraAPI {
     private func getVeraDevices(completionHandler:(device: String?, internalIP: String?, serverDevice: String?)->Void) {
         if (self.auth != nil && self.auth!.authToken != nil) {
             if let data = NSData(base64EncodedString: self.auth!.authToken!, options: NSDataBase64DecodingOptions(0)) {
-                let decodedString = NSString(data: data, encoding: NSUTF8StringEncoding) as String
+                let decodedString = NSString(data: data, encoding: NSUTF8StringEncoding) as! String
                 var tempAuth:Auth?
-                tempAuth <<<< decodedString
+                tempAuth <-- decodedString
                 if (tempAuth != nil) {
                     self.auth?.account = tempAuth?.account
                 }
@@ -171,7 +171,7 @@ public class VeraAPI {
                             Swell.info("Response for localtor: \(responseString)")
                             if (responseString != nil) {
                                 var tempUser:User?
-                                tempUser <<<< responseString!
+                                tempUser <-- responseString!
                                 self.user = tempUser
                             }
                             
@@ -185,7 +185,7 @@ public class VeraAPI {
                                             self.requestWithActivityIndicator(.GET, URLString: requestString, headers:["MMSSession":token!]).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
                                                 if (responseString != nil) {
                                                     var tempUnit:Unit?
-                                                    tempUnit <<<< responseString!
+                                                    tempUnit <-- responseString!
                                                     if (tempUnit != nil) {
                                                         unit.ipAddress = tempUnit!.ipAddress
                                                         unit.serverRelay = tempUnit!.serverRelay
@@ -267,7 +267,7 @@ public class VeraAPI {
             Swell.info("Response: \(response)")
             Swell.info("ResponseString: \(responseString)")
             if responseString != nil {
-                self.user <<<< responseString!
+                self.user <-- responseString!
                 if let units = self.user?.units {
                     for unit in units {
                         Swell.info("Unit: \(unit)")
@@ -417,7 +417,7 @@ public class VeraAPI {
                     if responseString != nil {
                         var newUnit:Unit?
                         var fullload = false
-                        newUnit <<<< responseString!
+                        newUnit <-- responseString!
                         if newUnit != nil {
                             unit.dataversion = newUnit!.dataversion
                             unit.loadtime = newUnit!.loadtime

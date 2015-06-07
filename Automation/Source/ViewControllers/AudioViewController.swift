@@ -57,7 +57,7 @@ class AudioViewController: UICollectionViewController, AudioProtocol {
     }
 
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("AudioDeviceCell", forIndexPath: indexPath) as AudioCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("AudioDeviceCell", forIndexPath: indexPath) as! AudioCell
         
         if indexPath.row < self.devices?.count {
             let device = self.devices![indexPath.row]

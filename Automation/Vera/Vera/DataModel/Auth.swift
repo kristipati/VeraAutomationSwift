@@ -16,13 +16,13 @@ public class Auth : Deserializable, Printable {
     var account:String?
 
     public required init(data: [String: AnyObject]) {
-        authToken <<< data["Identity"]
-        authSigToken <<< data["IdentitySignature"]
-        serverAccount <<< data["Server_Account"]
-        account <<< data["PK_Account"]
+        authToken <-- data["Identity"]
+        authSigToken <-- data["IdentitySignature"]
+        serverAccount <-- data["Server_Account"]
+        account <-- data["PK_Account"]
         if (account == nil) {
             var accountNumber: Int?
-            accountNumber <<< data["PK_Account"]
+            accountNumber <-- data["PK_Account"]
             if (accountNumber != nil) {
                 account = "\(accountNumber!)"
             }

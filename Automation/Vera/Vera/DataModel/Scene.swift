@@ -15,12 +15,12 @@ public class Scene: Deserializable, Printable {
     var comment: String?
     
     public required init(data: [String: AnyObject]) {
-        id <<< data["id"]
-        active <<< data["active"]
-        name <<< data["name"]
-        state <<< data["state"]
-        roomID <<< data ["room"]
-        comment <<< data ["comment"]
+        id <-- data["id"]
+        active <-- data["active"]
+        name <-- data["name"]
+        state <-- data["state"]
+        roomID <-- data ["room"]
+        comment <-- data ["comment"]
     }
     
     public var description: String {

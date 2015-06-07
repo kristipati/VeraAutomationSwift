@@ -55,7 +55,7 @@ class SwitchesListViewController: UITableViewController {
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showDetail" {
-            let controller = (segue.destinationViewController as UINavigationController).topViewController as SwitchesViewController
+            let controller = (segue.destinationViewController as! UINavigationController).topViewController as! SwitchesViewController
             if let indexPath = self.tableView.indexPathForSelectedRow() {
                 if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.Switch, Vera.Device.Category.DimmableLight) {
                     let room = roomsWithSwitches[indexPath.row]
@@ -79,7 +79,7 @@ class SwitchesListViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)as! UITableViewCell
 
         if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.Switch, Vera.Device.Category.DimmableLight) {
             let room = roomsWithSwitches[indexPath.row]
