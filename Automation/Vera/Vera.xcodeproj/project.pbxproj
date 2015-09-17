@@ -61,6 +61,13 @@
 			remoteGlobalIDString = F829C6B21A7A94F100A2CD59;
 			remoteInfo = "Alamofire OSX Tests";
 		};
+		D2D110131BAB161D002CE8F0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D244CC3719F75C4300CC78A9 /* Alamofire.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E4202FE01B667AA100C997FB;
+			remoteInfo = "Alamofire watchOS";
+		};
 		D2EB6C631A3A3B9C001F658A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2EB6C5E1A3A3B9C001F658A /* CryptoSwift.xcodeproj */;
@@ -165,7 +172,8 @@
 			children = (
 				D244CC3D19F75C4300CC78A9 /* Alamofire.framework */,
 				D2D057C71B2484ED00E002CB /* Alamofire.framework */,
-				D244CC3F19F75C4300CC78A9 /* AlamofireTests.xctest */,
+				D2D110141BAB161D002CE8F0 /* Alamofire.framework */,
+				D244CC3F19F75C4300CC78A9 /* Alamofire iOS Tests.xctest */,
 				D2D057C91B2484ED00E002CB /* Alamofire OSX Tests.xctest */,
 			);
 			name = Products;
@@ -292,7 +300,8 @@
 		D2E0DAB019F74E5500E79615 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Gruby Solutions";
 				TargetAttributes = {
 					D2E0DAB819F74E5500E79615 = {
@@ -335,7 +344,7 @@
 			remoteRef = D244CC3C19F75C4300CC78A9 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		D244CC3F19F75C4300CC78A9 /* AlamofireTests.xctest */ = {
+		D244CC3F19F75C4300CC78A9 /* Alamofire iOS Tests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "Alamofire iOS Tests.xctest";
@@ -354,6 +363,13 @@
 			fileType = wrapper.cfbundle;
 			path = "Alamofire OSX Tests.xctest";
 			remoteRef = D2D057C81B2484ED00E002CB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D2D110141BAB161D002CE8F0 /* Alamofire.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Alamofire.framework;
+			remoteRef = D2D110131BAB161D002CE8F0 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D2EB6C641A3A3B9C001F658A /* CryptoSwift.framework */ = {
@@ -439,6 +455,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -513,6 +530,7 @@
 				INFOPLIST_FILE = Vera/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.grubysolutions.veraliteautomation.vera;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -528,6 +546,7 @@
 				INFOPLIST_FILE = Vera/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.grubysolutions.veraliteautomation.vera;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
