@@ -20,7 +20,7 @@ let kPassword = "password"
 let kExcludedDevices = "Excluded Devices"
 let kExcludedScenes = "Excluded Scenes"
 
-let sTimeForCheck:NSTimeInterval = 4.0
+let sTimeForCheck:NSTimeInterval = 10.0
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate, UITabBarControllerDelegate {
