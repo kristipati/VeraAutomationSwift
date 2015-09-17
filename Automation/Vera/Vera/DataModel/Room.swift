@@ -10,7 +10,7 @@ public func ==(lhs: Room, rhs: Room) -> Bool {
     return lhs.id == rhs.id && lhs.name == rhs.name
 }
 
-public class Room: Deserializable, Printable, Hashable {
+public class Room: Deserializable, CustomStringConvertible, Hashable {
     public var name:String?
     var id:Int?
     

@@ -9,7 +9,7 @@
 
 import Foundation
 
-public class Unit : Deserializable, Printable {
+public class Unit : Deserializable, CustomStringConvertible {
 
     public var serialNumber:String?
     var firmwareVersion:String?

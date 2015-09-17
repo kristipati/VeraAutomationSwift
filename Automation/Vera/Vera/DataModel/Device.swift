@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Gruby Solutions. All rights reserved.
 //
 
-public class Device: Deserializable, Printable {
+public class Device: Deserializable, CustomStringConvertible {
     public enum HVACMode {
         case Off
         case Heat
@@ -19,7 +19,7 @@ public class Device: Deserializable, Printable {
         case Auto
     }
 
-    public enum Category: Int, Printable {
+    public enum Category: Int, CustomStringConvertible {
         case Interface = 1
         case DimmableLight = 2
         case Switch = 3
@@ -77,8 +77,6 @@ public class Device: Deserializable, Printable {
             case .Audio:
                 desc = "Audio"
                 
-            default:
-                desc = "Unknown"
             }
             
             

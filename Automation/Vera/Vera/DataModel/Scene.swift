@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Gruby Solutions. All rights reserved.
 //
 
-public class Scene: Deserializable, Printable {
+public class Scene: Deserializable, CustomStringConvertible {
     public var id: Int?
     var active: Bool?
     var state: Int?

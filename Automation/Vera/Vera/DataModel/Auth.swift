@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class Auth : Deserializable, Printable {
+public class Auth : Deserializable, CustomStringConvertible {
     
     var authToken:String?
     var authSigToken:String?
