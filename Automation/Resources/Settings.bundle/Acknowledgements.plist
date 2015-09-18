@@ -184,12 +184,6 @@
                         <key>Type</key>
                         <string>PSGroupSpecifier</string>
                         <key>FooterText</key>
-                        <string>Locksmith5</string>
-                </dict>
-                <dict>
-                        <key>Type</key>
-                        <string>PSGroupSpecifier</string>
-                        <key>FooterText</key>
                         <string>SFSwiftNotification</string>
                 </dict>
                 <dict>
