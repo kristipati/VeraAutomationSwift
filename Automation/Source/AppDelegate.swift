@@ -415,9 +415,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         let onePasswordAction = UIAlertAction(title: NSLocalizedString("ONE_PASSWORD_ACTION", comment: ""), style: .Destructive) { (_) in
             
+            let tabbarController = self.window!.rootViewController as! UITabBarController
             
             OnePasswordExtension.sharedExtension().findLoginForURLString(domainForOnePassword, forViewController: self.window!.rootViewController!,
-                sender: self) { (credentials, error) -> Void in
+                sender: tabbarController.tabBar) { (credentials, error) -> Void in
                     self.handlingLogin = false
                     if credentials != nil && credentials?.count > 0 {
                         let creds = credentials as? [String:String]
@@ -473,12 +474,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             alertController.addAction(onePasswordAction)
         }
         
-        let passwordData = Locksmith.loadDataForUserAccount(kPassword) as? [String:String]
-        let usernameData = Locksmith.loadDataForUserAccount(kUsername) as? [String:String]
+        var passwordData:[String: AnyObject]?
+        var usernameData:[String: AnyObject]?
+        passwordData = Locksmith.loadDataForUserAccount(kPassword) as? [String:String]
+        usernameData = Locksmith.loadDataForUserAccount(kUsername) as? [String:String]
         if passwordData != nil && usernameData != nil {
             loginAction.enabled = true
         }
-        
         let tabbarController = self.window!.rootViewController as! UITabBarController
         tabbarController.presentViewController(alertController, animated: true, completion: nil)
 
