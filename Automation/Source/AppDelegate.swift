@@ -361,8 +361,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             if password != nil && username != nil && password!.isEmpty == false && username!.isEmpty == false {
                 let usernameData = [kUsername: username!]
                 let passwordData = [kPassword: password!]
-                try! Locksmith.deleteDataForUserAccount(kPassword)
-                try! Locksmith.deleteDataForUserAccount(kUsername)
+                do {
+                    try Locksmith.deleteDataForUserAccount(kPassword)
+                }
+                catch {
+                    
+                }
+                
+                do {
+                    try Locksmith.deleteDataForUserAccount(kUsername)
+                }
+                catch {
+                    
+                }
                 try! Locksmith.saveData(usernameData, forUserAccount: kUsername)
                 try! Locksmith.saveData(passwordData, forUserAccount: kPassword)
                 self.handleLogin()
