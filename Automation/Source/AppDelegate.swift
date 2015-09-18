@@ -11,6 +11,7 @@ import Vera
 import XCGLogger
 import Locksmith
 
+
 let kTabOrderDefault = "Tab Order"
 let kSelectedTabDefault = "Selected Tab"
 let kShowAudioTabDefault = "Show Audio Tab"
@@ -43,8 +44,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     var initialTabViewControllers = [UIViewController]()
 
     func logout() {
-        try! Locksmith.deleteDataForUserAccount(kPassword)
-        try! Locksmith.deleteDataForUserAccount(kUsername)
+        do {
+            try Locksmith.deleteDataForUserAccount(kPassword)
+        }
+        catch {
+            
+        }
+        
+        do {
+            try Locksmith.deleteDataForUserAccount(kUsername)
+        }
+        catch {
+            
+        }
         self.veraAPI.resetAPI()
         self.veraAPI.useUI5 = NSUserDefaults.standardUserDefaults().boolForKey(kUseUI5Default)
     }
@@ -394,7 +406,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let cancelAction = UIAlertAction(title: NSLocalizedString("CANCEL_TITLE", comment: ""), style: .Cancel) { (_) in
             self.handlingLogin = false
         }
-        
+
+        let onePasswordAction = UIAlertAction(title: NSLocalizedString("ONE_PASSWORD_ACTION", comment: ""), style: .Destructive) { (_) in
+        }
+
         alertController.addTextFieldWithConfigurationHandler { (textField) in
             textField.placeholder = NSLocalizedString("USERNAME_PLACEHOLDER", comment: "")
             let usernameData = Locksmith.loadDataForUserAccount(kUsername) as? [String:String]
@@ -423,6 +438,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         alertController.addAction(loginAction)
         alertController.addAction(cancelAction)
+        if OnePasswordExtension.sharedExtension().isAppExtensionAvailable() {
+            alertController.addAction(onePasswordAction)
+        }
         
         let passwordData = Locksmith.loadDataForUserAccount(kPassword) as? [String:String]
         let usernameData = Locksmith.loadDataForUserAccount(kUsername) as? [String:String]

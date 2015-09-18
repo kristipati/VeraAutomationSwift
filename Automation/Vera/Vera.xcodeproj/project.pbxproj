@@ -10,6 +10,7 @@
 		D2432B1D1A467E7E00D09A40 /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = D2432B1B1A467E7E00D09A40 /* Reachability.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D2432B1E1A467E7E00D09A40 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D2432B1C1A467E7E00D09A40 /* Reachability.m */; };
 		D244CC4219F75C5800CC78A9 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D244CC3D19F75C4300CC78A9 /* Alamofire.framework */; };
+		D2BB40FA1BAC909D009BB9E3 /* XCGLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27998DD1BABC2B00040D462 /* XCGLogger.framework */; };
 		D2E0DABF19F74E5500E79615 /* Vera.h in Headers */ = {isa = PBXBuildFile; fileRef = D2E0DABE19F74E5500E79615 /* Vera.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D2E0DAE219F74EA800E79615 /* ForwardServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E0DADF19F74EA800E79615 /* ForwardServer.swift */; };
 		D2E0DAE319F74EA800E79615 /* Unit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E0DAE019F74EA800E79615 /* Unit.swift */; };
@@ -160,6 +161,7 @@
 			files = (
 				D244CC4219F75C5800CC78A9 /* Alamofire.framework in Frameworks */,
 				D2EB6C691A3A3BC1001F658A /* CryptoSwift.framework in Frameworks */,
+				D2BB40FA1BAC909D009BB9E3 /* XCGLogger.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

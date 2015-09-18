@@ -17,6 +17,7 @@
 "PASSWORD_PLACEHOLDER" = "Password";
 "LOGIN_TITLE" = "Login";
 "CANCEL_TITLE" = "Cancel";
+"ONE_PASSWORD_ACTION" = "1Password";
 "LOGIN_ALERT_TITLE" = "Enter username and password to login";
 "EXCLUDED_DEVICES_TITLE" = "Excluded Devices";
 "EXCLUDED_SCENES_TITLE" = "Excluded Scenes";

@@ -38,6 +38,10 @@
 		D28002B11A09D23A005894C3 /* SFSwiftNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28002B01A09D23A005894C3 /* SFSwiftNotification.swift */; };
 		D2A2A6DD1A0FFA4800BE65EE /* OnDeviceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */; };
 		D2A2A6DF1A101AF500BE65EE /* AudioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */; };
+		D2BB40E91BAC7E9C009BB9E3 /* 1Password.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2BB40E81BAC7E9C009BB9E3 /* 1Password.xcassets */; settings = {ASSET_TAGS = (); }; };
+		D2BB40F11BAC7EC5009BB9E3 /* OnePasswordExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BB40F01BAC7EC5009BB9E3 /* OnePasswordExtension.m */; settings = {ASSET_TAGS = (); }; };
+		D2BB41021BAC90E3009BB9E3 /* Vera.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2E0DADB19F74E5600E79615 /* Vera.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D2BB41031BAC919B009BB9E3 /* Locksmith.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2B667F01BAC526F0055C7E6 /* Locksmith.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2CEE4C419F8AA4D00D59BAF /* ToDo.txt in Resources */ = {isa = PBXBuildFile; fileRef = D2CEE4C319F8AA4D00D59BAF /* ToDo.txt */; };
 		D2E0DAEF19F74F8A00E79615 /* Vera.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2E0DADB19F74E5600E79615 /* Vera.framework */; };
 		D2E3597D1A104A0F00F30C32 /* LockCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E3597C1A104A0F00F30C32 /* LockCell.swift */; };
@@ -105,6 +109,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		D2BB41011BAC90BB009BB9E3 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				D2BB41021BAC90E3009BB9E3 /* Vera.framework in CopyFiles */,
+				D2BB41031BAC919B009BB9E3 /* Locksmith.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		D21CB84F19E1FEAF0054A7D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		D21CB85119E1FEAF0054A7D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -142,6 +160,10 @@
 		D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnDeviceCell.swift; sourceTree = "<group>"; };
 		D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioCell.swift; sourceTree = "<group>"; };
 		D2B667E71BAC526E0055C7E6 /* Locksmith.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Locksmith.xcodeproj; path = External/Locksmith/Locksmith.xcodeproj; sourceTree = SOURCE_ROOT; };
+		D2BB40E81BAC7E9C009BB9E3 /* 1Password.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = 1Password.xcassets; path = "External/onepassword-app-extension/1Password.xcassets"; sourceTree = SOURCE_ROOT; };
+		D2BB40EE1BAC7EC4009BB9E3 /* Automation-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Automation-Bridging-Header.h"; sourceTree = "<group>"; };
+		D2BB40EF1BAC7EC5009BB9E3 /* OnePasswordExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OnePasswordExtension.h; path = "External/onepassword-app-extension/OnePasswordExtension.h"; sourceTree = SOURCE_ROOT; };
+		D2BB40F01BAC7EC5009BB9E3 /* OnePasswordExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OnePasswordExtension.m; path = "External/onepassword-app-extension/OnePasswordExtension.m"; sourceTree = SOURCE_ROOT; };
 		D2CEE4C319F8AA4D00D59BAF /* ToDo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ToDo.txt; sourceTree = "<group>"; };
 		D2E0DAD519F74E5500E79615 /* Vera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Vera.xcodeproj; path = Vera/Vera.xcodeproj; sourceTree = "<group>"; };
 		D2E3597C1A104A0F00F30C32 /* LockCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockCell.swift; sourceTree = "<group>"; };
@@ -174,6 +196,7 @@
 				D21CB87319E20BE10054A7D4 /* Locks.storyboard */,
 				D21CB87619E20BEB0054A7D4 /* Climate.storyboard */,
 				D21CB87919E20BF60054A7D4 /* Settings.storyboard */,
+				D2BB40E81BAC7E9C009BB9E3 /* 1Password.xcassets */,
 				D21CB85219E1FEAF0054A7D4 /* Images.xcassets */,
 				D21CB86119E1FF970054A7D4 /* Settings.bundle */,
 				D21CB88019E20CDB0054A7D4 /* Localizable.strings */,
@@ -191,13 +214,6 @@
 				D23210741A07230500353F51 /* ViewControllers */,
 			);
 			path = Source;
-			sourceTree = "<group>";
-		};
-		D21CB86319E200860054A7D4 /* External */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = External;
 			sourceTree = "<group>";
 		};
 		D23210741A07230500353F51 /* ViewControllers */ = {
@@ -263,13 +279,14 @@
 		D2843B3819E0E798007CC520 /* Automation */ = {
 			isa = PBXGroup;
 			children = (
+				D2BB40F21BAC7ED8009BB9E3 /* OnePasswordExtension */,
 				D2B667F91BAC52750055C7E6 /* Locksmith */,
 				D28002B21A09D240005894C3 /* SFSwiftNotification */,
-				D21CB86319E200860054A7D4 /* External */,
 				D21CB84D19E1FEAF0054A7D4 /* Resources */,
 				D21CB85419E1FEAF0054A7D4 /* Source */,
 				D2843B3919E0E798007CC520 /* Supporting Files */,
 				D2E0DAD519F74E5500E79615 /* Vera.xcodeproj */,
+				D2BB40EE1BAC7EC4009BB9E3 /* Automation-Bridging-Header.h */,
 			);
 			path = Automation;
 			sourceTree = "<group>";
@@ -302,6 +319,15 @@
 			name = Locksmith;
 			sourceTree = "<group>";
 		};
+		D2BB40F21BAC7ED8009BB9E3 /* OnePasswordExtension */ = {
+			isa = PBXGroup;
+			children = (
+				D2BB40EF1BAC7EC5009BB9E3 /* OnePasswordExtension.h */,
+				D2BB40F01BAC7EC5009BB9E3 /* OnePasswordExtension.m */,
+			);
+			name = OnePasswordExtension;
+			sourceTree = "<group>";
+		};
 		D2E0DAD619F74E5500E79615 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -322,6 +348,7 @@
 				D2843B3419E0E798007CC520 /* Resources */,
 				D21CB86019E1FF660054A7D4 /* Setup Version */,
 				D244CC4519F75DFC00CC78A9 /* Copy Frameworks */,
+				D2BB41011BAC90BB009BB9E3 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -432,6 +459,7 @@
 				D21CB88219E20CDB0054A7D4 /* Localizable.strings in Resources */,
 				D21CB86F19E20BCA0054A7D4 /* Scenes.storyboard in Resources */,
 				D21CB87B19E20BF60054A7D4 /* Settings.storyboard in Resources */,
+				D2BB40E91BAC7E9C009BB9E3 /* 1Password.xcassets in Resources */,
 				D2EE377E19EB0BE900630C86 /* CurrentRelease.txt in Resources */,
 				D21CB87219E20BD60054A7D4 /* On.storyboard in Resources */,
 				D21CB86219E1FF970054A7D4 /* Settings.bundle in Resources */,
@@ -495,6 +523,7 @@
 				D23210891A07230500353F51 /* SwitchesListViewController.swift in Sources */,
 				D27772191A0DCAF400F33568 /* SceneCell.swift in Sources */,
 				D23210811A07230500353F51 /* AudioViewController.swift in Sources */,
+				D2BB40F11BAC7EC5009BB9E3 /* OnePasswordExtension.m in Sources */,
 				D2E3597D1A104A0F00F30C32 /* LockCell.swift in Sources */,
 				D23210841A07230500353F51 /* LocksViewController.swift in Sources */,
 				D2A2A6DF1A101AF500BE65EE /* AudioCell.swift in Sources */,
@@ -645,6 +674,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "b68609fb-d7f5-4a48-8736-c6e6ab5366f2";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -681,6 +711,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PROVISIONING_PROFILE = "b68609fb-d7f5-4a48-8736-c6e6ab5366f2";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -691,6 +722,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = Automation/Resources/Info.plist;
 				INFOPLIST_PREFIX_HEADER = Automation/Defines.h;
 				INFOPLIST_PREPROCESS = YES;
@@ -700,6 +732,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.grubysolutions.veraliteautomation;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_INCLUDE_PATHS = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Automation/Automation-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -707,6 +741,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = Automation/Resources/Info.plist;
 				INFOPLIST_PREFIX_HEADER = Automation/Defines.h;
 				INFOPLIST_PREPROCESS = YES;
@@ -716,6 +751,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.grubysolutions.veraliteautomation;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_INCLUDE_PATHS = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Automation/Automation-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Release;
