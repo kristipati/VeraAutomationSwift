@@ -48,7 +48,7 @@ class ScenesListViewController: UITableViewController {
     func loadRooms(fullload: Bool) {
         if fullload == true {
             self.navigationController?.popToRootViewControllerAnimated(false)
-            if let indexPath = self.tableView.indexPathForSelectedRow() {
+            if let indexPath = self.tableView.indexPathForSelectedRow {
                 self.tableView.deselectRowAtIndexPath(indexPath, animated: false)
             }
             self.tableView.reloadData()
@@ -59,7 +59,7 @@ class ScenesListViewController: UITableViewController {
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showDetail" {
-            if let indexPath = self.tableView.indexPathForSelectedRow() {
+            if let indexPath = self.tableView.indexPathForSelectedRow {
                 let controller = (segue.destinationViewController as! UINavigationController).topViewController as! ScenesViewController
                 if let roomsWithScenes = AppDelegate.appDelegate().veraAPI.roomsWithScenes() {
                     let room = roomsWithScenes[indexPath.row]
@@ -82,7 +82,7 @@ class ScenesListViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) 
         
         if let roomsWithScenes = AppDelegate.appDelegate().veraAPI.roomsWithScenes() {
             let room = roomsWithScenes[indexPath.row]

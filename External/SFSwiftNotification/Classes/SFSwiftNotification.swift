@@ -45,7 +45,7 @@ class SFSwiftNotification: UIView, UICollisionBehaviorDelegate, UIDynamicAnimato
     var toFrame = CGRect()
     var delay = NSTimeInterval()
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
@@ -60,7 +60,7 @@ class SFSwiftNotification: UIView, UICollisionBehaviorDelegate, UIDynamicAnimato
         self.delegate = delegate
         
         var newFrame = self.frame
-        newFrame.inset(dx: 20, dy: 0)
+        newFrame.insetInPlace(dx: 20, dy: 0)
         label = UILabel(frame: newFrame)
         label.text = title as? String
         label.textAlignment = NSTextAlignment.Center
@@ -69,7 +69,7 @@ class SFSwiftNotification: UIView, UICollisionBehaviorDelegate, UIDynamicAnimato
         self.addSubview(label)
         
         // Create gesture recognizer to detect notification touches
-        var tapReconizer = UITapGestureRecognizer()
+        let tapReconizer = UITapGestureRecognizer()
         tapReconizer.addTarget(self, action: "invokeTapAction");
         
         // Add Touch recognizer to notification view
@@ -80,7 +80,7 @@ class SFSwiftNotification: UIView, UICollisionBehaviorDelegate, UIDynamicAnimato
         viewController.view.addSubview(self)
         
         //Don't forget this line
-        self.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.translatesAutoresizingMaskIntoConstraints = false
     }
     
     func invokeTapAction() {
@@ -160,19 +160,19 @@ class SFSwiftNotification: UIView, UICollisionBehaviorDelegate, UIDynamicAnimato
             delay: animationSettings.delay,
             usingSpringWithDamping: animationSettings.damping,
             initialSpringVelocity: animationSettings.velocity,
-            options: (.BeginFromCurrentState | .AllowUserInteraction),
+            options: ([.BeginFromCurrentState, .AllowUserInteraction]),
             animations:{
                 self.frame = toFrame
             }, completion: {
                 (value: Bool) in
-                self.hide(delay:delay)
+                self.hide(delay)
             }
         )
     }
     
     func dynamicAnimatorDidPause(animator: UIDynamicAnimator) {
         
-        hide(delay:self.delay)
+        hide(self.delay)
     }
     
     func hide(delay:NSTimeInterval? = nil) {
@@ -183,7 +183,7 @@ class SFSwiftNotification: UIView, UICollisionBehaviorDelegate, UIDynamicAnimato
                 delay: delay!,
                 usingSpringWithDamping: animationSettings.damping,
                 initialSpringVelocity: animationSettings.velocity,
-                options: (.BeginFromCurrentState | .AllowUserInteraction),
+                options: ([.BeginFromCurrentState, .AllowUserInteraction]),
                 animations:{
                     self.frame = self.offScreenFrame
                 }, completion: {

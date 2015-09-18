@@ -23,7 +23,7 @@
 import Foundation
 
 public struct Set<T: Hashable> : Equatable {
-    typealias Element = T
+    public typealias Element = T
     private var contents: [Element: Bool]
     
     public init() {
@@ -32,7 +32,7 @@ public struct Set<T: Hashable> : Equatable {
 
     public init<S: SequenceType where S.Generator.Element == Element>(_ sequence: S) {
         self.contents = [Element: Bool]()
-        Swift.map(sequence) { self.contents[$0] = true }
+        sequence.map({self.contents[$0] = true})
     }
 
     /// The number of elements in the Set.
@@ -75,15 +75,15 @@ public struct Set<T: Hashable> : Equatable {
     }
 
     /// Returns a single value by iteratively combining each element of the Set.
-    public func reduce<U>(var initial: U, combine: (U, T) -> U) -> U {
-        return Swift.reduce(self, initial, combine)
+    public func reduce<U>( initial: U, combine: (U, T) -> U) -> U {
+        return self.reduce(initial, combine: combine)
     }
 }
 
 // MARK: SequenceType
 
 extension Set : SequenceType {
-    typealias Generator = MapSequenceGenerator<DictionaryGenerator<T, Bool>, T>
+    public typealias Generator = LazyMapGenerator<DictionaryGenerator<T, Bool>, T>
     
     /// Creates a generator for the items of the set.
     public func generate() -> Generator {
@@ -158,7 +158,7 @@ extension Set {
     
     /// Returns a new Set that contains all the elements of both this set and the set passed in.
     public func setByUnionWithSet(var set: Set<T>) -> Set<T> {
-        set.extend(self)
+        set.appendContentsOf(self)
         return set
     }
 
@@ -178,8 +178,8 @@ extension Set {
 
 // MARK: ExtensibleCollectionType
 
-extension Set : ExtensibleCollectionType {
-    typealias Index = Int
+extension Set : RangeReplaceableCollectionType {
+    public typealias Index = Int
     public var startIndex: Int { return 0 }
     public var endIndex: Int { return self.count }
 
@@ -187,24 +187,44 @@ extension Set : ExtensibleCollectionType {
         return Array(self.contents.keys)[i]
     }
 
-    public mutating func reserveCapacity(n: Int) {
-        // can't really do anything with this
-    }
-    
     /// Adds newElement to the Set.
     public mutating func append(newElement: Element) {
         self.add(newElement)
     }
     
     /// Extends the Set by adding all the elements of `seq`.
-    public mutating func extend<S : SequenceType where S.Generator.Element == Element>(seq: S) {
-        Swift.map(seq) { self.contents[$0] = true }
+    public mutating func appendContentsOf<S : SequenceType where S.Generator.Element == Element>(seq: S) {
+        seq.map( { self.contents[$0] = true })
     }
+    
+    public mutating func replaceRange<C : CollectionType where C.Generator.Element == Generator.Element>(subRange: Range<Set.Index>, with newElements: C) {
+        
+    }
+    public mutating func insert(newElement: Set.Generator.Element, atIndex i: Set.Index) {
+        
+    }
+    
+    public mutating func insertContentsOf<C : CollectionType where C.Generator.Element == Generator.Element>(newElements: C, at i: Set.Index) {
+        
+    }
+    public mutating func removeRange(subRange: Range<Set.Index>) {
+        
+    }
+    public mutating func removeFirst(n: Int) {
+        
+    }
+    public mutating func removeAll(keepCapacity keepCapacity: Bool) {
+        
+    }
+    public mutating func reserveCapacity(n: Set.Index.Distance) {
+        
+    }
+
 }
 
 // MARK: Printable
 
-extension Set : Printable, DebugPrintable {
+extension Set : CustomStringConvertible, CustomDebugStringConvertible {
     public var description: String {
         return "Set(\(self.elements))"
     }

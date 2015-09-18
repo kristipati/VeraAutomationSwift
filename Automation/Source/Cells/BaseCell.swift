@@ -28,7 +28,7 @@ class BaseCell: UICollectionViewCell {
         let stopTwo = NSNumber(double: 1.0)
         let locations = [stopOne, stopTwo]
         
-        var gradientLayer = CAGradientLayer()
+        let gradientLayer = CAGradientLayer()
         gradientLayer.colors = colors
         gradientLayer.locations = locations
         

@@ -105,7 +105,7 @@ public class Unit : Deserializable, CustomStringConvertible {
         var sceneArray = [Scene]()
         if scenes != nil {
             for scene in scenes! {
-                if excluded != nil && scene.id != nil && contains(excluded!, scene.id!) == true {
+                if excluded != nil && scene.id != nil && excluded!.contains(scene.id!) == true {
                     continue
                 }
 
@@ -118,7 +118,7 @@ public class Unit : Deserializable, CustomStringConvertible {
         }
         
         if sceneArray.isEmpty == false {
-            return sceneArray.sorted({$0.name<$1.name})
+            return sceneArray.sort({$0.name<$1.name})
         }
 
         return nil
@@ -130,7 +130,7 @@ public class Unit : Deserializable, CustomStringConvertible {
         if self.devices != nil {
             for device in self.devices! {
                 if let deviceRoomID = device.roomID {
-                    if excluded != nil && device.id != nil && contains(excluded!, device.id!) == true {
+                    if excluded != nil && device.id != nil && excluded!.contains(device.id!) == true {
                         continue
                     }
                     
@@ -148,7 +148,7 @@ public class Unit : Deserializable, CustomStringConvertible {
         }
         
         if deviceArray.isEmpty == false {
-            return deviceArray.sorted({$0.name<$1.name})
+            return deviceArray.sort({$0.name<$1.name})
         }
         return nil
     }
@@ -157,14 +157,14 @@ public class Unit : Deserializable, CustomStringConvertible {
         var roomSet = Set<Room>()
         if let rooms = self.rooms {
             for room in rooms {
-                if let deviceArray = self.devicesForRoom(room, excluded: excluded, categories: categories) {
+                if let _ = self.devicesForRoom(room, excluded: excluded, categories: categories) {
                     roomSet.append(room)
                 }
             }
         }
         
         if roomSet.isEmpty == false {
-            return roomSet.elements.sorted({$0.name<$1.name})
+            return roomSet.elements.sort({$0.name<$1.name})
         }
         
         return nil
@@ -174,14 +174,14 @@ public class Unit : Deserializable, CustomStringConvertible {
         var roomSet = Set<Room>()
         if let rooms = self.rooms {
             for room in rooms {
-                if let deviceArray = scenesForRoom(room, excluded: excluded) {
+                if let _ = scenesForRoom(room, excluded: excluded) {
                     roomSet.append(room)
                 }
             }
         }
         
         if roomSet.isEmpty == false {
-            return roomSet.elements.sorted({$0.name<$1.name})
+            return roomSet.elements.sort({$0.name<$1.name})
         }
         
         return nil

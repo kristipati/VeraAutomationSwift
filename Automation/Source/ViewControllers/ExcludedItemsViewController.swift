@@ -94,8 +94,7 @@ class ExcludedItemsViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("DeviceCellIdentifier", forIndexPath: indexPath) as! UITableViewCell
-
+        let cell = tableView.dequeueReusableCellWithIdentifier("DeviceCellIdentifier", forIndexPath: indexPath)
         cell.accessoryType = .None
         
         let room = roomList[indexPath.section] as Room
@@ -105,7 +104,7 @@ class ExcludedItemsViewController: UITableViewController {
                 let scene = scenes[indexPath.row]
                 cell.textLabel!.text = scene.name
                 if let id = scene.id {
-                    if contains(idsToExclude, id) == true {
+                    if idsToExclude.contains(id) == true {
                         cell.accessoryType = .Checkmark
                     }
                 }
@@ -115,7 +114,7 @@ class ExcludedItemsViewController: UITableViewController {
                 let device = devices[indexPath.row]
                 cell.textLabel!.text = device.name
                 if let id = device.id {
-                    if contains(idsToExclude, id) == true {
+                    if idsToExclude.contains(id) == true {
                         cell.accessoryType = .Checkmark
                     }
                 }
@@ -136,7 +135,7 @@ class ExcludedItemsViewController: UITableViewController {
             if let scenes = AppDelegate.appDelegate().veraAPI.scenesForRoom(room, showExcluded: true) {
                 let scene = scenes[indexPath.row]
                 if let id = scene.id {
-                    if contains(self.idsToExclude, id) == true {
+                    if self.idsToExclude.contains(id) == true {
                         idsToExclude.removeObject(id)
                     } else {
                         idsToExclude.append(id)
@@ -147,7 +146,7 @@ class ExcludedItemsViewController: UITableViewController {
             if let devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: true, categories: .Switch, .DimmableLight) {
                 let device = devices[indexPath.row]
                 if let id = device.id {
-                    if contains(self.idsToExclude, id) == true {
+                    if self.idsToExclude.contains(id) == true {
                         idsToExclude.removeObject(id)
                     } else {
                         idsToExclude.append(id)

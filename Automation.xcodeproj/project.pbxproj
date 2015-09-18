@@ -36,7 +36,6 @@
 		D27B15AD1A0730B5003790CE /* BaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27B15AC1A0730B5003790CE /* BaseCell.swift */; };
 		D28002AF1A09B5C6005894C3 /* VeraUIExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28002AE1A09B5C6005894C3 /* VeraUIExtension.swift */; };
 		D28002B11A09D23A005894C3 /* SFSwiftNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28002B01A09D23A005894C3 /* SFSwiftNotification.swift */; };
-		D281CB7D19F9F00D00BA74A9 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D281CB7C19F9F00D00BA74A9 /* KeychainService.swift */; };
 		D2A2A6DD1A0FFA4800BE65EE /* OnDeviceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */; };
 		D2A2A6DF1A101AF500BE65EE /* AudioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */; };
 		D2CEE4C419F8AA4D00D59BAF /* ToDo.txt in Resources */ = {isa = PBXBuildFile; fileRef = D2CEE4C319F8AA4D00D59BAF /* ToDo.txt */; };
@@ -45,10 +44,51 @@
 		D2E3597F1A105E5500F30C32 /* ThermostatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E3597E1A105E5500F30C32 /* ThermostatCell.swift */; };
 		D2ED11371A15BC4D00B8F25B /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2ED11361A15BC4D00B8F25B /* ArrayExtension.swift */; };
 		D2EE377E19EB0BE900630C86 /* CurrentRelease.txt in Resources */ = {isa = PBXBuildFile; fileRef = D2EE377C19EB0BE900630C86 /* CurrentRelease.txt */; };
-		D2EE378A19EB281F00630C86 /* SwellAll.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2EE378919EB281F00630C86 /* SwellAll.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		D2B667EF1BAC526F0055C7E6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2B667E71BAC526E0055C7E6 /* Locksmith.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0EC25C591BA385AA004191AF;
+			remoteInfo = "Locksmith iOS";
+		};
+		D2B667F11BAC526F0055C7E6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2B667E71BAC526E0055C7E6 /* Locksmith.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0EC25C621BA385AB004191AF;
+			remoteInfo = "Locksmith iOS Tests";
+		};
+		D2B667F31BAC526F0055C7E6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2B667E71BAC526E0055C7E6 /* Locksmith.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0EC25C751BA385F6004191AF;
+			remoteInfo = "Locksmith OS X";
+		};
+		D2B667F51BAC526F0055C7E6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2B667E71BAC526E0055C7E6 /* Locksmith.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0EC25C7E1BA385F6004191AF;
+			remoteInfo = "Locksmith OS X Tests";
+		};
+		D2B667F71BAC526F0055C7E6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2B667E71BAC526E0055C7E6 /* Locksmith.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0EC25CA71BA39C9F004191AF;
+			remoteInfo = "Locksmith watchOS";
+		};
+		D2B667FA1BAC52890055C7E6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2B667E71BAC526E0055C7E6 /* Locksmith.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 0EC25C581BA385AA004191AF;
+			remoteInfo = "Locksmith iOS";
+		};
 		D2E0DADA19F74E5600E79615 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2E0DAD519F74E5500E79615 /* Vera.xcodeproj */;
@@ -97,18 +137,17 @@
 		D27B15AC1A0730B5003790CE /* BaseCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCell.swift; sourceTree = "<group>"; };
 		D28002AE1A09B5C6005894C3 /* VeraUIExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraUIExtension.swift; sourceTree = "<group>"; };
 		D28002B01A09D23A005894C3 /* SFSwiftNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SFSwiftNotification.swift; path = External/SFSwiftNotification/Classes/SFSwiftNotification.swift; sourceTree = SOURCE_ROOT; };
-		D281CB7C19F9F00D00BA74A9 /* KeychainService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		D2843B3619E0E798007CC520 /* Automation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Automation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D29867E81A15B628000E99E7 /* ReleaseNotes.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReleaseNotes.txt; sourceTree = "<group>"; };
 		D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnDeviceCell.swift; sourceTree = "<group>"; };
 		D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioCell.swift; sourceTree = "<group>"; };
+		D2B667E71BAC526E0055C7E6 /* Locksmith.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Locksmith.xcodeproj; path = External/Locksmith/Locksmith.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D2CEE4C319F8AA4D00D59BAF /* ToDo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ToDo.txt; sourceTree = "<group>"; };
 		D2E0DAD519F74E5500E79615 /* Vera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Vera.xcodeproj; path = Vera/Vera.xcodeproj; sourceTree = "<group>"; };
 		D2E3597C1A104A0F00F30C32 /* LockCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockCell.swift; sourceTree = "<group>"; };
 		D2E3597E1A105E5500F30C32 /* ThermostatCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThermostatCell.swift; sourceTree = "<group>"; };
 		D2ED11361A15BC4D00B8F25B /* ArrayExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
 		D2EE377C19EB0BE900630C86 /* CurrentRelease.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CurrentRelease.txt; sourceTree = "<group>"; };
-		D2EE378919EB281F00630C86 /* SwellAll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwellAll.swift; path = External/Swell/SwellAll.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,17 +196,8 @@
 		D21CB86319E200860054A7D4 /* External */ = {
 			isa = PBXGroup;
 			children = (
-				D21CB8B019E212E90054A7D4 /* Swell */,
 			);
 			name = External;
-			sourceTree = "<group>";
-		};
-		D21CB8B019E212E90054A7D4 /* Swell */ = {
-			isa = PBXGroup;
-			children = (
-				D2EE378919EB281F00630C86 /* SwellAll.swift */,
-			);
-			name = Swell;
 			sourceTree = "<group>";
 		};
 		D23210741A07230500353F51 /* ViewControllers */ = {
@@ -210,15 +240,6 @@
 			name = SFSwiftNotification;
 			sourceTree = "<group>";
 		};
-		D281CB7B19F9EFF900BA74A9 /* KeychainService */ = {
-			isa = PBXGroup;
-			children = (
-				D281CB7C19F9F00D00BA74A9 /* KeychainService.swift */,
-			);
-			name = KeychainService;
-			path = External/KeychainService;
-			sourceTree = SOURCE_ROOT;
-		};
 		D2843B2D19E0E798007CC520 = {
 			isa = PBXGroup;
 			children = (
@@ -242,8 +263,8 @@
 		D2843B3819E0E798007CC520 /* Automation */ = {
 			isa = PBXGroup;
 			children = (
+				D2B667F91BAC52750055C7E6 /* Locksmith */,
 				D28002B21A09D240005894C3 /* SFSwiftNotification */,
-				D281CB7B19F9EFF900BA74A9 /* KeychainService */,
 				D21CB86319E200860054A7D4 /* External */,
 				D21CB84D19E1FEAF0054A7D4 /* Resources */,
 				D21CB85419E1FEAF0054A7D4 /* Source */,
@@ -259,6 +280,26 @@
 				D21CB85319E1FEAF0054A7D4 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D2B667E81BAC526E0055C7E6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2B667F01BAC526F0055C7E6 /* Locksmith.framework */,
+				D2B667F21BAC526F0055C7E6 /* Locksmith iOS Tests.xctest */,
+				D2B667F41BAC526F0055C7E6 /* Locksmith.framework */,
+				D2B667F61BAC526F0055C7E6 /* Locksmith OS X Tests.xctest */,
+				D2B667F81BAC526F0055C7E6 /* Locksmith.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D2B667F91BAC52750055C7E6 /* Locksmith */ = {
+			isa = PBXGroup;
+			children = (
+				D2B667E71BAC526E0055C7E6 /* Locksmith.xcodeproj */,
+			);
+			name = Locksmith;
 			sourceTree = "<group>";
 		};
 		D2E0DAD619F74E5500E79615 /* Products */ = {
@@ -285,6 +326,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D2B667FB1BAC52890055C7E6 /* PBXTargetDependency */,
 				D2E0DAEE19F74F4E00E79615 /* PBXTargetDependency */,
 			);
 			name = Automation;
@@ -320,6 +362,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = D2B667E81BAC526E0055C7E6 /* Products */;
+					ProjectRef = D2B667E71BAC526E0055C7E6 /* Locksmith.xcodeproj */;
+				},
+				{
 					ProductGroup = D2E0DAD619F74E5500E79615 /* Products */;
 					ProjectRef = D2E0DAD519F74E5500E79615 /* Vera.xcodeproj */;
 				},
@@ -332,6 +378,41 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		D2B667F01BAC526F0055C7E6 /* Locksmith.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Locksmith.framework;
+			remoteRef = D2B667EF1BAC526F0055C7E6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D2B667F21BAC526F0055C7E6 /* Locksmith iOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Locksmith iOS Tests.xctest";
+			remoteRef = D2B667F11BAC526F0055C7E6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D2B667F41BAC526F0055C7E6 /* Locksmith.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Locksmith.framework;
+			remoteRef = D2B667F31BAC526F0055C7E6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D2B667F61BAC526F0055C7E6 /* Locksmith OS X Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Locksmith OS X Tests.xctest";
+			remoteRef = D2B667F51BAC526F0055C7E6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D2B667F81BAC526F0055C7E6 /* Locksmith.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Locksmith.framework;
+			remoteRef = D2B667F71BAC526F0055C7E6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		D2E0DADB19F74E5600E79615 /* Vera.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -421,8 +502,6 @@
 				D28002AF1A09B5C6005894C3 /* VeraUIExtension.swift in Sources */,
 				D28002B11A09D23A005894C3 /* SFSwiftNotification.swift in Sources */,
 				D23210861A07230500353F51 /* ScenesListViewController.swift in Sources */,
-				D281CB7D19F9F00D00BA74A9 /* KeychainService.swift in Sources */,
-				D2EE378A19EB281F00630C86 /* SwellAll.swift in Sources */,
 				D23210881A07230500353F51 /* SettingsViewController.swift in Sources */,
 				D23210801A07230500353F51 /* AudioListViewController.swift in Sources */,
 				D23210831A07230500353F51 /* ExcludedItemsViewController.swift in Sources */,
@@ -432,6 +511,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		D2B667FB1BAC52890055C7E6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Locksmith iOS";
+			targetProxy = D2B667FA1BAC52890055C7E6 /* PBXContainerItemProxy */;
+		};
 		D2E0DAEE19F74F4E00E79615 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Vera;

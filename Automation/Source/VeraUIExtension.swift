@@ -30,7 +30,7 @@ extension VeraAPI {
         
         
         
-        Swell.info("Changing status \(notificationText)")
+//        Swell.info("Changing status \(notificationText)")
         
         AppDelegate.appDelegate().showMessageWithTitle(notificationText)
         
@@ -45,7 +45,7 @@ extension VeraAPI {
         
         let notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_RUN_SCENE_MESSAGE_%@", comment: ""), sceneName)
         
-        Swell.info("Running scene: \(notificationText)")
+//        Swell.info("Running scene: \(notificationText)")
         
         AppDelegate.appDelegate().showMessageWithTitle(notificationText)
         
@@ -98,7 +98,7 @@ extension VeraAPI {
         
         var notificationText = ""
         
-        notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_INPUT_%@_%d", comment: ""), deviceName as String, input) as! String
+        notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_INPUT_%@_%d", comment: ""), deviceName as String, input) as String
 
         AppDelegate.appDelegate().showMessageWithTitle(notificationText)
         

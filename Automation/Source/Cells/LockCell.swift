@@ -22,7 +22,7 @@ class LockCell: BaseCell {
             self.titleLabel.text = deviceName
         }
         
-        Swell.info("Lock info \(self.device)")
+//        Swell.info("Lock info \(self.device)")
         
         if let locked = self.device?.locked {
             if locked == true {

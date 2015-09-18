@@ -11,7 +11,7 @@ import UIKit
 extension Array {
     mutating func removeObject<U: Equatable>(object: U) {
         var index: Int?
-        for (idx, objectToCompare) in enumerate(self) {
+        for (idx, objectToCompare) in self.enumerate() {
             if let to = objectToCompare as? U {
                 if object == to {
                     index = idx

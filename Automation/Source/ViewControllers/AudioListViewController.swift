@@ -40,7 +40,7 @@ class AudioListViewController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showDetail" {
             let controller = (segue.destinationViewController as! UINavigationController).topViewController as! AudioViewController
-            if let indexPath = self.tableView.indexPathForSelectedRow() {
+            if let indexPath = self.tableView.indexPathForSelectedRow {
                 if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.Audio) {
                     let room = roomsWithSwitches[indexPath.row]
                     controller.room = room
@@ -65,7 +65,7 @@ class AudioListViewController: UITableViewController {
     func loadRooms(fullload: Bool) {
         if fullload == true {
             self.navigationController?.popToRootViewControllerAnimated(false)
-            if let indexPath = self.tableView.indexPathForSelectedRow() {
+            if let indexPath = self.tableView.indexPathForSelectedRow {
                 self.tableView.deselectRowAtIndexPath(indexPath, animated: false)
             }
             self.tableView.reloadData()
@@ -82,7 +82,7 @@ class AudioListViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) 
         
         if let roomsWithAudio = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.Audio) {
             let room = roomsWithAudio[indexPath.row]
