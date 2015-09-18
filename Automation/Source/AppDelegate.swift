@@ -59,6 +59,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         }
         self.veraAPI.resetAPI()
         self.veraAPI.useUI5 = NSUserDefaults.standardUserDefaults().boolForKey(kUseUI5Default)
+        self.presentLogin()
     }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -407,7 +408,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             self.handlingLogin = false
         }
 
+        var domainForOnePassword = "getvera.com"
+        if self.veraAPI.useUI5 {
+            domainForOnePassword = "mios.com"
+        }
+        
         let onePasswordAction = UIAlertAction(title: NSLocalizedString("ONE_PASSWORD_ACTION", comment: ""), style: .Destructive) { (_) in
+            
+            
+            OnePasswordExtension.sharedExtension().findLoginForURLString(domainForOnePassword, forViewController: self.window!.rootViewController!,
+                sender: self) { (credentials, error) -> Void in
+                    self.handlingLogin = false
+                    if credentials != nil && credentials?.count > 0 {
+                        let creds = credentials as? [String:String]
+                        let username = creds![AppExtensionUsernameKey] as String?
+                        let password = creds![AppExtensionPasswordKey] as String?
+                        let usernameData = [kUsername: username!]
+                        let passwordData = [kPassword: password!]
+
+                        try! Locksmith.saveData(usernameData, forUserAccount: kUsername)
+                        try! Locksmith.saveData(passwordData, forUserAccount: kPassword)
+                        self.handleLogin()
+                    }
+                    else {
+                        let delay = 1.0 * Double(NSEC_PER_SEC)
+                        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+                        dispatch_after(time, dispatch_get_main_queue(), {
+                            self.presentLogin()
+                        })
+                    }
+            }
+
         }
 
         alertController.addTextFieldWithConfigurationHandler { (textField) in
