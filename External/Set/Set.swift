@@ -32,7 +32,7 @@ public struct Set<T: Hashable> : Equatable {
 
     public init<S: SequenceType where S.Generator.Element == Element>(_ sequence: S) {
         self.contents = [Element: Bool]()
-        sequence.map({self.contents[$0] = true})
+        _ = sequence.map({self.contents[$0] = true})
     }
 
     /// The number of elements in the Set.
@@ -51,7 +51,7 @@ public struct Set<T: Hashable> : Equatable {
         
     /// Add `newElements` to the Set.
     public mutating func add(newElements: Element...) {
-        newElements.map { self.contents[$0] = true }
+        _ = newElements.map { self.contents[$0] = true }
     }
     
     /// Remove `element` from the Set.
@@ -96,7 +96,7 @@ extension Set : SequenceType {
 extension Set : ArrayLiteralConvertible {
     public init(arrayLiteral elements: Element...) {
         self.contents = [Element: Bool]()
-        elements.map { self.contents[$0] = true }
+        _ = elements.map { self.contents[$0] = true }
     }
 
     public static func convertFromArrayLiteral(elements: T...) -> Set<T> {
@@ -194,7 +194,7 @@ extension Set : RangeReplaceableCollectionType {
     
     /// Extends the Set by adding all the elements of `seq`.
     public mutating func appendContentsOf<S : SequenceType where S.Generator.Element == Element>(seq: S) {
-        seq.map( { self.contents[$0] = true })
+        _ = seq.map( { self.contents[$0] = true })
     }
     
     public mutating func replaceRange<C : CollectionType where C.Generator.Element == Generator.Element>(subRange: Range<Set.Index>, with newElements: C) {
