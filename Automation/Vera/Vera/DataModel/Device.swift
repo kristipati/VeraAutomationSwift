@@ -94,7 +94,7 @@ public class Device: Deserializable, CustomStringConvertible {
     var comment: String?
     public var roomID: Int?
     var armed: Bool?
-    public var temperature: Int?
+    public var temperature: Double?
     public var humidity: Int?
     public var batteryLevel: Int?
     var pinCodes: String?
@@ -112,8 +112,8 @@ public class Device: Deserializable, CustomStringConvertible {
     var objectStatusMap: String?
     var systemVeraRestart: String?
     var systemLuupRestart: String?
-    public var heatTemperatureSetPoint: Int?
-    public var coolTemperatureSetPoint: Int?
+    public var heatTemperatureSetPoint: Double?
+    public var coolTemperatureSetPoint: Double?
     public var hvacMode: HVACMode?
     public var fanMode: FanMode?
     var conditionSatisfied: String?
@@ -145,11 +145,30 @@ public class Device: Deserializable, CustomStringConvertible {
         comment <-- data["comment"]
         roomID <-- data["room"]
         armed <-- data["armed"]
-        temperature <-- data["temperature"]
         humidity <-- data["humidity"]
         batteryLevel <-- data["batterylevel"]
         pinCodes <-- data["pincodes"]
         
+        let temp: String? = data["temperature"] as! String?
+        if temp != nil {
+            temperature = Double(temp!)
+        }
+
+        heatTemperatureSetPoint <-- data["heatsp"]
+        coolTemperatureSetPoint <-- data["coolsp"]
+
+        let heatTemp: String? = data["heat"] as! String?
+        if heatTemp != nil {
+            heatTemperatureSetPoint = Double(heatTemp!)
+        }
+
+        let coolTemp: String? = data["cool"] as! String?
+        if coolTemp != nil {
+            coolTemperatureSetPoint = Double(coolTemp!)
+        }
+
+        
+
         var tempInt: Int?
         
         tempInt <-- data["locked"]
@@ -175,8 +194,6 @@ public class Device: Deserializable, CustomStringConvertible {
         objectStatusMap <-- data["objectstatusmap"]
         systemVeraRestart <-- data["systemVeraRestart"]
         systemLuupRestart <-- data["systemLuupRestart"]
-        heatTemperatureSetPoint <-- data["heatsp"]
-        coolTemperatureSetPoint <-- data["coolsp"]
         conditionSatisfied <-- data["conditionsatisfied"]
         detailedArmMode <-- data["detailedarmmode"]
         armMode <-- data["armmode"]
