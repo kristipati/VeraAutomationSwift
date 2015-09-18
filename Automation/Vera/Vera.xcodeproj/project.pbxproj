@@ -19,7 +19,6 @@
 		D2E0DAEA19F74ED000E79615 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E0DAE919F74ED000E79615 /* Device.swift */; };
 		D2E0DAEC19F74EDA00E79615 /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E0DAEB19F74EDA00E79615 /* Scene.swift */; };
 		D2E0DAFD19F7502400E79615 /* JSONHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E0DAFC19F7502400E79615 /* JSONHelper.swift */; };
-		D2E0DB0019F750ED00E79615 /* SwellAll.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E0DAFF19F750ED00E79615 /* SwellAll.swift */; };
 		D2E0DB0219F7510F00E79615 /* Set.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E0DB0119F7510F00E79615 /* Set.swift */; };
 		D2EB6C691A3A3BC1001F658A /* CryptoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2EB6C641A3A3B9C001F658A /* CryptoSwift.framework */; };
 		D2EB6C6B1A3A3FE3001F658A /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2EB6C6A1A3A3FE3001F658A /* Auth.swift */; };
@@ -46,6 +45,48 @@
 			proxyType = 1;
 			remoteGlobalIDString = F8111E3219A95C8B0040E7D1;
 			remoteInfo = Alamofire;
+		};
+		D27998DC1BABC2B00040D462 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D27998D41BABC2B00040D462 /* XCGLogger.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 55E3EE4519D76F280068C3A7;
+			remoteInfo = "XCGLogger (iOS)";
+		};
+		D27998DE1BABC2B00040D462 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D27998D41BABC2B00040D462 /* XCGLogger.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 554DF41719D76FE7005708BE;
+			remoteInfo = "XCGLogger (OS X)";
+		};
+		D27998E01BABC2B00040D462 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D27998D41BABC2B00040D462 /* XCGLogger.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 70CB94201B99E728007802FF;
+			remoteInfo = "XCGLogger (watchOS)";
+		};
+		D27998E21BABC2B00040D462 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D27998D41BABC2B00040D462 /* XCGLogger.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 55E3EE5019D76F280068C3A7;
+			remoteInfo = "XCGLoggerTests (iOS)";
+		};
+		D27998E41BABC2B00040D462 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D27998D41BABC2B00040D462 /* XCGLogger.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 55BB1F011B79DC7500709779;
+			remoteInfo = "XCGLoggerTests (OS X)";
+		};
+		D27998E71BABC2CE0040D462 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D27998D41BABC2B00040D462 /* XCGLogger.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 55E3EE4419D76F280068C3A7;
+			remoteInfo = "XCGLogger (iOS)";
 		};
 		D2D057C61B2484ED00E002CB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -95,6 +136,7 @@
 		D2432B1B1A467E7E00D09A40 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		D2432B1C1A467E7E00D09A40 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		D244CC3719F75C4300CC78A9 /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = ../../External/Alamofire/Alamofire.xcodeproj; sourceTree = "<group>"; };
+		D27998D41BABC2B00040D462 /* XCGLogger.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = XCGLogger.xcodeproj; path = ../../External/XCGLogger/XCGLogger/Library/XCGLogger.xcodeproj; sourceTree = "<group>"; };
 		D2E0DAB919F74E5500E79615 /* Vera.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Vera.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2E0DABD19F74E5500E79615 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D2E0DABE19F74E5500E79615 /* Vera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vera.h; sourceTree = "<group>"; };
@@ -106,7 +148,6 @@
 		D2E0DAE919F74ED000E79615 /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		D2E0DAEB19F74EDA00E79615 /* Scene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
 		D2E0DAFC19F7502400E79615 /* JSONHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONHelper.swift; path = ../../External/JSONHelper/JSONHelper/JSONHelper.swift; sourceTree = "<group>"; };
-		D2E0DAFF19F750ED00E79615 /* SwellAll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwellAll.swift; path = ../../External/Swell/SwellAll.swift; sourceTree = "<group>"; };
 		D2E0DB0119F7510F00E79615 /* Set.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Set.swift; path = ../../External/Set/Set.swift; sourceTree = "<group>"; };
 		D2EB6C5E1A3A3B9C001F658A /* CryptoSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CryptoSwift.xcodeproj; path = ../../External/CryptoSwift/CryptoSwift.xcodeproj; sourceTree = "<group>"; };
 		D2EB6C6A1A3A3FE3001F658A /* Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
@@ -133,14 +174,6 @@
 			);
 			name = Reachability;
 			path = ../../External/Reachability;
-			sourceTree = "<group>";
-		};
-		D244CC1919F7572700CC78A9 /* Swell */ = {
-			isa = PBXGroup;
-			children = (
-				D2E0DAFF19F750ED00E79615 /* SwellAll.swift */,
-			);
-			name = Swell;
 			sourceTree = "<group>";
 		};
 		D244CC1A19F7573000CC78A9 /* Set */ = {
@@ -177,6 +210,26 @@
 				D2D057C91B2484ED00E002CB /* Alamofire OSX Tests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D27998D51BABC2B00040D462 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D27998DD1BABC2B00040D462 /* XCGLogger.framework */,
+				D27998DF1BABC2B00040D462 /* XCGLogger.framework */,
+				D27998E11BABC2B00040D462 /* XCGLogger.framework */,
+				D27998E31BABC2B00040D462 /* XCGLoggerTests (iOS).xctest */,
+				D27998E51BABC2B00040D462 /* XCGLoggerTests (OS X).xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D27998E61BABC2B60040D462 /* XCGLogger */ = {
+			isa = PBXGroup;
+			children = (
+				D27998D41BABC2B00040D462 /* XCGLogger.xcodeproj */,
+			);
+			name = XCGLogger;
 			sourceTree = "<group>";
 		};
 		D2E0DAAF19F74E5500E79615 = {
@@ -232,9 +285,9 @@
 		D2E0DAFE19F750D400E79615 /* External */ = {
 			isa = PBXGroup;
 			children = (
+				D27998E61BABC2B60040D462 /* XCGLogger */,
 				D2432B1A1A467E7E00D09A40 /* Reachability */,
 				D2EB6C5C1A3A3B8B001F658A /* CryptoSwift */,
-				D244CC1919F7572700CC78A9 /* Swell */,
 				D244CC1A19F7573000CC78A9 /* Set */,
 				D244CC1B19F7573C00CC78A9 /* JSONHelper */,
 				D244CC1C19F7574500CC78A9 /* Alamofire */,
@@ -286,6 +339,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D27998E81BABC2CE0040D462 /* PBXTargetDependency */,
 				D2EB6C681A3A3BAC001F658A /* PBXTargetDependency */,
 				D244CC4119F75C4E00CC78A9 /* PBXTargetDependency */,
 			);
@@ -328,6 +382,10 @@
 					ProductGroup = D2EB6C5F1A3A3B9C001F658A /* Products */;
 					ProjectRef = D2EB6C5E1A3A3B9C001F658A /* CryptoSwift.xcodeproj */;
 				},
+				{
+					ProductGroup = D27998D51BABC2B00040D462 /* Products */;
+					ProjectRef = D27998D41BABC2B00040D462 /* XCGLogger.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -349,6 +407,41 @@
 			fileType = wrapper.cfbundle;
 			path = "Alamofire iOS Tests.xctest";
 			remoteRef = D244CC3E19F75C4300CC78A9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D27998DD1BABC2B00040D462 /* XCGLogger.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = XCGLogger.framework;
+			remoteRef = D27998DC1BABC2B00040D462 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D27998DF1BABC2B00040D462 /* XCGLogger.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = XCGLogger.framework;
+			remoteRef = D27998DE1BABC2B00040D462 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D27998E11BABC2B00040D462 /* XCGLogger.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = XCGLogger.framework;
+			remoteRef = D27998E01BABC2B00040D462 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D27998E31BABC2B00040D462 /* XCGLoggerTests (iOS).xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "XCGLoggerTests (iOS).xctest";
+			remoteRef = D27998E21BABC2B00040D462 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D27998E51BABC2B00040D462 /* XCGLoggerTests (OS X).xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "XCGLoggerTests (OS X).xctest";
+			remoteRef = D27998E41BABC2B00040D462 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D2D057C71B2484ED00E002CB /* Alamofire.framework */ = {
@@ -407,7 +500,6 @@
 				D2E0DAE619F74EB000E79615 /* VeraAPI.swift in Sources */,
 				D2E0DAE219F74EA800E79615 /* ForwardServer.swift in Sources */,
 				D2E0DAE419F74EA800E79615 /* User.swift in Sources */,
-				D2E0DB0019F750ED00E79615 /* SwellAll.swift in Sources */,
 				D2E0DAEA19F74ED000E79615 /* Device.swift in Sources */,
 				D2EB6C6B1A3A3FE3001F658A /* Auth.swift in Sources */,
 				D2E0DAEC19F74EDA00E79615 /* Scene.swift in Sources */,
@@ -425,6 +517,11 @@
 			isa = PBXTargetDependency;
 			name = Alamofire;
 			targetProxy = D244CC4019F75C4E00CC78A9 /* PBXContainerItemProxy */;
+		};
+		D27998E81BABC2CE0040D462 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "XCGLogger (iOS)";
+			targetProxy = D27998E71BABC2CE0040D462 /* PBXContainerItemProxy */;
 		};
 		D2EB6C681A3A3BAC001F658A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

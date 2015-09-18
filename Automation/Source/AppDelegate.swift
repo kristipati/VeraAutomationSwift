@@ -25,6 +25,7 @@ let sTimeForCheck:NSTimeInterval = 10.0
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate, UITabBarControllerDelegate {
 
+    let log = XCGLogger.defaultInstance()
     var veraAPI = Vera.VeraAPI()
     var periodicTimer: NSTimer?
     var lastUnitCheck: NSDate?
@@ -54,6 +55,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         let tabbarController = self.window!.rootViewController as! UITabBarController
         tabbarController.delegate = self
+        
+        log.setup(.Verbose, showThreadName: true, showLogLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil, fileLogLevel: .Debug)
+
         
         let switchesStoryboard = UIStoryboard(name: "Switches", bundle: nil)
         let audioStoryboard = UIStoryboard(name: "Audio", bundle: nil)
