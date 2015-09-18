@@ -18,7 +18,7 @@
 #define STRX(x)			x
 
 #define APP_VERSION_NUMBER				STRINGIFY(1.0.0)
-#define CF_BUNDLE_VERSION				STRINGIFY(4)
+#define CF_BUNDLE_VERSION				STRINGIFY(5)
 
 
 #endif
