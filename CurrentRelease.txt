@@ -1,6 +1,3 @@
-1.0.0 Build 4
+1.0.0 Build 5
 --------------
-- Tapping a tab bar icon pops to root view controller
-- Changed excluded list to be a grouped table view
-- Changed selection style for excluded list to be none
-- Fixed crash if keychain item didn't exist'
+- Fixed font on scenes tab for rooms
