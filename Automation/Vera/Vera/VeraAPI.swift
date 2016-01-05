@@ -114,6 +114,7 @@ public class VeraAPI {
         self.password = nil
         self.auth = nil
         self.sessionToken = nil
+        self.lastExternalIPAddressCheck = nil
     }
     
     func sessionTokenHeaders()->Dictionary<String, String>? {
