@@ -15,8 +15,6 @@ import Locksmith
 let kTabOrderDefault = "Tab Order"
 let kSelectedTabDefault = "Selected Tab"
 let kShowAudioTabDefault = "Show Audio Tab"
-let kUIVersionSet = "UI Version Set"
-let kUseUI5Default = "Use UI5"
 let kUsername = "username"
 let kPassword = "password"
 
@@ -58,7 +56,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             
         }
         self.veraAPI.resetAPI()
-        self.veraAPI.useUI5 = NSUserDefaults.standardUserDefaults().boolForKey(kUseUI5Default)
         self.presentLogin()
     }
 
@@ -66,7 +63,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         self.veraAPI.excludedDevices = NSUserDefaults.standardUserDefaults().arrayForKey(kExcludedDevices) as! [Int]?
         self.veraAPI.excludedScenes = NSUserDefaults.standardUserDefaults().arrayForKey(kExcludedScenes) as! [Int]?
-        self.veraAPI.useUI5 = NSUserDefaults.standardUserDefaults().boolForKey(kUseUI5Default)
         
         let tabbarController = self.window!.rootViewController as! UITabBarController
         tabbarController.delegate = self
@@ -298,35 +294,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         self.handlingLogin = true
 
-        let uiVersionSet = NSUserDefaults.standardUserDefaults().boolForKey(kUIVersionSet)
-        if uiVersionSet == false {
-            // Check to see if the user selected UI5 or UI7
-            let alertController = UIAlertController(title: nil, message: NSLocalizedString("SELECT_UI_VERSION", comment: ""), preferredStyle: .Alert)
-            
-            let ui7Action = UIAlertAction(title: NSLocalizedString("UI7_TEXT", comment: ""), style: .Default) { (_) in
-                self.handlingLogin = false
-                NSUserDefaults.standardUserDefaults().setBool(false, forKey: kUseUI5Default)
-                NSUserDefaults.standardUserDefaults().setBool(true, forKey: kUIVersionSet)
-                NSUserDefaults.standardUserDefaults().synchronize()
-            }
-            let ui5Action = UIAlertAction(title: NSLocalizedString("UI5_TEXT", comment: ""), style: .Cancel) { (_) in
-                self.handlingLogin = false
-                NSUserDefaults.standardUserDefaults().setBool(true, forKey: kUseUI5Default)
-                NSUserDefaults.standardUserDefaults().setBool(true, forKey: kUIVersionSet)
-                NSUserDefaults.standardUserDefaults().synchronize()
-                self.veraAPI.useUI5 = NSUserDefaults.standardUserDefaults().boolForKey(kUseUI5Default)
-            }
-            
-            alertController.addAction(ui7Action)
-            alertController.addAction(ui5Action)
-            
-            let tabbarController = self.window!.rootViewController as! UITabBarController
-            tabbarController.presentViewController(alertController, animated: true, completion: nil)
-            return
-        }
-
-        
-        
         var passwordData:[String:String]?
         var usernameData:[String:String]?
         passwordData = Locksmith.loadDataForUserAccount(kPassword) as? [String:String]
@@ -408,10 +375,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             self.handlingLogin = false
         }
 
-        var domainForOnePassword = "getvera.com"
-        if self.veraAPI.useUI5 {
-            domainForOnePassword = "mios.com"
-        }
+        let domainForOnePassword = "getvera.com"
         
         let onePasswordAction = UIAlertAction(title: NSLocalizedString("ONE_PASSWORD_ACTION", comment: ""), style: .Destructive) { (_) in
             

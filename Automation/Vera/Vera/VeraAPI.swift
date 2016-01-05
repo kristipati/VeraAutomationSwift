@@ -42,7 +42,6 @@ public class VeraAPI {
     public var password : String?
     public var excludedScenes: [Int]?
     public var excludedDevices: [Int]?
-    public var useUI5 = false
     var user : User?
     var auth: Auth?
     var sessionToken: String?
@@ -171,7 +170,7 @@ public class VeraAPI {
                 self.getSessionTokenForServer(self.auth!.serverAccount!, completionHandler: { (token) -> Void in
                     if (token != nil) {
                         self.requestWithActivityIndicator(.GET, URLString: requestString, headers:["MMSSession":token!]).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-                            self.log.info("Response for localtor: \(responseString)")
+                            self.log.info("Response for locator: \(responseString)")
                             if (responseString != nil) {
                                 var tempUser:User?
                                 tempUser <-- responseString!
@@ -186,6 +185,7 @@ public class VeraAPI {
                                         if (token != nil) {
                                             let requestString = "https://\(unit.serverDevice!)/device/device/device/\(unit.serialNumber!)"
                                             self.requestWithActivityIndicator(.GET, URLString: requestString, headers:["MMSSession":token!]).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                                                self.log.info("Response for device info: \(responseString)")
                                                 if (responseString != nil) {
                                                     var tempUnit:Unit?
                                                     tempUnit <-- responseString!
@@ -230,31 +230,16 @@ public class VeraAPI {
     
     public func getUnitsInformationForUser(completionHandler: (success:Bool)->Void) {
         if self.username != nil && self.password != nil {
-            if self.useUI5 {
-                var serverNumber = 1
-                self.getUnitsInformationForUser(server: serverNumber) { (success) -> Void in
-                    if success == false {
-                        serverNumber++
-                        self.getUnitsInformationForUser(server: serverNumber, completionHandler: { (success) -> Void in
-                            completionHandler(success:success)
-                        })
-                        
-                    } else {
-                        completionHandler(success:true)
+            self.getAuthenticationToken({ (auth) -> Void in
+                self.auth = auth
+                self.getVeraDevices({ (device, internalIP, serverDevice) -> Void in
+                    var success = false
+                    if (self.auth != nil && self.auth?.authSigToken != nil && self.auth?.authToken != nil) {
+                        success = true
                     }
-                }
-            } else {
-                self.getAuthenticationToken({ (auth) -> Void in
-                    self.auth = auth
-                    self.getVeraDevices({ (device, internalIP, serverDevice) -> Void in
-                        var success = false
-                        if (self.auth != nil && self.auth?.authSigToken != nil && self.auth?.authToken != nil) {
-                            success = true
-                        }
-                        completionHandler(success: success)
-                    })
+                    completionHandler(success: success)
                 })
-            }
+            })
         } else {
             completionHandler(success: false)
         }
@@ -288,42 +273,26 @@ public class VeraAPI {
     }
     
     func requestPrefix(localPrefix: Bool) -> String? {
-        if self.useUI5 == false {
-            if (self.sessionToken != nil) {
-                if let unit = self.getVeraUnit() {
-                    if (localPrefix == true) {
-                        if self.reachability != nil {
-                            if (self.reachability!.currentReachabilityStatus().rawValue != ReachableViaWiFi.rawValue) {
-                                return nil
-                            }
+        if (self.sessionToken != nil) {
+            if let unit = self.getVeraUnit() {
+                if (localPrefix == true) {
+                    if self.reachability != nil {
+                        if (self.reachability!.currentReachabilityStatus().rawValue != ReachableViaWiFi.rawValue) {
+                            return nil
                         }
                     }
-                    
-                    if (localPrefix == true && unit.ipAddress != nil && unit.ipAddress!.isEmpty == false) {
-                        return "http://\(unit.ipAddress!)/port_3480/data_request?id="
-                    } else if unit.serverRelay != nil {
-                        return "https://\(unit.serverRelay!)/relay/relay/relay/device/\(unit.serialNumber!)/port_3480/data_request?id="
-                    }
                 }
-            } else {
-                log.info("Session token is nil in requestPrefix")
+                
+                if (localPrefix == true && unit.ipAddress != nil && unit.ipAddress!.isEmpty == false) {
+                    return "http://\(unit.ipAddress!)/port_3480/data_request?id="
+                } else if unit.serverRelay != nil {
+                    return "https://\(unit.serverRelay!)/relay/relay/relay/device/\(unit.serialNumber!)/port_3480/data_request?id="
+                }
             }
-            
-            return nil
+        } else {
+            log.info("Session token is nil in requestPrefix")
         }
         
-        if let unit = self.getVeraUnit() {
-            if localPrefix == true || (unit.ipAddress != nil && unit.ipAddress!.isEmpty == false) {
-                return "http://\(unit.ipAddress!):3480/data_request?id="
-            } else {
-                if let forwardServer = unit.forwardServers?.first {
-                    if forwardServer.hostName != nil && self.username != nil && self.password != nil && unit.serialNumber != nil {
-                        return "https://\(forwardServer.hostName!)/\(self.username!)/\(self.password!)/\(unit.serialNumber!)/data_request?id="
-                    }
-                }
-            }
-        }
-
         return nil
     }
 

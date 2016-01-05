@@ -27,7 +27,6 @@
 "LOCKED_LABEL" = "Locked";
 "UNLOCKED_LABEL" = "Unlocked";
 "LOGOUT_LABEL" = "Logout";
-"USE_UI_5_LABEL" = "Use UI5";
 "COMMAND_SENT_TITLE" = "Command Sent";
 "COMMAND_SENT_MESSAGE_ON_%@" = "%@ has been turned on.";
 "COMMAND_SENT_MESSAGE_OFF_%@" = "%@ has been turned off.";
@@ -47,6 +46,4 @@
 "COMMAND_SENT_HEAT_TEMPERATURE_%@_%d" = "%@ heating set to %d.";
 "COMMAND_SENT_COOL_TEMPERATURE_%@_%d" = "%@ cooling set to %d.";
 "SELECT_UI_VERSION" = "Which version of Vera's UI are you using?";
-"UI5_TEXT" = "UI5";
-"UI7_TEXT" = "UI7";
 

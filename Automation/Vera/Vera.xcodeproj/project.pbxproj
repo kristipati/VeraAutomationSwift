@@ -12,7 +12,6 @@
 		D244CC4219F75C5800CC78A9 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D244CC3D19F75C4300CC78A9 /* Alamofire.framework */; };
 		D2BB40FA1BAC909D009BB9E3 /* XCGLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27998DD1BABC2B00040D462 /* XCGLogger.framework */; };
 		D2E0DABF19F74E5500E79615 /* Vera.h in Headers */ = {isa = PBXBuildFile; fileRef = D2E0DABE19F74E5500E79615 /* Vera.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D2E0DAE219F74EA800E79615 /* ForwardServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E0DADF19F74EA800E79615 /* ForwardServer.swift */; };
 		D2E0DAE319F74EA800E79615 /* Unit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E0DAE019F74EA800E79615 /* Unit.swift */; };
 		D2E0DAE419F74EA800E79615 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E0DAE119F74EA800E79615 /* User.swift */; };
 		D2E0DAE619F74EB000E79615 /* VeraAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E0DAE519F74EB000E79615 /* VeraAPI.swift */; };
@@ -141,7 +140,6 @@
 		D2E0DAB919F74E5500E79615 /* Vera.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Vera.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2E0DABD19F74E5500E79615 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D2E0DABE19F74E5500E79615 /* Vera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vera.h; sourceTree = "<group>"; };
-		D2E0DADF19F74EA800E79615 /* ForwardServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForwardServer.swift; sourceTree = "<group>"; };
 		D2E0DAE019F74EA800E79615 /* Unit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Unit.swift; sourceTree = "<group>"; };
 		D2E0DAE119F74EA800E79615 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D2E0DAE519F74EB000E79615 /* VeraAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraAPI.swift; sourceTree = "<group>"; };
@@ -273,7 +271,6 @@
 		D2E0DADE19F74EA800E79615 /* DataModel */ = {
 			isa = PBXGroup;
 			children = (
-				D2E0DADF19F74EA800E79615 /* ForwardServer.swift */,
 				D2E0DAE019F74EA800E79615 /* Unit.swift */,
 				D2E0DAE119F74EA800E79615 /* User.swift */,
 				D2E0DAE719F74EC600E79615 /* Room.swift */,
@@ -500,7 +497,6 @@
 			files = (
 				D2E0DB0219F7510F00E79615 /* Set.swift in Sources */,
 				D2E0DAE619F74EB000E79615 /* VeraAPI.swift in Sources */,
-				D2E0DAE219F74EA800E79615 /* ForwardServer.swift in Sources */,
 				D2E0DAE419F74EA800E79615 /* User.swift in Sources */,
 				D2E0DAEA19F74ED000E79615 /* Device.swift in Sources */,
 				D2EB6C6B1A3A3FE3001F658A /* Auth.swift in Sources */,

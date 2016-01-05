@@ -17,7 +17,6 @@ public class Unit : Deserializable, CustomStringConvertible {
     public var ipAddress:String?
     var users:[String]?
     var activeServer:String?
-    var forwardServers:[ForwardServer]?
     var loadtime = 0
     var dataversion = 0
     public var fullload:Bool?
@@ -34,7 +33,6 @@ public class Unit : Deserializable, CustomStringConvertible {
         ipAddress <-- data["ipAddress"]
         users <-- data["users"]
         activeServer <-- data["active_server"]
-        forwardServers <-- data["forwardServers"]
         rooms <-- data["rooms"]
         fullload <-- data["full"]
         devices <-- data["devices"]

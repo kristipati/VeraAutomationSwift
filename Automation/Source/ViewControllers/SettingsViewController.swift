@@ -10,7 +10,6 @@ import UIKit
 
 class SettingsViewController: UITableViewController {
     var audioSwitch = UISwitch()
-    var ui5Switch = UISwitch()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,7 +24,7 @@ class SettingsViewController: UITableViewController {
         if (section == 0) {
             return 3;
         } else if (section == 1) {
-            return 2;
+            return 1;
         }
         return 0
     }
@@ -86,15 +85,6 @@ class SettingsViewController: UITableViewController {
                 cell.selectionStyle = .None
                 return cell
                 
-            case 1:
-                let cell = tableView.dequeueReusableCellWithIdentifier("ToggleCellIdentifier", forIndexPath: indexPath) 
-                cell.accessoryType = .None
-                cell.accessoryView = self.ui5Switch
-                self.ui5Switch.on = NSUserDefaults.standardUserDefaults().boolForKey(kUseUI5Default)
-                self.ui5Switch.addTarget(self, action: "ui5Changed", forControlEvents: .ValueChanged)
-                cell.textLabel!.text = NSLocalizedString("USE_UI_5_LABEL", comment: "")
-                cell.selectionStyle = .None
-                return cell
             default:
                 return UITableViewCell()
 
@@ -108,12 +98,6 @@ class SettingsViewController: UITableViewController {
         NSUserDefaults.standardUserDefaults().setBool(self.audioSwitch.on, forKey: kShowAudioTabDefault)
         NSUserDefaults.standardUserDefaults().synchronize()
         AppDelegate.appDelegate().showHideAudioTab()
-    }
-
-    func ui5Changed() {
-        NSUserDefaults.standardUserDefaults().setBool(self.ui5Switch.on, forKey: kUseUI5Default)
-        NSUserDefaults.standardUserDefaults().synchronize()
-        AppDelegate.appDelegate().logout()
     }
 
     // MARK: - Navigation
