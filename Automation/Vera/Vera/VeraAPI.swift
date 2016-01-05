@@ -48,6 +48,7 @@ public class VeraAPI {
     var manager: Alamofire.Manager?
     var reachability: Reachability?
     var currentExternalIPAddress:String?
+    var lastExternalIPAddressCheck:NSDate?
     
     let passwordSeed = "oZ7QE6LcLJp6fiWzdqZc"
     let log = XCGLogger.defaultInstance()
@@ -83,21 +84,27 @@ public class VeraAPI {
         self.reachability = Reachability.reachabilityForLocalWiFi()
         self.reachability?.startNotifier()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "reachabilityChanged:", name: kReachabilityChangedNotification, object: nil)
-        getExternalIPAddress()
+        self.getExternalIPAddress()
     }
 
     func reachabilityChanged(notification: NSNotification) {
         self.log.info("Reachability Changed")
+        self.lastExternalIPAddressCheck = nil
         getExternalIPAddress()
     }
     
     func getExternalIPAddress () {
+        if self.lastExternalIPAddressCheck != nil && self.currentExternalIPAddress != nil && NSDate().timeIntervalSinceDate(self.lastExternalIPAddressCheck!) < 300 {
+            return
+        }
+
         let requestString = "http://ipv4.ipogre.com"
         self.requestWithActivityIndicator(.GET, URLString: requestString, headers:["User-Agent":"curl"]).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
             self.log.info("External IP String: \(responseString)")
             if responseString != nil {
                 self.currentExternalIPAddress = responseString?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
                 self.log.info("External IP address: \(self.currentExternalIPAddress)")
+                self.lastExternalIPAddressCheck = NSDate()
             }
         }
     }
