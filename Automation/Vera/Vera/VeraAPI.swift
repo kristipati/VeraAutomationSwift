@@ -47,6 +47,7 @@ public class VeraAPI {
     var sessionToken: String?
     var manager: Alamofire.Manager?
     var reachability: Reachability?
+    var currentExternalIPAddress:String?
     
     let passwordSeed = "oZ7QE6LcLJp6fiWzdqZc"
     let log = XCGLogger.defaultInstance()
@@ -81,6 +82,24 @@ public class VeraAPI {
         self.manager = Alamofire.Manager(configuration: configuration)
         self.reachability = Reachability.reachabilityForLocalWiFi()
         self.reachability?.startNotifier()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "reachabilityChanged:", name: kReachabilityChangedNotification, object: nil)
+        getExternalIPAddress()
+    }
+
+    func reachabilityChanged(notification: NSNotification) {
+        self.log.info("Reachability Changed")
+        getExternalIPAddress()
+    }
+    
+    func getExternalIPAddress () {
+        let requestString = "http://ipv4.ipogre.com"
+        self.requestWithActivityIndicator(.GET, URLString: requestString, headers:["User-Agent":"curl"]).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+            self.log.info("External IP String: \(responseString)")
+            if responseString != nil {
+                self.currentExternalIPAddress = responseString?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+                self.log.info("External IP address: \(self.currentExternalIPAddress)")
+            }
+        }
     }
     
     public func resetAPI () {
@@ -191,6 +210,7 @@ public class VeraAPI {
                                                     tempUnit <-- responseString!
                                                     if (tempUnit != nil) {
                                                         unit.ipAddress = tempUnit!.ipAddress
+                                                        unit.externalIPAddress = tempUnit!.externalIPAddress
                                                         unit.serverRelay = tempUnit!.serverRelay
                                                     }
                                                 }
@@ -283,6 +303,14 @@ public class VeraAPI {
                     }
                 }
                 
+                if localPrefix == true {
+                    if self.currentExternalIPAddress != nil && unit.externalIPAddress != nil {
+                        if self.currentExternalIPAddress! != unit.externalIPAddress! {
+                            return nil
+                        }
+                    }
+                }
+                
                 if (localPrefix == true && unit.ipAddress != nil && unit.ipAddress!.isEmpty == false) {
                     return "http://\(unit.ipAddress!)/port_3480/data_request?id="
                 } else if unit.serverRelay != nil {
@@ -358,6 +386,7 @@ public class VeraAPI {
 
     // Mark methods that operate on the first unit
     public func getUnitInformation(completionHandler:(success:Bool, fullload: Bool) -> Void) {
+        self.getExternalIPAddress()
         self.getUnitInformation(true, completionHandler: { (success, fullload) -> Void in
             if (success == false) {
                 self.getUnitInformation(false, completionHandler: { (success, fullload) -> Void in

@@ -15,6 +15,7 @@ public class Unit : Deserializable, CustomStringConvertible {
     var firmwareVersion:String?
     var name:String?
     public var ipAddress:String?
+    public var externalIPAddress:String?
     var users:[String]?
     var activeServer:String?
     var loadtime = 0
@@ -47,7 +48,11 @@ public class Unit : Deserializable, CustomStringConvertible {
         if ipAddress == nil {
             ipAddress <-- data["InternalIP"]
         }
-        
+
+        if externalIPAddress == nil {
+            externalIPAddress <-- data["ExternalIP"]
+        }
+
         serverDevice <-- data["Server_Device"]
         serverRelay <-- data["Server_Relay"]
     }
@@ -66,6 +71,11 @@ public class Unit : Deserializable, CustomStringConvertible {
         desc += "\nIP Address: \n"
         if ipAddress != nil {
             desc += ipAddress!
+        }
+
+        desc += "\nExternal IP Address: \n"
+        if externalIPAddress != nil {
+            desc += externalIPAddress!
         }
 
         desc += "\nServer Relay: \n"
