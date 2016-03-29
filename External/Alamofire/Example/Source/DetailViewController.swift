@@ -1,6 +1,6 @@
 // DetailViewController.swift
 //
-// Copyright (c) 2014–2015 Alamofire Software Foundation (http://alamofire.org/)
+// Copyright (c) 2014–2016 Alamofire Software Foundation (http://alamofire.org/)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -55,13 +55,11 @@ class DetailViewController: UITableViewController {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        refreshControl?.addTarget(self, action: "refresh", forControlEvents: .ValueChanged)
-
+        refreshControl?.addTarget(self, action: #selector(DetailViewController.refresh), forControlEvents: .ValueChanged)
     }
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-
         refresh()
     }
 
@@ -75,11 +73,11 @@ class DetailViewController: UITableViewController {
         refreshControl?.beginRefreshing()
 
         let start = CACurrentMediaTime()
-        request.responseString { request, response, result in
+        request.responseString { response in
             let end = CACurrentMediaTime()
             self.elapsedTime = end - start
 
-            if let response = response {
+            if let response = response.response {
                 for (field, value) in response.allHeaderFields {
                     self.headers["\(field)"] = "\(value)"
                 }
@@ -88,7 +86,7 @@ class DetailViewController: UITableViewController {
             if let segueIdentifier = self.segueIdentifier {
                 switch segueIdentifier {
                 case "GET", "POST", "PUT", "DELETE":
-                    self.body = result.value
+                    self.body = response.result.value
                 case "DOWNLOAD":
                     self.body = self.downloadedBodyString()
                 default:
