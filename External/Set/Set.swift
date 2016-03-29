@@ -157,15 +157,17 @@ extension Set {
     }
     
     /// Returns a new Set that contains all the elements of both this set and the set passed in.
-    public func setByUnionWithSet(var set: Set<T>) -> Set<T> {
-        set.appendContentsOf(self)
-        return set
+    public func setByUnionWithSet(set: Set<T>) -> Set<T> {
+        var newSet = set
+        newSet.appendContentsOf(self)
+        return newSet
     }
 
     /// Returns a new Set that contains only the elements in both this set and the set passed in.
-    public func setByIntersectionWithSet(var set: Set<T>) -> Set<T> {
-        set.intersectSet(self)
-        return set
+    public func setByIntersectionWithSet(set: Set<T>) -> Set<T> {
+        var newSet = set
+        newSet.intersectSet(self)
+        return newSet
     }
 
     /// Returns a new Set that contains only the elements in this set *not* also in the set passed in.
