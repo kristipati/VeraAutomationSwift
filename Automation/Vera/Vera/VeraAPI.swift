@@ -162,21 +162,17 @@ public class VeraAPI {
     
     private func getAuthenticationToken(completionhandler: (auth: Auth?)->Void) {
         let stringToHash = self.username!.lowercaseString + self.password! + self.passwordSeed
-        if let hashedString = stringToHash.sha1() {
-            let requestString = "https://us-autha11.mios.com/autha/auth/username/\(self.username!.lowercaseString)?SHA1Password=\(hashedString)&PK_Oem=1"
-            self.requestWithActivityIndicator(.GET, URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-                if (responseString != nil) {
-                    var auth:Auth?
-                    auth <-- responseString!
-                    self.log.info("Auth response: \(responseString)")
-                    completionhandler(auth: auth)
-                } else {
-                    completionhandler(auth: nil)
-                }
+        let hashedString = stringToHash.sha1()
+        let requestString = "https://us-autha11.mios.com/autha/auth/username/\(self.username!.lowercaseString)?SHA1Password=\(hashedString)&PK_Oem=1"
+        self.requestWithActivityIndicator(.GET, URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+            if (responseString != nil) {
+                var auth:Auth?
+                auth <-- responseString!
+                self.log.info("Auth response: \(responseString)")
+                completionhandler(auth: auth)
+            } else {
+                completionhandler(auth: nil)
             }
-            
-        } else {
-            completionhandler(auth: nil)
         }
     }
 
