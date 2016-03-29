@@ -70,7 +70,7 @@ class SFSwiftNotification: UIView, UICollisionBehaviorDelegate, UIDynamicAnimato
         
         // Create gesture recognizer to detect notification touches
         let tapReconizer = UITapGestureRecognizer()
-        tapReconizer.addTarget(self, action: "invokeTapAction");
+        tapReconizer.addTarget(self, action: #selector(SFSwiftNotification.invokeTapAction));
         
         // Add Touch recognizer to notification view
         self.addGestureRecognizer(tapReconizer)

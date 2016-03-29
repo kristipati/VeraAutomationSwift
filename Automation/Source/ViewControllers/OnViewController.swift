@@ -15,7 +15,7 @@ class OnViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "unitInfoUpdated:", name: Vera.VeraUnitInfoUpdated, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(OnViewController.unitInfoUpdated(_:)), name: Vera.VeraUnitInfoUpdated, object: nil)
         
         self.loadOnDevices()
     }

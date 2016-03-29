@@ -66,7 +66,7 @@ class SettingsViewController: UITableViewController {
                     cell.accessoryType = .None
                     cell.accessoryView = self.audioSwitch
                     self.audioSwitch.on = NSUserDefaults.standardUserDefaults().boolForKey(kShowAudioTabDefault)
-                    self.audioSwitch.addTarget(self, action: "audioTabChanged", forControlEvents: .ValueChanged)
+                    self.audioSwitch.addTarget(self, action: #selector(SettingsViewController.audioTabChanged), forControlEvents: .ValueChanged)
                     cell.textLabel!.text = NSLocalizedString("SHOW_AUDIO_TAB", comment: "")
                     cell.selectionStyle = .None
                     return cell

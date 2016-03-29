@@ -146,7 +146,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                     }
                 }
                 
-                currentIndex++
+                currentIndex += 1
             }
         }
         
@@ -156,10 +156,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         self.showHideAudioTab()
 
-        self.periodicTimer = NSTimer.scheduledTimerWithTimeInterval(sTimeForCheck, target: self, selector: "updateVeraInfo", userInfo: nil, repeats: true)
+        self.periodicTimer = NSTimer.scheduledTimerWithTimeInterval(sTimeForCheck, target: self, selector: #selector(AppDelegate.updateVeraInfo), userInfo: nil, repeats: true)
         
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "orientationChanged:", name: UIApplicationWillChangeStatusBarOrientationNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AppDelegate.orientationChanged(_:)), name: UIApplicationWillChangeStatusBarOrientationNotification, object: nil)
 
         let delay = 1.0 * Double(NSEC_PER_SEC)
         let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
@@ -184,7 +184,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
-        self.periodicTimer = NSTimer.scheduledTimerWithTimeInterval(sTimeForCheck, target: self, selector: "updateVeraInfo", userInfo: nil, repeats: true)
+        self.periodicTimer = NSTimer.scheduledTimerWithTimeInterval(sTimeForCheck, target: self, selector: #selector(AppDelegate.updateVeraInfo), userInfo: nil, repeats: true)
         self.lastUnitCheck = nil
         updateVeraInfo()
         

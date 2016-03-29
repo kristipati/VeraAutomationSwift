@@ -62,12 +62,12 @@ public class VeraAPI {
                 UIApplication.sharedApplication().networkActivityIndicatorVisible = true
             }
             
-            activitiesCount++
+            activitiesCount += 1
         }
         
         static func removeActivity() {
             if activitiesCount > 0 {
-                activitiesCount--
+                activitiesCount -= 1
                 
                 if activitiesCount == 0 {
                     UIApplication.sharedApplication().networkActivityIndicatorVisible = false
