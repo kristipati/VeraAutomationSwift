@@ -707,9 +707,9 @@ public class VeraAPI {
 }
 
 extension Request {
-    func responseData(completionHandler: (NSURLRequest?, NSHTTPURLResponse?, Result<NSData>) -> Void) -> Self {
-        return response(responseSerializer: Request.dataResponseSerializer(), completionHandler: completionHandler)
-    }
+//    func responseData(completionHandler: (NSURLRequest?, NSHTTPURLResponse?, Result<NSData>) -> Void) -> Self {
+//        return response(responseSerializer: Request.dataResponseSerializer(), completionHandler: completionHandler)
+//    }
 
     func responseStringWithActivityIndicator(completionHandler: (NSURLRequest?, NSHTTPURLResponse?, String?, NSError?) -> Void) -> Self {
         let responseHandler: (NSURLRequest?, NSHTTPURLResponse?, NSData?, ErrorType?) -> (Void) = {request, urlResponse, data, error in
