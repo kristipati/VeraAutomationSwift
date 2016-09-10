@@ -32,7 +32,7 @@ class ScenesViewController: UICollectionViewController {
             self.title = self.room?.name
         }
 
-        NotificationCenter.default.addObserver(self, selector: #selector(ScenesViewController.unitInfoUpdated(_:)), name: Vera.VeraUnitInfoUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ScenesViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: Vera.VeraUnitInfoUpdated), object: nil)
     }
 
     func unitInfoUpdated(_ notification: Notification) {

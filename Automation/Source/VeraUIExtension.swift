@@ -10,7 +10,7 @@ import UIKit
 import Vera
 
 extension VeraAPI {
-    public func setDeviceStatusWithNotification(_ device: Device, newDeviceStatus: Int?, newDeviceLevel: Int?, completionHandler:(NSError?)->Void) -> Void {
+    public func setDeviceStatusWithNotification(_ device: Device, newDeviceStatus: Int?, newDeviceLevel: Int?, completionHandler:@escaping (NSError?)->Void) -> Void {
         
         var notificationText = ""
         var deviceName = ""
@@ -37,13 +37,13 @@ extension VeraAPI {
         self.setDeviceStatus(device, newDeviceStatus: newDeviceStatus, newDeviceLevel: newDeviceLevel, completionHandler: completionHandler)
     }
    
-    public func runSceneWithNotification(_ scene: Scene, completionHandler:(NSError?)->Void) -> Void {
+    public func runSceneWithNotification(_ scene: Scene, completionHandler:@escaping (NSError?)->Void) -> Void {
         var sceneName = ""
         if scene.name != nil {
             sceneName = scene.name!
         }
         
-        let notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_RUN_SCENE_MESSAGE_%@", comment: "") as NSString, sceneName)
+        let notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_RUN_SCENE_MESSAGE_%@", comment: "") as NSString, sceneName) as String
         
 //        Swell.info("Running scene: \(notificationText)")
         
@@ -52,7 +52,7 @@ extension VeraAPI {
         self.runScene(scene, completionHandler: completionHandler)
     }
     
-    public func setAudioPowerWithNotification(_ device: Device, on: Bool, completionHandler:(NSError?)->Void) -> Void {
+    public func setAudioPowerWithNotification(_ device: Device, on: Bool, completionHandler:@escaping (NSError?)->Void) -> Void {
         var deviceName = ""
         if device.name != nil {
             deviceName = device.name!
@@ -71,7 +71,7 @@ extension VeraAPI {
         self.setAudioPower(device, on: on, completionHandler: completionHandler)
     }
 
-    public func changeAudioVolumeWithNotification(_ device: Device, increase: Bool, completionHandler:(NSError?)->Void) -> Void {
+    public func changeAudioVolumeWithNotification(_ device: Device, increase: Bool, completionHandler:@escaping (NSError?)->Void) -> Void {
         var deviceName = ""
         if device.name != nil {
             deviceName = device.name!
@@ -90,7 +90,7 @@ extension VeraAPI {
         self.changeAudioVolume(device, increase: increase, completionHandler: completionHandler)
     }
 
-    public func setAudioInputWithNotification(_ device: Device, input: Int, completionHandler:(NSError?)->Void) -> Void {
+    public func setAudioInputWithNotification(_ device: Device, input: Int, completionHandler:@escaping (NSError?)->Void) -> Void {
         var deviceName = ""
         if device.name != nil {
             deviceName = device.name!
@@ -106,7 +106,7 @@ extension VeraAPI {
     }
 
 
-    public func setLockStateWithNotification(_ device: Device, locked: Bool, completionHandler:(NSError?)->Void) -> Void {
+    public func setLockStateWithNotification(_ device: Device, locked: Bool, completionHandler:@escaping (NSError?)->Void) -> Void {
         var deviceName = ""
         if device.name != nil {
             deviceName = device.name!
@@ -125,7 +125,7 @@ extension VeraAPI {
         self.setLockState(device, locked: locked, completionHandler: completionHandler)
     }
     
-    public func changeHVACWithNotification(_ device: Device, fanMode: Device.FanMode?, hvacMode: Device.HVACMode?, coolTemp: Int?, heatTemp: Int?, completionHandler:(NSError?)->Void) -> Void {
+    public func changeHVACWithNotification(_ device: Device, fanMode: Device.FanMode?, hvacMode: Device.HVACMode?, coolTemp: Int?, heatTemp: Int?, completionHandler:@escaping (NSError?)->Void) -> Void {
         
         var deviceName = ""
         if device.name != nil {

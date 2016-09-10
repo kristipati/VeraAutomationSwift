@@ -45,13 +45,13 @@ open class VeraAPI {
     var user : User?
     var auth: Auth?
     var sessionToken: String?
-    var manager: Alamofire.Manager?
+    var manager: Alamofire.SessionManager?
     var reachability: Reachability?
     var currentExternalIPAddress:String?
     var lastExternalIPAddressCheck:Date?
     
     let passwordSeed = "oZ7QE6LcLJp6fiWzdqZc"
-    let log = XCGLogger.defaultInstance()
+    let log = XCGLogger.default
     
     struct ActivityManager {
         
@@ -78,9 +78,9 @@ open class VeraAPI {
 
     public init() {
         let configuration = URLSessionConfiguration.default
-        log.setup(.verbose, showThreadName: true, showLogLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil, fileLogLevel: .debug)
+        log.setup(level: .verbose, showThreadName: true, showLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil, fileLevel: .debug)
         
-        self.manager = Alamofire.Manager(configuration: configuration)
+        self.manager = Alamofire.SessionManager(configuration: configuration)
         self.reachability = Reachability.forLocalWiFi()
         self.reachability?.startNotifier()
         NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged(_:)), name: NSNotification.Name.reachabilityChanged, object: nil)
@@ -99,7 +99,7 @@ open class VeraAPI {
         }
 
         let requestString = "http://ipv4.ipogre.com"
-        self.requestWithActivityIndicator(.GET, URLString: requestString, headers:["User-Agent":"curl"]).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+        self.requestWithActivityIndicator(URLString: requestString, headers:["User-Agent":"curl"]).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
             self.log.info("External IP String: \(responseString)")
             if responseString != nil {
                 self.currentExternalIPAddress = responseString?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
@@ -145,18 +145,18 @@ open class VeraAPI {
     }
     
     fileprivate func getSessionTokenForServer(_ server: String, completionHandler: @escaping (_ token:String?)->Void) {
-        self.requestWithActivityIndicator(.GET, URLString: "https://\(server)/info/session/token", headers: self.authTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+        self.requestWithActivityIndicator(URLString: "https://\(server)/info/session/token", headers: self.authTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
             self.log.info("Response with session token: \(response)")
             self.log.info("ResponseString: \(responseString)")
             
             if let statusCode = response?.statusCode {
                 if statusCode / 200 == 1 {
-                    completionHandler(token: responseString)
+                    completionHandler(responseString)
                     return
                 }
             }
 
-            completionHandler(token: nil)
+            completionHandler(nil)
         }
     }
     
@@ -164,14 +164,14 @@ open class VeraAPI {
         let stringToHash = self.username!.lowercased() + self.password! + self.passwordSeed
         let hashedString = stringToHash.sha1()
         let requestString = "https://us-autha11.mios.com/autha/auth/username/\(self.username!.lowercased())?SHA1Password=\(hashedString)&PK_Oem=1"
-        self.requestWithActivityIndicator(.GET, URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+        self.requestWithActivityIndicator(URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
             if (responseString != nil) {
                 var auth:Auth?
                 auth <-- responseString!
                 self.log.info("Auth response: \(responseString)")
-                completionhandler(auth: auth)
+                completionhandler(auth)
             } else {
-                completionhandler(auth: nil)
+                completionhandler(nil)
             }
         }
     }
@@ -192,7 +192,7 @@ open class VeraAPI {
                 let requestString = "https://\(self.auth!.serverAccount!)/account/account/account/\(self.auth!.account!)/devices"
                 self.getSessionTokenForServer(self.auth!.serverAccount!, completionHandler: { (token) -> Void in
                     if (token != nil) {
-                        self.requestWithActivityIndicator(.GET, URLString: requestString, headers:["MMSSession":token!]).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                        self.requestWithActivityIndicator(URLString: requestString, headers:["MMSSession":token!]).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
                             self.log.info("Response for locator: \(responseString)")
                             if (responseString != nil) {
                                 var tempUser:User?
@@ -207,7 +207,7 @@ open class VeraAPI {
                                     self.getSessionTokenForServer(unit.serverDevice!, completionHandler: { (token) -> Void in
                                         if (token != nil) {
                                             let requestString = "https://\(unit.serverDevice!)/device/device/device/\(unit.serialNumber!)"
-                                            self.requestWithActivityIndicator(.GET, URLString: requestString, headers:["MMSSession":token!]).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                                            self.requestWithActivityIndicator(URLString: requestString, headers:["MMSSession":token!]).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
                                                 self.log.info("Response for device info: \(responseString)")
                                                 if (responseString != nil) {
                                                     var tempUnit:Unit?
@@ -223,21 +223,21 @@ open class VeraAPI {
                                                     self.getSessionTokenForServer(unit.serverRelay!, completionHandler: { (token) -> Void in
                                                         self.sessionToken = token
                                                         self.log.info("Session token: \(token)")
-                                                        completionHandler(device: nil, internalIP: nil, serverDevice: nil)
+                                                        completionHandler(nil, nil, nil)
                                                     })
                                                 } else {
-                                                    completionHandler(device: nil, internalIP: nil, serverDevice: nil)
+                                                    completionHandler(nil, nil, nil)
                                                 }
                                             }
                                         } else {
-                                            completionHandler(device: nil, internalIP: nil, serverDevice: nil)
+                                            completionHandler(nil, nil, nil)
                                         }
                                     })
                                 } else {
-                                    completionHandler(device: nil, internalIP: nil, serverDevice: nil)
+                                    completionHandler(nil, nil, nil)
                                 }
                             } else {
-                                completionHandler(device: nil, internalIP: nil, serverDevice: nil)
+                                completionHandler(nil, nil, nil)
                             }
                         }
                     } else {
@@ -275,7 +275,7 @@ open class VeraAPI {
         }
         let requestString = "https://sta\(server).mios.com/locator_json.php?username=\(self.username!)"
         log.info("Request: \(requestString)")
-        self.requestWithActivityIndicator(.GET, URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+        self.requestWithActivityIndicator(URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
             self.log.info("Response: \(response)")
             self.log.info("ResponseString: \(responseString)")
             if responseString != nil {
@@ -287,7 +287,7 @@ open class VeraAPI {
                 }
             }
             
-            completionHandler(success: self.user != nil)
+            completionHandler(self.user != nil)
         }
     }
     
@@ -328,20 +328,22 @@ open class VeraAPI {
         return nil
     }
 
-    func requestWithActivityIndicator(_ method: Alamofire.Method, URLString: URLStringConvertible, parameters: [String: AnyObject]? = nil, encoding: Alamofire.ParameterEncoding = .url, headers: Dictionary<String, String>? = nil) -> Request {
+    func requestWithActivityIndicator(URLString: URLStringConvertible, parameters: [String: AnyObject]? = nil, headers: Dictionary<String, String>? = nil) -> Request {
         
         log.info("Sending request: \(URLString)")
         
         ActivityManager.addActivity()
-        let mutableURLRequest = NSMutableURLRequest(url: URL(string: URLString.URLString)!)
-        mutableURLRequest.httpMethod = method.rawValue
+        let mutableURLRequest = NSMutableURLRequest(url: URL(string: URLString.urlString)!)
+        mutableURLRequest.httpMethod = "GET"
         if let theHeaders = headers {
             for (key, value) in theHeaders {
                 mutableURLRequest.setValue(value, forHTTPHeaderField: key)
             }
         }
 
-        let request = self.manager!.request(encoding.encode(mutableURLRequest, parameters: parameters).0)
+        
+        let request = self.manager!.request(URLString)
+//        let request = self.manager!.request(encoding.encode(mutableURLRequest, parameters: parameters).0)
         
         let time = DispatchTime.now() + Double(Int64(30.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
         DispatchQueue.main.asyncAfter(deadline: time, execute: { (_) in
@@ -416,7 +418,7 @@ open class VeraAPI {
                 }
                 
                 log.info("request: \(requestString)")
-                self.requestWithActivityIndicator(.GET, URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                self.requestWithActivityIndicator(URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
                     self.log.info("Response: \(response)")
                     self.log.info("ResponseString: \(responseString)")
                     if responseString != nil {
@@ -442,7 +444,7 @@ open class VeraAPI {
                         
                         self.log.info("Unit: \(unit)")
                         
-                        completionHandler(success:(newUnit != nil), fullload: fullload)
+                        completionHandler((newUnit != nil), fullload)
                     }
                 }
             } else {
@@ -479,7 +481,7 @@ open class VeraAPI {
                 }
 
                 if requestString != nil {
-                    self.requestWithActivityIndicator(.GET, URLString: requestString!, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                    self.requestWithActivityIndicator(URLString: requestString!, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
                         completionHandler(error)
                     }
                 }
@@ -507,7 +509,7 @@ open class VeraAPI {
 
                 let requestString = prefix + "lu_action&serviceId=urn:micasaverde-com:serviceId:HomeAutomationGateway1&action=RunScene&SceneNum=\(sceneID)"
                 
-                self.requestWithActivityIndicator(.GET, URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                self.requestWithActivityIndicator(URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
                     completionHandler(error)
                 }
             }
@@ -545,7 +547,7 @@ open class VeraAPI {
                     requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:micasaverde-com:serviceId:SwitchPower1&action=SetTarget&newTargetValue=\(on == true ? 1 : 0)"
                 }
 
-                self.requestWithActivityIndicator(.GET, URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                self.requestWithActivityIndicator(URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
                     completionHandler(error)
                 }
             }
@@ -576,7 +578,7 @@ open class VeraAPI {
                 
                 let requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:micasaverde-com:serviceId:Volume1&action=\(newAction)"
                 
-                self.requestWithActivityIndicator(.GET, URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                self.requestWithActivityIndicator(URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
                     completionHandler(error)
                 }
             }
@@ -602,7 +604,7 @@ open class VeraAPI {
             if let deviceID = device.id {
                 let requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:micasaverde-com:serviceId:InputSelection1&action=Input\(input)"
                 
-                self.requestWithActivityIndicator(.GET, URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                self.requestWithActivityIndicator(URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
                     completionHandler(error)
                 }
             }
@@ -628,7 +630,7 @@ open class VeraAPI {
             if let deviceID = device.id {
                 let requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:micasaverde-com:serviceId:DoorLock1&action=SetTarget&newTargetValue=\(locked == true ? 1 : 0)"
                 
-                self.requestWithActivityIndicator(.GET, URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                self.requestWithActivityIndicator(URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
                     completionHandler(error)
                 }
             }
@@ -694,7 +696,7 @@ open class VeraAPI {
                 }
                 
                 if requestString.isEmpty == false {
-                    self.requestWithActivityIndicator(.GET, URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+                    self.requestWithActivityIndicator(URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
                         completionHandler(error)
                     }
                 }
@@ -711,12 +713,13 @@ extension Request {
 //        return response(responseSerializer: Request.dataResponseSerializer(), completionHandler: completionHandler)
 //    }
 
-    func responseStringWithActivityIndicator(_ completionHandler: (URLRequest?, HTTPURLResponse?, String?, NSError?) -> Void) -> Self {
+    func responseStringWithActivityIndicator(_ completionHandler: @escaping (URLRequest?, HTTPURLResponse?, String?, NSError?) -> Void) -> Self {
         let responseHandler: (URLRequest?, HTTPURLResponse?, Data?, Error?) -> (Void) = {request, urlResponse, data, error in
             VeraAPI.ActivityManager.removeActivity()
-            completionHandler(request, urlResponse, NSString(data: data!, encoding: String.Encoding.utf8) as? String, nil)
+            completionHandler(request, urlResponse, NSString(data: data!, encoding: String.Encoding.utf8.rawValue) as? String, nil)
         }
         
-        return response(completionHandler: responseHandler)
+//        return response(completionHandler: responseHandler)
+        return self
     }
 }

@@ -39,7 +39,7 @@ class AudioViewController: UICollectionViewController, AudioProtocol {
             self.title = self.room?.name
         }
 
-        NotificationCenter.default.addObserver(self, selector: #selector(AudioViewController.unitInfoUpdated(_:)), name: Vera.VeraUnitInfoUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(AudioViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: Vera.VeraUnitInfoUpdated), object: nil)
     }
     
     func unitInfoUpdated(_ notification: Notification) {

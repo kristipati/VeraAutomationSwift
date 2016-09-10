@@ -9,7 +9,7 @@
 import UIKit
 import Vera
 import XCGLogger
-import Locksmith
+import KeychainSwift
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
@@ -46,7 +46,7 @@ let sTimeForCheck:TimeInterval = 4.0
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate, UITabBarControllerDelegate {
 
-    let log = XCGLogger.defaultInstance()
+    let log = XCGLogger.default
     var veraAPI = Vera.VeraAPI()
     var periodicTimer: Timer?
     var lastUnitCheck: Date?
@@ -62,19 +62,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     var initialTabViewControllers = [UIViewController]()
 
     func logout() {
-        do {
-            try Locksmith.deleteDataForUserAccount(kPassword)
-        }
-        catch {
-            
-        }
+            KeychainSwift(keyPrefix: "").clear()
         
-        do {
-            try Locksmith.deleteDataForUserAccount(kUsername)
-        }
-        catch {
-            
-        }
         self.veraAPI.resetAPI()
         self.presentLogin()
     }
@@ -87,7 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let tabbarController = self.window!.rootViewController as! UITabBarController
         tabbarController.delegate = self
         
-        log.setup(.verbose, showThreadName: true, showLogLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil, fileLogLevel: .debug)
+        log.setup(level: .verbose, showThreadName: true, showLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil, fileLevel: .debug)
 
         
         let switchesStoryboard = UIStoryboard(name: "Switches", bundle: nil)
@@ -314,25 +303,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         self.handlingLogin = true
 
-        var passwordData:[String:String]?
-        var usernameData:[String:String]?
-        passwordData = Locksmith.loadDataForUserAccount(kPassword) as? [String:String]
-        usernameData = Locksmith.loadDataForUserAccount(kUsername) as? [String:String]
-
-        var password:NSString? = nil
-        var username:NSString? = nil
+        var password = KeychainSwift().get(kPassword)
+        var username = KeychainSwift().get(kUsername)
         
-        if passwordData != nil {
-            password = passwordData![kPassword] as NSString?
-        }
-
-        if usernameData != nil {
-            username = usernameData![kUsername] as NSString?
-        }
-
-        if password != nil && password!.length > 0 && username != nil && username!.length > 0 {
-            veraAPI.username = username as? String
-            veraAPI.password = password as? String
+        if password != nil && password!.characters.count > 0 && username != nil && username!.characters.count > 0 {
+            veraAPI.username = username
+            veraAPI.password = password
             
             veraAPI.getUnitsInformationForUser{ (success) -> Void in
                 if success == true {
@@ -361,23 +337,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             let password = passwordTextField.text
             let username = loginTextField.text
             if password != nil && username != nil && password!.isEmpty == false && username!.isEmpty == false {
-                let usernameData = [kUsername: username!]
-                let passwordData = [kPassword: password!]
-                do {
-                    try Locksmith.deleteDataForUserAccount(kPassword)
-                }
-                catch {
-                    
-                }
+                KeychainSwift(keyPrefix: "").clear()
+                KeychainSwift(keyPrefix: "").set(username!, forKey: kUsername)
+                KeychainSwift(keyPrefix: "").set(password!, forKey: kPassword)
                 
-                do {
-                    try Locksmith.deleteDataForUserAccount(kUsername)
-                }
-                catch {
-                    
-                }
-                try! Locksmith.saveData(usernameData, forUserAccount: kUsername)
-                try! Locksmith.saveData(passwordData, forUserAccount: kPassword)
                 self.handleLogin()
                 
             } else {
@@ -408,11 +371,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                         let creds = credentials as? [String:String]
                         let username = creds![AppExtensionUsernameKey] as String?
                         let password = creds![AppExtensionPasswordKey] as String?
-                        let usernameData = [kUsername: username!]
-                        let passwordData = [kPassword: password!]
-
-                        try! Locksmith.saveData(usernameData, forUserAccount: kUsername)
-                        try! Locksmith.saveData(passwordData, forUserAccount: kPassword)
+                        KeychainSwift(keyPrefix: "").clear()
+                        KeychainSwift(keyPrefix: "").set(username!, forKey: kUsername)
+                        KeychainSwift(keyPrefix: "").set(password!, forKey: kPassword)
                         self.handleLogin()
                     }
                     else {
@@ -428,13 +389,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
         alertController.addTextField { (textField) in
             textField.placeholder = NSLocalizedString("USERNAME_PLACEHOLDER", comment: "")
-            let usernameData = Locksmith.loadDataForUserAccount(kUsername) as? [String:String]
-            if usernameData != nil {
-                textField.text = usernameData![kUsername]
-            }
-            else {
-                textField.text = nil
-            }
+            textField.text = KeychainSwift(keyPrefix: "").get(kUsername)
+
             NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: textField, queue: OperationQueue.main) { (notification) in
                 loginAction.isEnabled = textField.text != ""
             }
@@ -442,13 +398,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         alertController.addTextField { (textField) in
             textField.placeholder = NSLocalizedString("PASSWORD_PLACEHOLDER", comment: "")
-            let passwordData = Locksmith.loadDataForUserAccount(kPassword) as? [String:String]
-            if passwordData != nil {
-                textField.text = passwordData![kPassword]
-            }
-            else {
-                textField.text = nil
-            }
+            textField.text = KeychainSwift(keyPrefix: "").get(kPassword)
             textField.isSecureTextEntry = true
         }
         
@@ -458,11 +408,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             alertController.addAction(onePasswordAction)
         }
         
-        var passwordData:[String: AnyObject]?
-        var usernameData:[String: AnyObject]?
-        passwordData = Locksmith.loadDataForUserAccount(kPassword) as? [String:String]
-        usernameData = Locksmith.loadDataForUserAccount(kUsername) as? [String:String]
-        if passwordData != nil && usernameData != nil {
+        if KeychainSwift(keyPrefix: "").get(kUsername) != nil && KeychainSwift(keyPrefix: "").get(kPassword) != nil {
             loginAction.isEnabled = true
         }
         let tabbarController = self.window!.rootViewController as! UITabBarController
@@ -584,7 +530,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         }
     }
     
-    func showMessageWithTitle(_ title: NSString) {
+    func showMessageWithTitle(_ title: String) {
         let tabbarController = self.window!.rootViewController as! UITabBarController
         _ = CGRect(x: 0, y: 0, width: tabbarController.view.frame.maxX, height: 64)
         if self.notifyView != nil {

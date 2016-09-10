@@ -177,13 +177,13 @@ open class Unit : Deserializable, CustomStringConvertible {
         if let rooms = self.rooms {
             for room in rooms {
                 if let _ = self.devicesForRoom(room, excluded: excluded, categories: categories) {
-                    roomSet.append(room)
+                    roomSet.insert(room)
                 }
             }
         }
         
         if roomSet.isEmpty == false {
-            return roomSet.elements.sorted(by: {$0.name<$1.name})
+            return roomSet.sorted(by: {$0.name<$1.name})
         }
         
         return nil
@@ -194,13 +194,13 @@ open class Unit : Deserializable, CustomStringConvertible {
         if let rooms = self.rooms {
             for room in rooms {
                 if let _ = scenesForRoom(room, excluded: excluded) {
-                    roomSet.append(room)
+                    roomSet.insert(room)
                 }
             }
         }
         
         if roomSet.isEmpty == false {
-            return roomSet.elements.sorted(by: {$0.name<$1.name})
+            return roomSet.sorted(by: {$0.name<$1.name})
         }
         
         return nil

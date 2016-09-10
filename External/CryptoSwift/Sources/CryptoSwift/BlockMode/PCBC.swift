@@ -8,59 +8,32 @@
 //  Propagating Cipher Block Chaining (PCBC)
 //
 
-struct PCBCModeEncryptGenerator: BlockModeGenerator {
+struct PCBCModeWorker: BlockModeWorker {
     typealias Element = Array<UInt8>
-    let options: BlockModeOptions = [.InitializationVectorRequired, .PaddingRequired]
 
-    fileprivate let iv: Element
-    fileprivate let inputGenerator: AnyIterator<Element>
+    let cipherOperation: CipherOperationOnBlock
+    private let iv: Element
+    private var prev: Element?
 
-    fileprivate let cipherOperation: CipherOperationOnBlock
-    fileprivate var prevCiphertext: Element?
-
-    init(iv: Array<UInt8>, cipherOperation: @escaping CipherOperationOnBlock, inputGenerator: AnyIterator<Array<UInt8>>) {
+    init(iv: Array<UInt8>, cipherOperation: @escaping CipherOperationOnBlock) {
         self.iv = iv
         self.cipherOperation = cipherOperation
-        self.inputGenerator = inputGenerator
     }
 
-    mutating func next() -> Element? {
-        guard let plaintext = inputGenerator.next(),
-              let encrypted = cipherOperation(xor(prevCiphertext ?? iv, plaintext))
-        else {
-            return nil
+    mutating func encrypt(_ plaintext: Array<UInt8>) -> Array<UInt8> {
+        guard let ciphertext = cipherOperation(xor(prev ?? iv, plaintext)) else {
+            return plaintext
         }
-
-        self.prevCiphertext = xor(plaintext, encrypted)
-        return encrypted
-    }
-}
-
-struct PCBCModeDecryptGenerator: BlockModeGenerator {
-    typealias Element = Array<UInt8>
-    let options: BlockModeOptions = [.InitializationVectorRequired, .PaddingRequired]
-
-    fileprivate let iv: Element
-    fileprivate let inputGenerator: AnyIterator<Element>
-
-    fileprivate let cipherOperation: CipherOperationOnBlock
-    fileprivate var prevCiphertext: Element?
-
-    init(iv: Array<UInt8>, cipherOperation: @escaping CipherOperationOnBlock, inputGenerator: AnyIterator<Element>) {
-        self.iv = iv
-        self.cipherOperation = cipherOperation
-        self.inputGenerator = inputGenerator
+        prev = xor(plaintext, ciphertext)
+        return ciphertext
     }
 
-    mutating func next() -> Element? {
-        guard let ciphertext = inputGenerator.next(),
-              let decrypted = cipherOperation(ciphertext)
-        else {
-            return nil
+    mutating func decrypt(_ ciphertext: Array<UInt8>) -> Array<UInt8> {
+        guard let plaintext = cipherOperation(ciphertext) else {
+            return ciphertext
         }
-
-        let plaintext = xor(prevCiphertext ?? iv, decrypted)
-        self.prevCiphertext = xor(plaintext, ciphertext)
-        return plaintext
+        let result = xor(prev ?? iv, plaintext)
+        self.prev = xor(plaintext, ciphertext)
+        return result
     }
 }

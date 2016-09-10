@@ -60,7 +60,7 @@ class SFSwiftNotification: UIView, UICollisionBehaviorDelegate, UIDynamicAnimato
         self.delegate = delegate
         
         var newFrame = self.frame
-        newFrame.insetInPlace(dx: 20, dy: 0)
+        newFrame = newFrame.insetBy(dx: 20, dy: 0)
         label = UILabel(frame: newFrame)
         label.text = title as? String
         label.textAlignment = NSTextAlignment.center

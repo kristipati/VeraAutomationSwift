@@ -1,4 +1,5 @@
 ### Xcode ###
+.build/
 build/
 *.pbxuser
 !default.pbxuser
@@ -16,3 +17,4 @@ DerivedData
 timeline.xctimeline
 
 /Framework
+.DS_Store
