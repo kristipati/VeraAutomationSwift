@@ -8,9 +8,20 @@
 
 import UIKit
 import Vera
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 protocol SwitchProtocol {
-    func changeDeviceLevel(device: Device, level: Int)
+    func changeDeviceLevel(_ device: Device, level: Int)
 }
 
 class SwitchesViewController: UICollectionViewController, SwitchProtocol {
@@ -21,17 +32,17 @@ class SwitchesViewController: UICollectionViewController, SwitchProtocol {
         super.viewDidLoad()
 
         if self.room != nil {
-            self.devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(self.room!, categories: .Switch, .DimmableLight)
+            self.devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(self.room!, categories: .switch, .dimmableLight)
             self.title = self.room?.name
         }
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SwitchesViewController.unitInfoUpdated(_:)), name: Vera.VeraUnitInfoUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(SwitchesViewController.unitInfoUpdated(_:)), name: Vera.VeraUnitInfoUpdated, object: nil)
     }
 
 
-    func unitInfoUpdated(notification: NSNotification) {
+    func unitInfoUpdated(_ notification: Notification) {
         var fullload = false
-        if let info = notification.userInfo as? Dictionary<String, AnyObject> {
+        if let info = (notification as NSNotification).userInfo as? Dictionary<String, AnyObject> {
             if let tempFullLoad = info[VeraUnitInfoFullLoad] as? Bool {
                 fullload = tempFullLoad
             }
@@ -48,7 +59,7 @@ class SwitchesViewController: UICollectionViewController, SwitchProtocol {
 
     // MARK: UICollectionViewDataSource
 
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if self.devices != nil {
             return self.devices!.count
         }
@@ -56,11 +67,11 @@ class SwitchesViewController: UICollectionViewController, SwitchProtocol {
         return 0
     }
 
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("DeviceCell", forIndexPath: indexPath) as! DeviceCell
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DeviceCell", for: indexPath) as! DeviceCell
     
-        if indexPath.row < self.devices?.count {
-            let device = self.devices![indexPath.row]
+        if (indexPath as NSIndexPath).row < self.devices?.count {
+            let device = self.devices![(indexPath as NSIndexPath).row]
             cell.device = device
             cell.delegate = self
             cell.setup()
@@ -71,9 +82,9 @@ class SwitchesViewController: UICollectionViewController, SwitchProtocol {
 
     // MARK: UICollectionViewDelegate
 
-    override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        if indexPath.row < self.devices?.count {
-            let device = self.devices![indexPath.row]
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if (indexPath as NSIndexPath).row < self.devices?.count {
+            let device = self.devices![(indexPath as NSIndexPath).row]
             var newStatus = 0
             if let status = device.status {
                 if status == 0 {
@@ -87,7 +98,7 @@ class SwitchesViewController: UICollectionViewController, SwitchProtocol {
         }
     }
     
-    func changeDeviceLevel(device: Device, level: Int) {
+    func changeDeviceLevel(_ device: Device, level: Int) {
         AppDelegate.appDelegate().veraAPI.setDeviceStatusWithNotification(device, newDeviceStatus: nil, newDeviceLevel: level, completionHandler: { (error: NSError?) -> Void in
             
         })

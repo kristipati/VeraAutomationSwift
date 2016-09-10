@@ -12,12 +12,12 @@ struct ECBModeEncryptGenerator: BlockModeGenerator {
     typealias Element = Array<UInt8>
     let options: BlockModeOptions = [.InitializationVectorRequired, .PaddingRequired]
 
-    private let iv: Element
-    private let inputGenerator: AnyGenerator<Element>
+    fileprivate let iv: Element
+    fileprivate let inputGenerator: AnyIterator<Element>
 
-    private let cipherOperation: CipherOperationOnBlock
+    fileprivate let cipherOperation: CipherOperationOnBlock
 
-    init(iv: Array<UInt8>, cipherOperation: CipherOperationOnBlock, inputGenerator: AnyGenerator<Array<UInt8>>) {
+    init(iv: Array<UInt8>, cipherOperation: @escaping CipherOperationOnBlock, inputGenerator: AnyIterator<Array<UInt8>>) {
         self.iv = iv
         self.cipherOperation = cipherOperation
         self.inputGenerator = inputGenerator
@@ -25,7 +25,7 @@ struct ECBModeEncryptGenerator: BlockModeGenerator {
 
     mutating func next() -> Element? {
         guard let plaintext = inputGenerator.next(),
-              let encrypted = cipherOperation(block: plaintext)
+              let encrypted = cipherOperation(plaintext)
         else {
             return nil
         }

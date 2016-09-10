@@ -8,9 +8,20 @@
 
 import UIKit
 import Vera
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 protocol LockProtocol {
-    func setDeviceLocked(device:Device, locked: Bool)
+    func setDeviceLocked(_ device:Device, locked: Bool)
 }
 
 class LocksViewController: UICollectionViewController, LockProtocol {
@@ -19,20 +30,20 @@ class LocksViewController: UICollectionViewController, LockProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LocksViewController.unitInfoUpdated(_:)), name: Vera.VeraUnitInfoUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(LocksViewController.unitInfoUpdated(_:)), name: Vera.VeraUnitInfoUpdated, object: nil)
         
         self.loadLockDevices()
     }
     
-    func unitInfoUpdated(notification: NSNotification) {
+    func unitInfoUpdated(_ notification: Notification) {
         self.loadLockDevices()
     }
     
     func loadLockDevices () {
         var devices = [Device]()
-        if let roomsWithLocks = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.Lock) {
+        if let roomsWithLocks = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.lock) {
             for room in roomsWithLocks {
-                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: Vera.Device.Category.Lock) {
+                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: Vera.Device.Category.lock) {
                         for device in roomDevices {
                             devices.append(device)
                         }
@@ -48,7 +59,7 @@ class LocksViewController: UICollectionViewController, LockProtocol {
 
     // MARK: UICollectionViewDataSource
 
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if self.devices != nil {
             return self.devices!.count
         }
@@ -56,11 +67,11 @@ class LocksViewController: UICollectionViewController, LockProtocol {
         return 0
     }
     
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("LockCell", forIndexPath: indexPath) as! LockCell
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LockCell", for: indexPath) as! LockCell
         
-        if indexPath.row < self.devices?.count {
-            let device = self.devices![indexPath.row]
+        if (indexPath as NSIndexPath).row < self.devices?.count {
+            let device = self.devices![(indexPath as NSIndexPath).row]
             cell.device = device
             cell.delegate = self
             cell.setup()
@@ -69,7 +80,7 @@ class LocksViewController: UICollectionViewController, LockProtocol {
         return cell as UICollectionViewCell
     }
     
-    func setDeviceLocked(device:Device, locked: Bool) {
+    func setDeviceLocked(_ device:Device, locked: Bool) {
         AppDelegate.appDelegate().veraAPI.setLockStateWithNotification(device, locked:locked, completionHandler: { (error: NSError?) -> Void in
             
         })

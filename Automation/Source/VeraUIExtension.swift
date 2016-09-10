@@ -10,7 +10,7 @@ import UIKit
 import Vera
 
 extension VeraAPI {
-    public func setDeviceStatusWithNotification(device: Device, newDeviceStatus: Int?, newDeviceLevel: Int?, completionHandler:(NSError?)->Void) -> Void {
+    public func setDeviceStatusWithNotification(_ device: Device, newDeviceStatus: Int?, newDeviceLevel: Int?, completionHandler:(NSError?)->Void) -> Void {
         
         var notificationText = ""
         var deviceName = ""
@@ -20,12 +20,12 @@ extension VeraAPI {
         
         if let status = newDeviceStatus {
             if status == 0 {
-                notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_MESSAGE_OFF_%@", comment: ""), deviceName) as String
+                notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_MESSAGE_OFF_%@", comment: "") as NSString, deviceName) as String
             } else {
-                notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_MESSAGE_ON_%@", comment: ""), deviceName) as String
+                notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_MESSAGE_ON_%@", comment: "") as NSString, deviceName) as String
             }
         } else if let level = newDeviceLevel {
-            notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_MESSAGE_LEVEL_%@_%ld", comment: ""), deviceName, level) as String
+            notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_MESSAGE_LEVEL_%@_%ld", comment: "") as NSString, deviceName, level) as String
         }
         
         
@@ -37,13 +37,13 @@ extension VeraAPI {
         self.setDeviceStatus(device, newDeviceStatus: newDeviceStatus, newDeviceLevel: newDeviceLevel, completionHandler: completionHandler)
     }
    
-    public func runSceneWithNotification(scene: Scene, completionHandler:(NSError?)->Void) -> Void {
+    public func runSceneWithNotification(_ scene: Scene, completionHandler:(NSError?)->Void) -> Void {
         var sceneName = ""
         if scene.name != nil {
             sceneName = scene.name!
         }
         
-        let notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_RUN_SCENE_MESSAGE_%@", comment: ""), sceneName)
+        let notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_RUN_SCENE_MESSAGE_%@", comment: "") as NSString, sceneName)
         
 //        Swell.info("Running scene: \(notificationText)")
         
@@ -52,7 +52,7 @@ extension VeraAPI {
         self.runScene(scene, completionHandler: completionHandler)
     }
     
-    public func setAudioPowerWithNotification(device: Device, on: Bool, completionHandler:(NSError?)->Void) -> Void {
+    public func setAudioPowerWithNotification(_ device: Device, on: Bool, completionHandler:(NSError?)->Void) -> Void {
         var deviceName = ""
         if device.name != nil {
             deviceName = device.name!
@@ -61,9 +61,9 @@ extension VeraAPI {
         var notificationText = ""
         
         if on == false {
-            notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_MESSAGE_OFF_%@", comment: ""), deviceName) as String
+            notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_MESSAGE_OFF_%@", comment: "") as NSString, deviceName) as String
         } else {
-            notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_MESSAGE_ON_%@", comment: ""), deviceName) as String
+            notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_MESSAGE_ON_%@", comment: "") as NSString, deviceName) as String
         }
         
         AppDelegate.appDelegate().showMessageWithTitle(notificationText)
@@ -71,7 +71,7 @@ extension VeraAPI {
         self.setAudioPower(device, on: on, completionHandler: completionHandler)
     }
 
-    public func changeAudioVolumeWithNotification(device: Device, increase: Bool, completionHandler:(NSError?)->Void) -> Void {
+    public func changeAudioVolumeWithNotification(_ device: Device, increase: Bool, completionHandler:(NSError?)->Void) -> Void {
         var deviceName = ""
         if device.name != nil {
             deviceName = device.name!
@@ -80,9 +80,9 @@ extension VeraAPI {
         var notificationText = ""
         
         if increase == false {
-            notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_VOLUME_DOWN_%@", comment: ""), deviceName) as String
+            notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_VOLUME_DOWN_%@", comment: "") as NSString, deviceName) as String
         } else {
-            notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_VOLUME_UP_%@", comment: ""), deviceName) as String
+            notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_VOLUME_UP_%@", comment: "") as NSString, deviceName) as String
         }
         
         AppDelegate.appDelegate().showMessageWithTitle(notificationText)
@@ -90,7 +90,7 @@ extension VeraAPI {
         self.changeAudioVolume(device, increase: increase, completionHandler: completionHandler)
     }
 
-    public func setAudioInputWithNotification(device: Device, input: Int, completionHandler:(NSError?)->Void) -> Void {
+    public func setAudioInputWithNotification(_ device: Device, input: Int, completionHandler:(NSError?)->Void) -> Void {
         var deviceName = ""
         if device.name != nil {
             deviceName = device.name!
@@ -98,7 +98,7 @@ extension VeraAPI {
         
         var notificationText = ""
         
-        notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_INPUT_%@_%d", comment: ""), deviceName as String, input) as String
+        notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_INPUT_%@_%d", comment: "") as NSString, deviceName as String, input) as String
 
         AppDelegate.appDelegate().showMessageWithTitle(notificationText)
         
@@ -106,7 +106,7 @@ extension VeraAPI {
     }
 
 
-    public func setLockStateWithNotification(device: Device, locked: Bool, completionHandler:(NSError?)->Void) -> Void {
+    public func setLockStateWithNotification(_ device: Device, locked: Bool, completionHandler:(NSError?)->Void) -> Void {
         var deviceName = ""
         if device.name != nil {
             deviceName = device.name!
@@ -115,9 +115,9 @@ extension VeraAPI {
         var notificationText = ""
         
         if locked == true {
-            notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_LOCKING_%@", comment: ""), deviceName) as String
+            notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_LOCKING_%@", comment: "") as NSString, deviceName) as String
         } else {
-            notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_UNLOCKING_%@", comment: ""), deviceName) as String
+            notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_UNLOCKING_%@", comment: "") as NSString, deviceName) as String
         }
         
         AppDelegate.appDelegate().showMessageWithTitle(notificationText)
@@ -125,7 +125,7 @@ extension VeraAPI {
         self.setLockState(device, locked: locked, completionHandler: completionHandler)
     }
     
-    public func changeHVACWithNotification(device: Device, fanMode: Device.FanMode?, hvacMode: Device.HVACMode?, coolTemp: Int?, heatTemp: Int?, completionHandler:(NSError?)->Void) -> Void {
+    public func changeHVACWithNotification(_ device: Device, fanMode: Device.FanMode?, hvacMode: Device.HVACMode?, coolTemp: Int?, heatTemp: Int?, completionHandler:(NSError?)->Void) -> Void {
         
         var deviceName = ""
         if device.name != nil {
@@ -136,32 +136,32 @@ extension VeraAPI {
 
         if let mode = fanMode {
             switch mode {
-                case .Auto:
-                    notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_FAN_MODE_AUTO_%@", comment: ""), deviceName) as String
-                case .On:
-                    notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_FAN_MODE_ON_%@", comment: ""), deviceName) as String
+                case .auto:
+                    notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_FAN_MODE_AUTO_%@", comment: "") as NSString, deviceName) as String
+                case .on:
+                    notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_FAN_MODE_ON_%@", comment: "") as NSString, deviceName) as String
             }
         }
         
         if let mode = hvacMode {
             switch mode {
-                case .Auto:
-                    notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_HVAC_AUTO_%@", comment: ""), deviceName) as String
-            case .Off:
-                notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_HVAC_OFF_%@", comment: ""), deviceName) as String
-            case .Heat:
-                notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_HVAC_HEAT_%@", comment: ""), deviceName) as String
-            case .Cool:
-                notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_HVAC_COOL_%@", comment: ""), deviceName) as String
+                case .auto:
+                    notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_HVAC_AUTO_%@", comment: "") as NSString, deviceName) as String
+            case .off:
+                notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_HVAC_OFF_%@", comment: "") as NSString, deviceName) as String
+            case .heat:
+                notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_HVAC_HEAT_%@", comment: "") as NSString, deviceName) as String
+            case .cool:
+                notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_HVAC_COOL_%@", comment: "") as NSString, deviceName) as String
             }
         }
         
         if let temp = coolTemp {
-            notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_COOL_TEMPERATURE_%@_%d", comment: ""), deviceName, temp) as String
+            notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_COOL_TEMPERATURE_%@_%d", comment: "") as NSString, deviceName, temp) as String
         }
         
         if let temp = heatTemp {
-            notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_HEAT_TEMPERATURE_%@_%d", comment: ""), deviceName, temp) as String
+            notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_HEAT_TEMPERATURE_%@_%d", comment: "") as NSString, deviceName, temp) as String
         }
         
         AppDelegate.appDelegate().showMessageWithTitle(notificationText)

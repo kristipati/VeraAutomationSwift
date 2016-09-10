@@ -8,10 +8,10 @@
 
 extension Bit {
     func inverted() -> Bit {
-        if (self == Bit.Zero) {
-            return Bit.One
+        if (self == Bit.zero) {
+            return Bit.one
         }
 
-        return Bit.Zero
+        return Bit.zero
     }
 }

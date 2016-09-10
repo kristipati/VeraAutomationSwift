@@ -15,21 +15,21 @@ public enum Hash {
     
     public func calculate() -> [UInt8] {
         switch self {
-        case md5(let bytes):
+        case .md5(let bytes):
             return MD5(bytes).calculate()
-        case sha1(let bytes):
+        case .sha1(let bytes):
             return SHA1(bytes).calculate()
-        case sha224(let bytes):
+        case .sha224(let bytes):
             return SHA2(bytes, variant: .sha224).calculate32()
-        case sha256(let bytes):
+        case .sha256(let bytes):
             return SHA2(bytes, variant: .sha256).calculate32()
-        case sha384(let bytes):
+        case .sha384(let bytes):
             return SHA2(bytes, variant: .sha384).calculate64()
-        case sha512(let bytes):
+        case .sha512(let bytes):
             return SHA2(bytes, variant: .sha512).calculate64()
-        case crc32(let bytes):
+        case .crc32(let bytes):
             return CRC().crc32(bytes.0, seed: bytes.seed).bytes()
-        case crc16(let bytes):
+        case .crc16(let bytes):
             return UInt32(CRC().crc16(bytes.0, seed: bytes.seed)).bytes(2)
         }
     }

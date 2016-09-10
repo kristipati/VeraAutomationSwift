@@ -13,12 +13,12 @@ class SwitchesListViewController: UITableViewController {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+        if UIDevice.current.userInterfaceIdiom == .pad {
             self.clearsSelectionOnViewWillAppear = true
             self.preferredContentSize = CGSize(width: 320.0, height: 600.0)
         }
         
-        self.tableView.tableFooterView = UIView(frame: CGRectMake(0, 0, 0, 0))
+        self.tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
     }
 
     override func viewDidLoad() {
@@ -27,13 +27,13 @@ class SwitchesListViewController: UITableViewController {
         self.tableView.estimatedRowHeight = 44
         self.tableView.rowHeight = UITableViewAutomaticDimension;
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SwitchesListViewController.unitInfoUpdated(_:)), name: Vera.VeraUnitInfoUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(SwitchesListViewController.unitInfoUpdated(_:)), name: Vera.VeraUnitInfoUpdated, object: nil)
         self.loadRooms(true)
     }
     
-    func unitInfoUpdated(notification: NSNotification) {
+    func unitInfoUpdated(_ notification: Notification) {
         var fullload = false
-        if let info = notification.userInfo as? Dictionary<String, AnyObject> {
+        if let info = (notification as NSNotification).userInfo as? Dictionary<String, AnyObject> {
             if let tempFullLoad = info[VeraUnitInfoFullLoad] as? Bool {
                 fullload = tempFullLoad
             }
@@ -41,11 +41,11 @@ class SwitchesListViewController: UITableViewController {
         self.loadRooms(fullload)
     }
 
-    func loadRooms(fullload: Bool) {
+    func loadRooms(_ fullload: Bool) {
         if fullload == true {
-            self.navigationController?.popToRootViewControllerAnimated(false)
+            self.navigationController?.popToRootViewController(animated: false)
             if let indexPath = self.tableView.indexPathForSelectedRow {
-                self.tableView.deselectRowAtIndexPath(indexPath, animated: false)
+                self.tableView.deselectRow(at: indexPath, animated: false)
             }
             self.tableView.reloadData()
         }
@@ -53,16 +53,16 @@ class SwitchesListViewController: UITableViewController {
     
     // MARK: - Segues
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetail" {
-            let controller = (segue.destinationViewController as! UINavigationController).topViewController as! SwitchesViewController
+            let controller = (segue.destination as! UINavigationController).topViewController as! SwitchesViewController
             if let indexPath = self.tableView.indexPathForSelectedRow {
-                if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.Switch, Vera.Device.Category.DimmableLight) {
-                    let room = roomsWithSwitches[indexPath.row]
+                if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.switch, Vera.Device.Category.dimmableLight) {
+                    let room = roomsWithSwitches[(indexPath as NSIndexPath).row]
                     controller.room = room
                 }
 
-                controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
+                controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
         }
@@ -70,23 +70,23 @@ class SwitchesListViewController: UITableViewController {
 
     // MARK: - Table View
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.Switch, Vera.Device.Category.DimmableLight) {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.switch, Vera.Device.Category.dimmableLight) {
                 return roomsWithSwitches.count
             }
         
         return 0
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
 
-        if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.Switch, Vera.Device.Category.DimmableLight) {
-            let room = roomsWithSwitches[indexPath.row]
+        if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.switch, Vera.Device.Category.dimmableLight) {
+            let room = roomsWithSwitches[(indexPath as NSIndexPath).row]
             cell.textLabel!.text = room.name
         }
         
-        cell.accessoryType = .DisclosureIndicator
+        cell.accessoryType = .disclosureIndicator
 
         return cell
     }

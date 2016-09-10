@@ -16,16 +16,16 @@ class BaseCell: UICollectionViewCell {
             self.layer.cornerRadius = 5.0
             let bgLayer = self.blueGradientLayer()
             bgLayer.frame = self.bounds
-            self.layer.insertSublayer(bgLayer, atIndex: 0)
+            self.layer.insertSublayer(bgLayer, at: 0)
         }
     }
     
     func blueGradientLayer()->CAGradientLayer {
-        let colorOne = UIColor.whiteColor()
+        let colorOne = UIColor.white
         let colorTwo = UIColor(red: 176.0/255.0, green: 224.0/255.0, blue: 230.0/255.0, alpha: 1.0)
-        let colors = [colorOne.CGColor, colorTwo.CGColor]
-        let stopOne = NSNumber(double: 0.0)
-        let stopTwo = NSNumber(double: 1.0)
+        let colors = [colorOne.cgColor, colorTwo.cgColor]
+        let stopOne = NSNumber(value: 0.0 as Double)
+        let stopTwo = NSNumber(value: 1.0 as Double)
         let locations = [stopOne, stopTwo]
         
         let gradientLayer = CAGradientLayer()

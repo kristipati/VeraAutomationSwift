@@ -8,6 +8,17 @@
 
 import UIKit
 import Vera
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 class OnViewController: UICollectionViewController {
     var devices: [Device]?
@@ -15,20 +26,20 @@ class OnViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(OnViewController.unitInfoUpdated(_:)), name: Vera.VeraUnitInfoUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(OnViewController.unitInfoUpdated(_:)), name: Vera.VeraUnitInfoUpdated, object: nil)
         
         self.loadOnDevices()
     }
 
-    func unitInfoUpdated(notification: NSNotification) {
+    func unitInfoUpdated(_ notification: Notification) {
         self.loadOnDevices()
     }
     
     func loadOnDevices () {
         var devices = [Device]()
-        if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.Switch, Vera.Device.Category.DimmableLight) {
+        if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.switch, Vera.Device.Category.dimmableLight) {
             for room in roomsWithSwitches {
-                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: Vera.Device.Category.Switch, Vera.Device.Category.DimmableLight) {
+                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: Vera.Device.Category.switch, Vera.Device.Category.dimmableLight) {
                     for device in roomDevices {
                         if let status = device.status {
                             if status == 1 {
@@ -45,7 +56,7 @@ class OnViewController: UICollectionViewController {
         self.collectionView!.reloadData()
     }
     
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if self.devices != nil {
             return self.devices!.count
         }
@@ -53,11 +64,11 @@ class OnViewController: UICollectionViewController {
         return 0
     }
 
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("OnCellIdentifier", forIndexPath: indexPath) as! OnDeviceCell
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "OnCellIdentifier", for: indexPath) as! OnDeviceCell
         
-        if indexPath.row < self.devices?.count {
-            let device = self.devices![indexPath.row]
+        if (indexPath as NSIndexPath).row < self.devices?.count {
+            let device = self.devices![(indexPath as NSIndexPath).row]
             cell.device = device
             cell.setup()
         }
@@ -65,9 +76,9 @@ class OnViewController: UICollectionViewController {
         return cell as UICollectionViewCell
     }
 
-    override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        if indexPath.row < self.devices?.count {
-            let device = self.devices![indexPath.row]
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if (indexPath as NSIndexPath).row < self.devices?.count {
+            let device = self.devices![(indexPath as NSIndexPath).row]
             
             AppDelegate.appDelegate().veraAPI.setDeviceStatusWithNotification(device, newDeviceStatus: 0, newDeviceLevel: nil, completionHandler: { (error: NSError?) -> Void in
                 

@@ -55,7 +55,7 @@ final class SHA2 : HashProtocol {
         
         var size:Int { return self.rawValue }
         
-        private var h:[UInt64] {
+        fileprivate var h:[UInt64] {
             switch (self) {
             case .sha224:
                 return [0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939, 0xffc00b31, 0x68581511, 0x64f98fa7, 0xbefa4fa4]
@@ -68,7 +68,7 @@ final class SHA2 : HashProtocol {
             }
         }
         
-        private var k:[UInt64] {
+        fileprivate var k:[UInt64] {
             switch (self) {
             case .sha224, .sha256:
                 return [0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -99,7 +99,7 @@ final class SHA2 : HashProtocol {
             }
         }
         
-        private func resultingArray<T>(hh:[T]) -> ArraySlice<T> {
+        fileprivate func resultingArray<T>(_ hh:[T]) -> ArraySlice<T> {
             switch (self) {
             case .sha224:
                 return hh[0..<7]
@@ -130,7 +130,7 @@ final class SHA2 : HashProtocol {
         for chunk in BytesSequence(chunkSize: chunkSizeBytes, data: tmpMessage) {
             // break chunk into sixteen 32-bit words M[j], 0 ≤ j ≤ 15, big-endian
             // Extend the sixteen 32-bit words into sixty-four 32-bit words:
-            var M:[UInt32] = [UInt32](count: variant.k.count, repeatedValue: 0)
+            var M:[UInt32] = [UInt32](repeating: 0, count: variant.k.count)
             for x in 0..<M.count {
                 switch (x) {
                 case 0...15:
@@ -213,7 +213,7 @@ final class SHA2 : HashProtocol {
         for chunk in BytesSequence(chunkSize: chunkSizeBytes, data: tmpMessage) {
             // break chunk into sixteen 64-bit words M[j], 0 ≤ j ≤ 15, big-endian
             // Extend the sixteen 64-bit words into eighty 64-bit words:
-            var M = [UInt64](count: variant.k.count, repeatedValue: 0)
+            var M = [UInt64](repeating: 0, count: variant.k.count)
             for x in 0..<M.count {
                 switch (x) {
                 case 0...15:

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class Auth : Deserializable, CustomStringConvertible {
+open class Auth : Deserializable, CustomStringConvertible {
     
     var authToken:String?
     var authSigToken:String?
@@ -29,7 +29,7 @@ public class Auth : Deserializable, CustomStringConvertible {
         }
     }
     
-    public var description: String {
+    open var description: String {
         var desc: String = "AuthToken: "
         if authToken != nil {
             desc += authToken!

@@ -35,24 +35,24 @@ class ThermostatCell: BaseCell {
             
             if let fanMode = device.fanMode {
                 switch fanMode {
-                    case .Auto:
+                    case .auto:
                         self.fanSegmentedControl.selectedSegmentIndex = 0
                     
-                    case .On:
+                    case .on:
                         self.fanSegmentedControl.selectedSegmentIndex = 1
                 }
             }
 
             if let hvacMode = device.hvacMode {
                 switch hvacMode {
-                case .Auto:
+                case .auto:
                     self.hvacSegmentedControl.selectedSegmentIndex = 1
                     
-                case .Off:
+                case .off:
                     self.hvacSegmentedControl.selectedSegmentIndex = 0
-                case .Cool:
+                case .cool:
                     self.hvacSegmentedControl.selectedSegmentIndex = 2
-                case .Heat:
+                case .heat:
                     self.hvacSegmentedControl.selectedSegmentIndex = 3
                 }
             }
@@ -75,16 +75,16 @@ class ThermostatCell: BaseCell {
         }
     }
 
-    @IBAction func hvacStateChanged(sender: AnyObject) {
-        var hvacMode: Device.HVACMode = .Auto
+    @IBAction func hvacStateChanged(_ sender: AnyObject) {
+        var hvacMode: Device.HVACMode = .auto
         if self.hvacSegmentedControl.selectedSegmentIndex == 0 {
-            hvacMode = .Off
+            hvacMode = .off
         }
         else if self.hvacSegmentedControl.selectedSegmentIndex == 2 {
-            hvacMode = .Cool
+            hvacMode = .cool
         }
         else if self.hvacSegmentedControl.selectedSegmentIndex == 3 {
-            hvacMode = .Heat
+            hvacMode = .heat
         }
         
         if let  device = self.device {
@@ -94,10 +94,10 @@ class ThermostatCell: BaseCell {
         }
     }
     
-    @IBAction func fanChanged(sender: AnyObject) {
-        var fanMode: Device.FanMode = .Auto
+    @IBAction func fanChanged(_ sender: AnyObject) {
+        var fanMode: Device.FanMode = .auto
         if self.fanSegmentedControl.selectedSegmentIndex == 1 {
-            fanMode = .On
+            fanMode = .on
         }
 
         if let  device = self.device {
@@ -107,7 +107,7 @@ class ThermostatCell: BaseCell {
         }
     }
     
-    @IBAction func heatStepperChanged(sender: AnyObject) {
+    @IBAction func heatStepperChanged(_ sender: AnyObject) {
         if let  device = self.device {
             if let delegate = self.delegate {
                 delegate.changeHVAC(device, fanMode: nil, hvacMode: nil, coolTemp: nil, heatTemp: Int(self.heatStepper.value))
@@ -115,7 +115,7 @@ class ThermostatCell: BaseCell {
         }
     }
     
-    @IBAction func coolStepperChanged(sender: AnyObject) {
+    @IBAction func coolStepperChanged(_ sender: AnyObject) {
         if let  device = self.device {
             if let delegate = self.delegate {
                 delegate.changeHVAC(device, fanMode: nil, hvacMode: nil, coolTemp: Int(self.coolStepper.value), heatTemp: nil)

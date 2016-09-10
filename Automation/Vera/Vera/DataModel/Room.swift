@@ -10,8 +10,8 @@ public func ==(lhs: Room, rhs: Room) -> Bool {
     return lhs.id == rhs.id && lhs.name == rhs.name
 }
 
-public class Room: Deserializable, CustomStringConvertible, Hashable {
-    public var name:String?
+open class Room: Deserializable, CustomStringConvertible, Hashable {
+    open var name:String?
     var id:Int?
     
     public required init(data: [String: AnyObject]) {
@@ -19,7 +19,7 @@ public class Room: Deserializable, CustomStringConvertible, Hashable {
         id <-- data["id"]
     }
     
-    public var description: String {
+    open var description: String {
         var desc: String = "Name: "
         if self.name != nil {
             desc += self.name!
@@ -32,7 +32,7 @@ public class Room: Deserializable, CustomStringConvertible, Hashable {
         return desc
     }
     
-    public var hashValue : Int {
+    open var hashValue : Int {
         get {
             if self.id == nil {
                 return 0

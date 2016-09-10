@@ -8,9 +8,20 @@
 
 import UIKit
 import Vera
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 protocol ThermostatProtocol {
-    func changeHVAC(device: Device, fanMode: Device.FanMode?, hvacMode: Device.HVACMode?, coolTemp: Int?, heatTemp: Int?)
+    func changeHVAC(_ device: Device, fanMode: Device.FanMode?, hvacMode: Device.HVACMode?, coolTemp: Int?, heatTemp: Int?)
 }
 
 class ClimateViewController: UICollectionViewController, ThermostatProtocol {
@@ -19,20 +30,20 @@ class ClimateViewController: UICollectionViewController, ThermostatProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ClimateViewController.unitInfoUpdated(_:)), name: Vera.VeraUnitInfoUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ClimateViewController.unitInfoUpdated(_:)), name: Vera.VeraUnitInfoUpdated, object: nil)
         
         self.loadThermostats()
     }
     
-    func unitInfoUpdated(notification: NSNotification) {
+    func unitInfoUpdated(_ notification: Notification) {
         self.loadThermostats()
     }
     
     func loadThermostats () {
         var devices = [Device]()
-        if let roomsWithThermostats = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.Thermostat) {
+        if let roomsWithThermostats = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.thermostat) {
             for room in roomsWithThermostats {
-                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: Vera.Device.Category.Thermostat) {
+                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: Vera.Device.Category.thermostat) {
                     for device in roomDevices {
                             devices.append(device)
                     }
@@ -45,7 +56,7 @@ class ClimateViewController: UICollectionViewController, ThermostatProtocol {
         self.collectionView!.reloadData()
     }
     
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if self.devices != nil {
             return self.devices!.count
         }
@@ -53,11 +64,11 @@ class ClimateViewController: UICollectionViewController, ThermostatProtocol {
         return 0
     }
     
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ClimateCell", forIndexPath: indexPath) as! ThermostatCell
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ClimateCell", for: indexPath) as! ThermostatCell
         
-        if indexPath.row < self.devices?.count {
-            let device = self.devices![indexPath.row]
+        if (indexPath as NSIndexPath).row < self.devices?.count {
+            let device = self.devices![(indexPath as NSIndexPath).row]
             cell.device = device
             cell.delegate = self
             cell.setup()
@@ -66,7 +77,7 @@ class ClimateViewController: UICollectionViewController, ThermostatProtocol {
         return cell as UICollectionViewCell
     }
     
-    func changeHVAC(device: Device, fanMode: Device.FanMode?, hvacMode: Device.HVACMode?, coolTemp: Int?, heatTemp: Int?) {
+    func changeHVAC(_ device: Device, fanMode: Device.FanMode?, hvacMode: Device.HVACMode?, coolTemp: Int?, heatTemp: Int?) {
         AppDelegate.appDelegate().veraAPI.changeHVACWithNotification(device, fanMode: fanMode, hvacMode: hvacMode, coolTemp: coolTemp, heatTemp: heatTemp, completionHandler: { (error: NSError?) -> Void in
             
         })

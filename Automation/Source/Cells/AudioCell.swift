@@ -22,7 +22,7 @@ class AudioCell: BaseCell {
     
     @IBOutlet weak var titleLabel: UILabel!
     
-    @IBAction func turnOff(sender: AnyObject) {
+    @IBAction func turnOff(_ sender: AnyObject) {
         if let device = self.device {
             if self.delegate != nil {
                 self.delegate?.setDevicePower(device, turnOn: false)
@@ -30,7 +30,7 @@ class AudioCell: BaseCell {
         }
     }
     
-    @IBAction func turnOn(sender: AnyObject) {
+    @IBAction func turnOn(_ sender: AnyObject) {
         if let device = self.device {
             if self.delegate != nil {
                 self.delegate?.setDevicePower(device, turnOn: true)
@@ -38,7 +38,7 @@ class AudioCell: BaseCell {
         }
     }
 
-    @IBAction func decreaseVolume(sender: AnyObject) {
+    @IBAction func decreaseVolume(_ sender: AnyObject) {
         if let device = self.device {
             if self.delegate != nil {
                 self.delegate?.changeDeviceVolume(device, increase: false)
@@ -46,7 +46,7 @@ class AudioCell: BaseCell {
         }
     }
 
-    @IBAction func increaseVolume(sender: AnyObject) {
+    @IBAction func increaseVolume(_ sender: AnyObject) {
         if let device = self.device {
             if self.delegate != nil {
                 self.delegate?.changeDeviceVolume(device, increase: true)
@@ -54,7 +54,7 @@ class AudioCell: BaseCell {
         }
     }
 
-    @IBAction func servver1Action(sender: AnyObject) {
+    @IBAction func servver1Action(_ sender: AnyObject) {
         if let device = self.device {
             if self.delegate != nil {
                 self.delegate?.setDeviceServer(device, server: 1)
@@ -62,7 +62,7 @@ class AudioCell: BaseCell {
         }
     }
 
-    @IBAction func server2Action(sender: AnyObject) {
+    @IBAction func server2Action(_ sender: AnyObject) {
         if let device = self.device {
             if self.delegate != nil {
                 self.delegate?.setDeviceServer(device, server: 2)
@@ -70,7 +70,7 @@ class AudioCell: BaseCell {
         }
     }
 
-    @IBAction func server3Action(sender: AnyObject) {
+    @IBAction func server3Action(_ sender: AnyObject) {
         if let device = self.device {
             if self.delegate != nil {
                 self.delegate?.setDeviceServer(device, server: 3)
@@ -83,11 +83,11 @@ class AudioCell: BaseCell {
         if self.device != nil {
             self.titleLabel.text = self.device!.name
             if let parentID = self.device?.parentID {
-                self.decreaseVolumeButton.hidden = (parentID == 0)
-                self.increaseVolumeButton.hidden = (parentID == 0)
-                self.server1Button.hidden = (parentID == 0)
-                self.server2Button.hidden = (parentID == 0)
-                self.server3Button.hidden = (parentID == 0)
+                self.decreaseVolumeButton.isHidden = (parentID == 0)
+                self.increaseVolumeButton.isHidden = (parentID == 0)
+                self.server1Button.isHidden = (parentID == 0)
+                self.server2Button.isHidden = (parentID == 0)
+                self.server3Button.isHidden = (parentID == 0)
             }
         }
     }

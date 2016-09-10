@@ -27,17 +27,17 @@ extension _UInt8Type {
 extension UInt8 {
     
     /** cast because UInt8(<UInt32>) because std initializer crash if value is > byte */
-    static func withValue(v:UInt64) -> UInt8 {
+    static func withValue(_ v:UInt64) -> UInt8 {
         let tmp = v & 0xFF
         return UInt8(tmp)
     }
 
-    static func withValue(v:UInt32) -> UInt8 {
+    static func withValue(_ v:UInt32) -> UInt8 {
         let tmp = v & 0xFF
         return UInt8(tmp)
     }
     
-    static func withValue(v:UInt16) -> UInt8 {
+    static func withValue(_ v:UInt16) -> UInt8 {
         let tmp = v & 0xFF
         return UInt8(tmp)
     }
@@ -53,16 +53,16 @@ extension UInt8 {
     
     /** array of bits */
     func bits() -> [Bit] {
-        let totalBitsCount = sizeofValue(self) * 8
+        let totalBitsCount = MemoryLayout.size(ofValue: self) * 8
         
-        var bitsArray = [Bit](count: totalBitsCount, repeatedValue: Bit.Zero)
+        var bitsArray = [Bit](repeating: Bit.zero, count: totalBitsCount)
         
         for j in 0..<totalBitsCount {
             let bitVal:UInt8 = 1 << UInt8(totalBitsCount - 1 - j)
             let check = self & bitVal
             
             if (check != 0) {
-                bitsArray[j] = Bit.One;
+                bitsArray[j] = Bit.one;
             }
         }
         return bitsArray
@@ -71,8 +71,8 @@ extension UInt8 {
     func bits() -> String {
         var s = String()
         let arr:[Bit] = self.bits()
-        for (idx,b) in arr.enumerate() {
-            s += (b == Bit.One ? "1" : "0")
+        for (idx,b) in arr.enumerated() {
+            s += (b == Bit.one ? "1" : "0")
             if ((idx + 1) % 8 == 0) { s += " " }
         }
         return s
@@ -82,7 +82,7 @@ extension UInt8 {
 /** Shift bits */
 extension UInt8 {
     /** Shift bits to the right. All bits are shifted (including sign bit) */
-    mutating func shiftRight(count: UInt8) -> UInt8 {
+    mutating func shiftRight(_ count: UInt8) -> UInt8 {
         if (self == 0) {
             return self;
         }

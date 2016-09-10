@@ -18,7 +18,7 @@ class DeviceCell: BaseCell {
     var device: Device?
     var delegate: SwitchProtocol?
     
-    @IBAction func sliderTouchUpAction(sender: UISlider) {
+    @IBAction func sliderTouchUpAction(_ sender: UISlider) {
         if let delegate = self.delegate {
             delegate.changeDeviceLevel(self.device!, level: Int(sender.value))
         }
@@ -38,15 +38,15 @@ class DeviceCell: BaseCell {
             
             if let cat = self.device?.category {
                 switch cat {
-                case .DimmableLight:
-                    self.slider.hidden = false
+                case .dimmableLight:
+                    self.slider.isHidden = false
                     if let level = self.device?.level {
                         self.slider.value = Float(level)
                     }
-                case .Switch:
-                    self.slider.hidden = true
+                case .switch:
+                    self.slider.isHidden = true
                 default:
-                    self.slider.hidden = true
+                    self.slider.isHidden = true
                 }
             }
         }

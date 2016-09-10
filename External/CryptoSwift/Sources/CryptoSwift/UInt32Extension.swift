@@ -18,16 +18,16 @@ extension UInt32: _UInt32Type {}
 
 /** array of bytes */
 extension UInt32 {
-    public func bytes(totalBytes: Int = sizeof(UInt32)) -> [UInt8] {
+    public func bytes(_ totalBytes: Int = MemoryLayout<UInt32>.size) -> [UInt8] {
         return arrayOfBytes(self, length: totalBytes)
     }
 
-    public static func withBytes(bytes: ArraySlice<UInt8>) -> UInt32 {
+    public static func withBytes(_ bytes: ArraySlice<UInt8>) -> UInt32 {
         return UInt32.withBytes(Array(bytes))
     }
 
     /** Int with array bytes (little-endian) */
-    public static func withBytes(bytes: [UInt8]) -> UInt32 {
+    public static func withBytes(_ bytes: [UInt8]) -> UInt32 {
         return integerWithBytes(bytes)
     }
 }
@@ -36,12 +36,12 @@ extension UInt32 {
 extension UInt32 {
     
     /** Shift bits to the left. All bits are shifted (including sign bit) */
-    private mutating func shiftLeft(count: UInt32) -> UInt32 {
+    fileprivate mutating func shiftLeft(_ count: UInt32) -> UInt32 {
         if (self == 0) {
             return self;
         }
         
-        let bitsCount = UInt32(sizeof(UInt32) * 8)
+        let bitsCount = UInt32(MemoryLayout<UInt32>.size * 8)
         let shiftCount = Swift.min(count, bitsCount - 1)
         var shiftedValue:UInt32 = 0;
         
@@ -63,12 +63,12 @@ extension UInt32 {
     }
     
     /** Shift bits to the right. All bits are shifted (including sign bit) */
-    private mutating func shiftRight(count: UInt32) -> UInt32 {
+    fileprivate mutating func shiftRight(_ count: UInt32) -> UInt32 {
         if (self == 0) {
             return self;
         }
         
-        let bitsCount = UInt32(sizeofValue(self) * 8)
+        let bitsCount = UInt32(MemoryLayout.size(ofValue: self) * 8)
 
         if (count >= bitsCount) {
             return 0
@@ -92,7 +92,7 @@ extension UInt32 {
 }
 
 /** shift left and assign with bits truncation */
-public func &<<= (inout lhs: UInt32, rhs: UInt32) {
+public func &<<= (lhs: inout UInt32, rhs: UInt32) {
     lhs.shiftLeft(rhs)
 }
 
@@ -104,7 +104,7 @@ public func &<< (lhs: UInt32, rhs: UInt32) -> UInt32 {
 }
 
 /** shift right and assign with bits truncation */
-func &>>= (inout lhs: UInt32, rhs: UInt32) {
+func &>>= (lhs: inout UInt32, rhs: UInt32) {
     lhs.shiftRight(rhs)
 }
 

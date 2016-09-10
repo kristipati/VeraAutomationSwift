@@ -35,14 +35,14 @@ class LockCell: BaseCell {
         }
     }
 
-    @IBAction func lockAction(sender: AnyObject) {
+    @IBAction func lockAction(_ sender: AnyObject) {
         if let device = self.device {
             if let delegate = self.delegate {
                 delegate.setDeviceLocked(device, locked: true)
             }
         }
     }
-    @IBAction func unlockAction(sender: AnyObject) {
+    @IBAction func unlockAction(_ sender: AnyObject) {
         if let device = self.device {
             if let delegate = self.delegate {
                 delegate.setDeviceLocked(device, locked: false)

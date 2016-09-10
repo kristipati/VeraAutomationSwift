@@ -8,6 +8,17 @@
 
 import UIKit
 import Vera
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 class ScenesViewController: UICollectionViewController {
     var room: Room?
@@ -21,12 +32,12 @@ class ScenesViewController: UICollectionViewController {
             self.title = self.room?.name
         }
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ScenesViewController.unitInfoUpdated(_:)), name: Vera.VeraUnitInfoUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ScenesViewController.unitInfoUpdated(_:)), name: Vera.VeraUnitInfoUpdated, object: nil)
     }
 
-    func unitInfoUpdated(notification: NSNotification) {
+    func unitInfoUpdated(_ notification: Notification) {
         var fullload = false
-        if let info = notification.userInfo as? Dictionary<String, AnyObject> {
+        if let info = (notification as NSNotification).userInfo as? Dictionary<String, AnyObject> {
             if let tempFullLoad = info[VeraUnitInfoFullLoad] as? Bool {
                 fullload = tempFullLoad
             }
@@ -43,7 +54,7 @@ class ScenesViewController: UICollectionViewController {
 
     // MARK: UICollectionViewDataSource
 
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         //#warning Incomplete method implementation -- Return the number of items in the section
         if let scenes = self.scenes {
             return scenes.count
@@ -52,11 +63,11 @@ class ScenesViewController: UICollectionViewController {
         return 0
     }
 
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("SceneCell", forIndexPath: indexPath) as! SceneCell
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SceneCell", for: indexPath) as! SceneCell
     
-        if indexPath.row < self.scenes?.count {
-            let scene = self.scenes![indexPath.row]
+        if (indexPath as NSIndexPath).row < self.scenes?.count {
+            let scene = self.scenes![(indexPath as NSIndexPath).row]
             cell.scene = scene
             cell.setup()
         }
@@ -65,9 +76,9 @@ class ScenesViewController: UICollectionViewController {
     }
 
     // MARK: UICollectionViewDelegate
-    override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        if indexPath.row < self.scenes?.count {
-            let scene = self.scenes![indexPath.row]
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if (indexPath as NSIndexPath).row < self.scenes?.count {
+            let scene = self.scenes![(indexPath as NSIndexPath).row]
 //            Swell.info("Selected: \(scene)")
             
             AppDelegate.appDelegate().veraAPI.runSceneWithNotification(scene, completionHandler: { (error: NSError?) -> Void in

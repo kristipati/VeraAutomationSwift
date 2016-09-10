@@ -6,75 +6,75 @@
 //  Copyright (c) 2014 Gruby Solutions. All rights reserved.
 //
 
-public class Device: Deserializable, CustomStringConvertible {
+open class Device: Deserializable, CustomStringConvertible {
     public enum HVACMode {
-        case Off
-        case Heat
-        case Cool
-        case Auto
+        case off
+        case heat
+        case cool
+        case auto
     }
 
     public enum FanMode {
-        case On
-        case Auto
+        case on
+        case auto
     }
 
     public enum Category: Int, CustomStringConvertible {
-        case Interface = 1
-        case DimmableLight = 2
-        case Switch = 3
-        case Sensor = 4
-        case Thermostat = 5
-        case Lock = 7
-        case GenericIO = 11
-        case SceneController = 14
-        case HumiditySensor = 16
-        case TemperatureSensor = 17
-        case AlarmPanel = 22
-        case AlarmPartition = 23
-        case Audio = 200
+        case interface = 1
+        case dimmableLight = 2
+        case `switch` = 3
+        case sensor = 4
+        case thermostat = 5
+        case lock = 7
+        case genericIO = 11
+        case sceneController = 14
+        case humiditySensor = 16
+        case temperatureSensor = 17
+        case alarmPanel = 22
+        case alarmPartition = 23
+        case audio = 200
         
         public var description: String {
             var desc: String = ""
             
             switch self {
-            case .Interface:
+            case .interface:
                 desc = "Interface"
                 
-            case .DimmableLight:
+            case .dimmableLight:
                 desc = "Dimmable Light"
                 
-            case .Switch:
+            case .switch:
                 desc = "Switch"
                 
-            case .Sensor:
+            case .sensor:
                 desc = "Sensor"
                 
-            case .Thermostat:
+            case .thermostat:
                 desc = "Thermostat"
                 
-            case .Lock:
+            case .lock:
                 desc = "Lock"
                 
-            case .GenericIO:
+            case .genericIO:
                 desc = "Generic I/O"
                 
-            case .SceneController:
+            case .sceneController:
                 desc = "Scene Controller"
                 
-            case .HumiditySensor:
+            case .humiditySensor:
                 desc = "Humidity Sensor"
                 
-            case .TemperatureSensor:
+            case .temperatureSensor:
                 desc = "Temperature Sensor"
                 
-            case .AlarmPanel:
+            case .alarmPanel:
                 desc = "Alarm Panel"
                 
-            case .AlarmPartition:
+            case .alarmPartition:
                 desc = "Alarm Parition"
                 
-            case .Audio:
+            case .audio:
                 desc = "Audio"
                 
             }
@@ -84,24 +84,24 @@ public class Device: Deserializable, CustomStringConvertible {
         }
     }
     
-    public var id : Int?
-    public var parentID: Int?
-    public var category: Category?
+    open var id : Int?
+    open var parentID: Int?
+    open var category: Category?
     var subcategory: Int?
-    public var status: Int?
-    public var state: Int?
-    public var name: String?
+    open var status: Int?
+    open var state: Int?
+    open var name: String?
     var comment: String?
-    public var roomID: Int?
+    open var roomID: Int?
     var armed: Bool?
-    public var temperature: Double?
-    public var humidity: Int?
-    public var batteryLevel: Int?
+    open var temperature: Double?
+    open var humidity: Int?
+    open var batteryLevel: Int?
     var pinCodes: String?
-    public var locked: Bool?
+    open var locked: Bool?
     var tripped: Bool?
     var lastTripped: String?
-    public var level: Int?
+    open var level: Int?
     var ip: String?
     var vendorStatusCode: String?
     var vendorStatusData: String?
@@ -112,10 +112,10 @@ public class Device: Deserializable, CustomStringConvertible {
     var objectStatusMap: String?
     var systemVeraRestart: String?
     var systemLuupRestart: String?
-    public var heatTemperatureSetPoint: Double?
-    public var coolTemperatureSetPoint: Double?
-    public var hvacMode: HVACMode?
-    public var fanMode: FanMode?
+    open var heatTemperatureSetPoint: Double?
+    open var coolTemperatureSetPoint: Double?
+    open var hvacMode: HVACMode?
+    open var fanMode: FanMode?
     var conditionSatisfied: String?
     var detailedArmMode: String?
     var armMode: String?
@@ -133,8 +133,8 @@ public class Device: Deserializable, CustomStringConvertible {
             
             if tempCategory! == 0 {
                 if let deviceName = name {
-                    if deviceName.rangeOfString("audio", options: .CaseInsensitiveSearch) != nil {
-                        category = .Audio
+                    if deviceName.range(of: "audio", options: .caseInsensitive) != nil {
+                        category = .audio
                     }
                 }
             }
@@ -202,15 +202,15 @@ public class Device: Deserializable, CustomStringConvertible {
         var mode:String?
         mode <-- data["mode"]
         if mode != nil {
-            switch mode!.lowercaseString {
+            switch mode!.lowercased() {
             case "off":
-                hvacMode = .Off
+                hvacMode = .off
             case "heaton":
-                hvacMode = .Heat
+                hvacMode = .heat
             case "coolon":
-                hvacMode = .Cool
+                hvacMode = .cool
             case "autochangeover":
-                hvacMode = .Auto
+                hvacMode = .auto
             default:
                 hvacMode = nil
             }
@@ -218,16 +218,16 @@ public class Device: Deserializable, CustomStringConvertible {
         
         mode <-- data["fanmode"]
         if mode != nil {
-            switch mode!.lowercaseString {
+            switch mode!.lowercased() {
             case "auto":
-                fanMode = .Auto
+                fanMode = .auto
             default:
-                fanMode = .On
+                fanMode = .on
             }
         }
     }
     
-    public var description: String {
+    open var description: String {
         var desc: String = "Name: "
         if self.name != nil {
             desc += self.name!

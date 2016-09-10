@@ -12,13 +12,13 @@
 
 final public class Poly1305 {
     let blockSize = 16
-    private var ctx:Context?
+    fileprivate var ctx:Context?
     
-    private class Context {
-        var r            = [UInt8](count: 17, repeatedValue: 0)
-        var h            = [UInt8](count: 17, repeatedValue: 0)
-        var pad          = [UInt8](count: 17, repeatedValue: 0)
-        var buffer       = [UInt8](count: 16, repeatedValue: 0)
+    fileprivate class Context {
+        var r            = [UInt8](repeating: 0, count: 17)
+        var h            = [UInt8](repeating: 0, count: 17)
+        var pad          = [UInt8](repeating: 0, count: 17)
+        var buffer       = [UInt8](repeating: 0, count: 16)
         
         var final:UInt8   = 0
         var leftover:Int = 0
@@ -86,20 +86,20 @@ final public class Poly1305 {
     
     - returns: Message Authentication Code
     */
-    class internal func authenticate(key  key: [UInt8], message: [UInt8]) -> [UInt8]? {
+    class internal func authenticate(key: [UInt8], message: [UInt8]) -> [UInt8]? {
         return Poly1305(key)?.authenticate(message: message)
     }
     
     // MARK: - Private
     
-    private init? (_ key: [UInt8]) {
+    fileprivate init? (_ key: [UInt8]) {
         ctx = Context(key)
         if (ctx == nil) {
             return nil
         }
     }
     
-    private func authenticate(message  message:[UInt8]) -> [UInt8]? {
+    fileprivate func authenticate(message:[UInt8]) -> [UInt8]? {
         if let ctx = self.ctx {
             update(ctx, message: message)
             return finish(ctx)
@@ -114,7 +114,7 @@ final public class Poly1305 {
     - parameter message: message
     - parameter bytes:   length of the message fragment to be processed
     */
-    private func update(context:Context, message:[UInt8], bytes:Int? = nil) {
+    fileprivate func update(_ context:Context, message:[UInt8], bytes:Int? = nil) {
         var bytes = bytes ?? message.count
         var mPos = 0
         
@@ -159,8 +159,8 @@ final public class Poly1305 {
         }
     }
     
-    private func finish(context:Context) -> [UInt8]? {
-        var mac = [UInt8](count: 16, repeatedValue: 0);
+    fileprivate func finish(_ context:Context) -> [UInt8]? {
+        var mac = [UInt8](repeating: 0, count: 16);
         
         /* process the remaining block */
         if (context.leftover > 0) {
@@ -189,7 +189,7 @@ final public class Poly1305 {
     
     // MARK: - Utils
     
-    private func add(context:Context, c:[UInt8]) -> Bool {
+    fileprivate func add(_ context:Context, c:[UInt8]) -> Bool {
         if (context.h.count != 17 && c.count != 17) {
             return false
         }
@@ -203,7 +203,7 @@ final public class Poly1305 {
         return true
     }
     
-    private func squeeze(context:Context, hr:[UInt32]) -> Bool {
+    fileprivate func squeeze(_ context:Context, hr:[UInt32]) -> Bool {
         if (context.h.count != 17 && hr.count != 17) {
             return false
         }
@@ -230,14 +230,14 @@ final public class Poly1305 {
         return true
     }
     
-    private func freeze(context:Context) -> Bool {
+    fileprivate func freeze(_ context:Context) -> Bool {
         assert(context.h.count == 17,"Invalid length")
         if (context.h.count != 17) {
             return false
         }
         
         let minusp:[UInt8] = [0x05,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xfc]
-        var horig:[UInt8] = [UInt8](count: 17, repeatedValue: 0)
+        var horig:[UInt8] = [UInt8](repeating: 0, count: 17)
         
         /* compute h + -p */
         for i in 0..<17 {
@@ -260,15 +260,15 @@ final public class Poly1305 {
         return true;
     }
     
-    private func blocks(context:Context, m:[UInt8], startPos:Int = 0) -> Int {
+    fileprivate func blocks(_ context:Context, m:[UInt8], startPos:Int = 0) -> Int {
         var bytes = m.count
         let hibit = context.final ^ 1 // 1 <<128
         var mPos = startPos
         
         while (bytes >= Int(blockSize)) {
-            var hr:[UInt32] = [UInt32](count: 17, repeatedValue: 0)
+            var hr:[UInt32] = [UInt32](repeating: 0, count: 17)
             var u:UInt32 = 0
-            var c:[UInt8] = [UInt8](count: 17, repeatedValue: 0)
+            var c:[UInt8] = [UInt8](repeating: 0, count: 17)
             
             /* h += m */
             for i in 0..<16 {

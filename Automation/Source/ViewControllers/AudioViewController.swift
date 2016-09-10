@@ -8,11 +8,22 @@
 
 import UIKit
 import Vera
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 protocol AudioProtocol {
-    func setDevicePower(device:Device, turnOn: Bool)
-    func changeDeviceVolume(device:Device, increase: Bool)
-    func setDeviceServer(device:Device, server: Int)
+    func setDevicePower(_ device:Device, turnOn: Bool)
+    func changeDeviceVolume(_ device:Device, increase: Bool)
+    func setDeviceServer(_ device:Device, server: Int)
 }
 
 
@@ -24,16 +35,16 @@ class AudioViewController: UICollectionViewController, AudioProtocol {
         super.viewDidLoad()
 
         if self.room != nil {
-            self.devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(self.room!, showExcluded: false, categories: .Audio)
+            self.devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(self.room!, showExcluded: false, categories: .audio)
             self.title = self.room?.name
         }
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AudioViewController.unitInfoUpdated(_:)), name: Vera.VeraUnitInfoUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(AudioViewController.unitInfoUpdated(_:)), name: Vera.VeraUnitInfoUpdated, object: nil)
     }
     
-    func unitInfoUpdated(notification: NSNotification) {
+    func unitInfoUpdated(_ notification: Notification) {
         var fullload = false
-        if let info = notification.userInfo as? Dictionary<String, AnyObject> {
+        if let info = (notification as NSNotification).userInfo as? Dictionary<String, AnyObject> {
             if let tempFullLoad = info[VeraUnitInfoFullLoad] as? Bool {
                 fullload = tempFullLoad
             }
@@ -48,7 +59,7 @@ class AudioViewController: UICollectionViewController, AudioProtocol {
         self.collectionView!.reloadData()
     }
 
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let devices = self.devices {
             return devices.count
         }
@@ -56,11 +67,11 @@ class AudioViewController: UICollectionViewController, AudioProtocol {
         return 0
     }
 
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("AudioDeviceCell", forIndexPath: indexPath) as! AudioCell
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AudioDeviceCell", for: indexPath) as! AudioCell
         
-        if indexPath.row < self.devices?.count {
-            let device = self.devices![indexPath.row]
+        if (indexPath as NSIndexPath).row < self.devices?.count {
+            let device = self.devices![(indexPath as NSIndexPath).row]
             cell.device = device
             cell.delegate = self
             cell.setup()
@@ -69,17 +80,17 @@ class AudioViewController: UICollectionViewController, AudioProtocol {
         return cell as UICollectionViewCell
     }
 
-    func setDevicePower(device:Device, turnOn: Bool) {
+    func setDevicePower(_ device:Device, turnOn: Bool) {
         AppDelegate.appDelegate().veraAPI.setAudioPowerWithNotification(device, on:turnOn, completionHandler: { (error: NSError?) -> Void in
         })
     }
     
-    func changeDeviceVolume(device:Device, increase: Bool) {
+    func changeDeviceVolume(_ device:Device, increase: Bool) {
         AppDelegate.appDelegate().veraAPI.changeAudioVolumeWithNotification(device, increase:increase, completionHandler: { (error: NSError?) -> Void in
         })
     }
     
-    func setDeviceServer(device:Device, server: Int) {
+    func setDeviceServer(_ device:Device, server: Int) {
         AppDelegate.appDelegate().veraAPI.setAudioInputWithNotification(device, input:server, completionHandler: { (error: NSError?) -> Void in
         })
     }

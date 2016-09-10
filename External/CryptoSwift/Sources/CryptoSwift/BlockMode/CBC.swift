@@ -12,13 +12,13 @@ struct CBCModeEncryptGenerator: BlockModeGenerator {
     typealias Element = Array<UInt8>
     let options: BlockModeOptions = [.InitializationVectorRequired, .PaddingRequired]
 
-    private let iv: Element
-    private let inputGenerator: AnyGenerator<Element>
+    fileprivate let iv: Element
+    fileprivate let inputGenerator: AnyIterator<Element>
 
-    private let cipherOperation: CipherOperationOnBlock
-    private var prevCiphertext: Element?
+    fileprivate let cipherOperation: CipherOperationOnBlock
+    fileprivate var prevCiphertext: Element?
 
-    init(iv: Array<UInt8>, cipherOperation: CipherOperationOnBlock, inputGenerator: AnyGenerator<Element>) {
+    init(iv: Array<UInt8>, cipherOperation: @escaping CipherOperationOnBlock, inputGenerator: AnyIterator<Element>) {
         self.iv = iv
         self.cipherOperation = cipherOperation
         self.inputGenerator = inputGenerator
@@ -26,7 +26,7 @@ struct CBCModeEncryptGenerator: BlockModeGenerator {
 
     mutating func next() -> Element? {
         guard let plaintext = inputGenerator.next(),
-              let encrypted = cipherOperation(block: xor(prevCiphertext ?? iv, plaintext))
+              let encrypted = cipherOperation(xor(prevCiphertext ?? iv, plaintext))
         else {
             return nil
         }
@@ -40,13 +40,13 @@ struct CBCModeDecryptGenerator: BlockModeGenerator {
     typealias Element = Array<UInt8>
     let options: BlockModeOptions = [.InitializationVectorRequired, .PaddingRequired]
 
-    private let iv: Element
-    private let inputGenerator: AnyGenerator<Element>
+    fileprivate let iv: Element
+    fileprivate let inputGenerator: AnyIterator<Element>
 
-    private let cipherOperation: CipherOperationOnBlock
-    private var prevCiphertext: Element?
+    fileprivate let cipherOperation: CipherOperationOnBlock
+    fileprivate var prevCiphertext: Element?
 
-    init(iv: Array<UInt8>, cipherOperation: CipherOperationOnBlock, inputGenerator: AnyGenerator<Element>) {
+    init(iv: Array<UInt8>, cipherOperation: @escaping CipherOperationOnBlock, inputGenerator: AnyIterator<Element>) {
         self.iv = iv
         self.cipherOperation = cipherOperation
         self.inputGenerator = inputGenerator
@@ -54,7 +54,7 @@ struct CBCModeDecryptGenerator: BlockModeGenerator {
 
     mutating func next() -> Element? {
         guard let ciphertext = inputGenerator.next(),
-              let decrypted = cipherOperation(block: ciphertext)
+              let decrypted = cipherOperation(ciphertext)
         else {
             return nil
         }

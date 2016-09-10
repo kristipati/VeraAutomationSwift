@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		056F2A971BA4316700B24B65 /* Dictionary_Initializers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC25C401BA38539004191AF /* Dictionary_Initializers.swift */; settings = {ASSET_TAGS = (); }; };
-		056F2A981BA4316700B24B65 /* Locksmith.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC25C421BA38539004191AF /* Locksmith.swift */; settings = {ASSET_TAGS = (); }; };
-		056F2A991BA4316700B24B65 /* LocksmithAccessibleOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC25C431BA38539004191AF /* LocksmithAccessibleOption.swift */; settings = {ASSET_TAGS = (); }; };
-		056F2A9A1BA4316700B24B65 /* LocksmithError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC25C441BA38539004191AF /* LocksmithError.swift */; settings = {ASSET_TAGS = (); }; };
-		056F2A9B1BA4316700B24B65 /* LocksmithInternetAuthenticationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC25C451BA38539004191AF /* LocksmithInternetAuthenticationType.swift */; settings = {ASSET_TAGS = (); }; };
-		056F2A9C1BA4316700B24B65 /* LocksmithInternetProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC25C461BA38539004191AF /* LocksmithInternetProtocol.swift */; settings = {ASSET_TAGS = (); }; };
-		056F2A9D1BA4316700B24B65 /* LocksmithSecurityClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC25C471BA38539004191AF /* LocksmithSecurityClass.swift */; settings = {ASSET_TAGS = (); }; };
+		056F2A971BA4316700B24B65 /* Dictionary_Initializers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC25C401BA38539004191AF /* Dictionary_Initializers.swift */; };
+		056F2A981BA4316700B24B65 /* Locksmith.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC25C421BA38539004191AF /* Locksmith.swift */; };
+		056F2A991BA4316700B24B65 /* LocksmithAccessibleOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC25C431BA38539004191AF /* LocksmithAccessibleOption.swift */; };
+		056F2A9A1BA4316700B24B65 /* LocksmithError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC25C441BA38539004191AF /* LocksmithError.swift */; };
+		056F2A9B1BA4316700B24B65 /* LocksmithInternetAuthenticationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC25C451BA38539004191AF /* LocksmithInternetAuthenticationType.swift */; };
+		056F2A9C1BA4316700B24B65 /* LocksmithInternetProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC25C461BA38539004191AF /* LocksmithInternetProtocol.swift */; };
+		056F2A9D1BA4316700B24B65 /* LocksmithSecurityClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC25C471BA38539004191AF /* LocksmithSecurityClass.swift */; };
 		0EC25C631BA385AB004191AF /* Locksmith.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EC25C591BA385AA004191AF /* Locksmith.framework */; };
 		0EC25C7F1BA385F6004191AF /* Locksmith.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EC25C751BA385F6004191AF /* Locksmith.framework */; };
 		0EC25C8D1BA38648004191AF /* LocksmithTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC25C491BA38539004191AF /* LocksmithTests.swift */; };
@@ -295,11 +295,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Mathew Palmer";
 				TargetAttributes = {
 					0EC25C581BA385AA004191AF = {
 						CreatedOnToolsVersion = 7.0;
+						LastSwiftMigration = 0800;
 					};
 					0EC25C611BA385AB004191AF = {
 						CreatedOnToolsVersion = 7.0;
@@ -452,6 +453,7 @@
 		0EC25C6B1BA385AB004191AF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -466,12 +468,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "net.matthewpalmer.Locksmith-iOS";
 				PRODUCT_NAME = Locksmith;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
 		0EC25C6C1BA385AB004191AF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
@@ -486,6 +490,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "net.matthewpalmer.Locksmith-iOS";
 				PRODUCT_NAME = Locksmith;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -598,6 +603,7 @@
 		0EC25CAC1BA39CA0004191AF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -619,6 +625,7 @@
 		0EC25CAD1BA39CA0004191AF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
@@ -651,8 +658,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -662,6 +671,7 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -700,8 +710,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -710,6 +722,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -721,6 +734,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "";
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";

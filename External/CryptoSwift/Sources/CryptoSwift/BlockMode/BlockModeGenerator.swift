@@ -8,13 +8,13 @@
 
 // I have no better name for that
 
-enum BlockError: ErrorType {
-    case MissingInitializationVector
+enum BlockError: Error {
+    case missingInitializationVector
 }
 
-typealias CipherOperationOnBlock = (block: [UInt8]) -> [UInt8]?
+typealias CipherOperationOnBlock = (_ block: [UInt8]) -> [UInt8]?
 
-protocol BlockModeGenerator: GeneratorType {
+protocol BlockModeGenerator: IteratorProtocol {
     var options: BlockModeOptions { get }
-    init(iv: Array<UInt8>, cipherOperation: CipherOperationOnBlock, inputGenerator: AnyGenerator<Element>)
+    init(iv: Array<UInt8>, cipherOperation: CipherOperationOnBlock, inputGenerator: AnyIterator<Element>)
 }

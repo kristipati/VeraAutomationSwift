@@ -6,12 +6,12 @@
 //  Copyright (c) 2014 Gruby Solutions. All rights reserved.
 //
 
-public class Scene: Deserializable, CustomStringConvertible {
-    public var id: Int?
+open class Scene: Deserializable, CustomStringConvertible {
+    open var id: Int?
     var active: Bool?
     var state: Int?
-    public var name: String?
-    public var roomID: Int?
+    open var name: String?
+    open var roomID: Int?
     var comment: String?
     
     public required init(data: [String: AnyObject]) {
@@ -23,7 +23,7 @@ public class Scene: Deserializable, CustomStringConvertible {
         comment <-- data ["comment"]
     }
     
-    public var description: String {
+    open var description: String {
         var desc: String = "Name: "
         if self.name != nil {
             desc += self.name!

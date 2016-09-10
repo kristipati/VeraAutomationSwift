@@ -8,24 +8,35 @@
 //
 
 import Foundation
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
 
-public class Unit : Deserializable, CustomStringConvertible {
 
-    public var serialNumber:String?
+open class Unit : Deserializable, CustomStringConvertible {
+
+    open var serialNumber:String?
     var firmwareVersion:String?
     var name:String?
-    public var ipAddress:String?
-    public var externalIPAddress:String?
+    open var ipAddress:String?
+    open var externalIPAddress:String?
     var users:[String]?
     var activeServer:String?
     var loadtime = 0
     var dataversion = 0
-    public var fullload:Bool?
-    public var rooms:[Room]?
-    public var devices:[Device]?
-    public var scenes:[Scene]?
-    public var serverDevice:String?
-    public var serverRelay:String?
+    open var fullload:Bool?
+    open var rooms:[Room]?
+    open var devices:[Device]?
+    open var scenes:[Scene]?
+    open var serverDevice:String?
+    open var serverRelay:String?
     
     public required init(data: [String: AnyObject]) {
         serialNumber <-- data["serialNumber"]
@@ -57,7 +68,7 @@ public class Unit : Deserializable, CustomStringConvertible {
         serverRelay <-- data["Server_Relay"]
     }
 
-    public var description: String {
+    open var description: String {
         var desc: String = "Name: "
         if name != nil {
             desc += name!
@@ -108,7 +119,7 @@ public class Unit : Deserializable, CustomStringConvertible {
         return desc
     }
     
-    func scenesForRoom(room: Room, excluded:[Int]? = nil)->[Scene]? {
+    func scenesForRoom(_ room: Room, excluded:[Int]? = nil)->[Scene]? {
         let roomID = room.id!
         var sceneArray = [Scene]()
         if scenes != nil {
@@ -126,13 +137,13 @@ public class Unit : Deserializable, CustomStringConvertible {
         }
         
         if sceneArray.isEmpty == false {
-            return sceneArray.sort({$0.name<$1.name})
+            return sceneArray.sorted(by: {$0.name<$1.name})
         }
 
         return nil
     }
 
-    func devicesForRoom(room: Room, excluded:[Int]? = nil, categories: [Device.Category])->[Device]? {
+    func devicesForRoom(_ room: Room, excluded:[Int]? = nil, categories: [Device.Category])->[Device]? {
         let roomID = room.id!
         var deviceArray = [Device]()
         if self.devices != nil {
@@ -156,12 +167,12 @@ public class Unit : Deserializable, CustomStringConvertible {
         }
         
         if deviceArray.isEmpty == false {
-            return deviceArray.sort({$0.name<$1.name})
+            return deviceArray.sorted(by: {$0.name<$1.name})
         }
         return nil
     }
 
-    func roomsWithDevices(excluded:[Int]? = nil, categories: [Device.Category])->[Room]? {
+    func roomsWithDevices(_ excluded:[Int]? = nil, categories: [Device.Category])->[Room]? {
         var roomSet = Set<Room>()
         if let rooms = self.rooms {
             for room in rooms {
@@ -172,13 +183,13 @@ public class Unit : Deserializable, CustomStringConvertible {
         }
         
         if roomSet.isEmpty == false {
-            return roomSet.elements.sort({$0.name<$1.name})
+            return roomSet.elements.sorted(by: {$0.name<$1.name})
         }
         
         return nil
     }
 
-    func roomsWithScenes(excluded:[Int]? = nil)->[Room]? {
+    func roomsWithScenes(_ excluded:[Int]? = nil)->[Room]? {
         var roomSet = Set<Room>()
         if let rooms = self.rooms {
             for room in rooms {
@@ -189,13 +200,13 @@ public class Unit : Deserializable, CustomStringConvertible {
         }
         
         if roomSet.isEmpty == false {
-            return roomSet.elements.sort({$0.name<$1.name})
+            return roomSet.elements.sorted(by: {$0.name<$1.name})
         }
         
         return nil
     }
 
-    func deviceWithIdentifier(identifier: Int)->Device? {
+    func deviceWithIdentifier(_ identifier: Int)->Device? {
         if let deviceArray = self.devices {
             for device in deviceArray {
                 if let deviceID = device.id {
@@ -209,7 +220,7 @@ public class Unit : Deserializable, CustomStringConvertible {
         return nil
     }
 
-    func roomWithIdentifier(identifier: Int)->Room? {
+    func roomWithIdentifier(_ identifier: Int)->Room? {
         if let roomArray = self.rooms {
             for room in roomArray {
                 if let roomID = room.id {
@@ -223,7 +234,7 @@ public class Unit : Deserializable, CustomStringConvertible {
         return nil
     }
 
-    func updateUnitInfo(unit: Unit) {
+    func updateUnitInfo(_ unit: Unit) {
         dataversion = unit.dataversion
         loadtime = unit.loadtime
         

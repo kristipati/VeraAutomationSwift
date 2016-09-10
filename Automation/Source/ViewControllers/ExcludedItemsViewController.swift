@@ -31,10 +31,10 @@ class ExcludedItemsViewController: UITableViewController {
         }
         self.buildRoomList()
 
-        self.tableView.tableFooterView = UIView(frame: CGRectMake(0, 0, 0, 0))
+        self.tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         if self.showScenes == true {
@@ -54,7 +54,7 @@ class ExcludedItemsViewController: UITableViewController {
                         }
                     }
                 } else {
-                    if let devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: true, categories: .Switch, .DimmableLight) {
+                    if let devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: true, categories: .switch, .dimmableLight) {
                         if devices.isEmpty == false {
                             roomList.append(room)
                         }
@@ -67,17 +67,17 @@ class ExcludedItemsViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return self.roomList.count
     }
     
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let room = roomList[section] as Room
         return room.name
     }
 
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let room = roomList[section] as Room
 
         if self.showScenes == true {
@@ -85,7 +85,7 @@ class ExcludedItemsViewController: UITableViewController {
                 return scenes.count
             }
         } else {
-            if let devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: true, categories: .Switch, .DimmableLight) {
+            if let devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: true, categories: .switch, .dimmableLight) {
                 return devices.count
             }
         }
@@ -93,47 +93,47 @@ class ExcludedItemsViewController: UITableViewController {
         return 0
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("DeviceCellIdentifier", forIndexPath: indexPath)
-        cell.accessoryType = .None
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DeviceCellIdentifier", for: indexPath)
+        cell.accessoryType = .none
         
-        let room = roomList[indexPath.section] as Room
+        let room = roomList[(indexPath as NSIndexPath).section] as Room
 
         if self.showScenes == true {
             if let scenes = AppDelegate.appDelegate().veraAPI.scenesForRoom(room, showExcluded: true) {
-                let scene = scenes[indexPath.row]
+                let scene = scenes[(indexPath as NSIndexPath).row]
                 cell.textLabel!.text = scene.name
                 if let id = scene.id {
                     if idsToExclude.contains(id) == true {
-                        cell.accessoryType = .Checkmark
+                        cell.accessoryType = .checkmark
                     }
                 }
             }
         } else {
-            if let devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: true, categories: .Switch, .DimmableLight) {
-                let device = devices[indexPath.row]
+            if let devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: true, categories: .switch, .dimmableLight) {
+                let device = devices[(indexPath as NSIndexPath).row]
                 cell.textLabel!.text = device.name
                 if let id = device.id {
                     if idsToExclude.contains(id) == true {
-                        cell.accessoryType = .Checkmark
+                        cell.accessoryType = .checkmark
                     }
                 }
             }
         }
         
-        cell.selectionStyle = .None
+        cell.selectionStyle = .none
         
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         
-        let room = roomList[indexPath.section] as Room
+        let room = roomList[(indexPath as NSIndexPath).section] as Room
 
         if self.showScenes == true {
             if let scenes = AppDelegate.appDelegate().veraAPI.scenesForRoom(room, showExcluded: true) {
-                let scene = scenes[indexPath.row]
+                let scene = scenes[(indexPath as NSIndexPath).row]
                 if let id = scene.id {
                     if self.idsToExclude.contains(id) == true {
                         idsToExclude.removeObject(id)
@@ -143,8 +143,8 @@ class ExcludedItemsViewController: UITableViewController {
                 }
             }
         } else {
-            if let devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: true, categories: .Switch, .DimmableLight) {
-                let device = devices[indexPath.row]
+            if let devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: true, categories: .switch, .dimmableLight) {
+                let device = devices[(indexPath as NSIndexPath).row]
                 if let id = device.id {
                     if self.idsToExclude.contains(id) == true {
                         idsToExclude.removeObject(id)
@@ -155,7 +155,7 @@ class ExcludedItemsViewController: UITableViewController {
             }
         }
 
-        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None)
+        tableView.reloadRows(at: [indexPath], with: .none)
     }
 }
 

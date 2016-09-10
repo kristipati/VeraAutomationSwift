@@ -38,15 +38,13 @@
 		D28002B11A09D23A005894C3 /* SFSwiftNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28002B01A09D23A005894C3 /* SFSwiftNotification.swift */; };
 		D2A2A6DD1A0FFA4800BE65EE /* OnDeviceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */; };
 		D2A2A6DF1A101AF500BE65EE /* AudioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */; };
-		D2BB40E91BAC7E9C009BB9E3 /* 1Password.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2BB40E81BAC7E9C009BB9E3 /* 1Password.xcassets */; settings = {ASSET_TAGS = (); }; };
-		D2BB40F11BAC7EC5009BB9E3 /* OnePasswordExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BB40F01BAC7EC5009BB9E3 /* OnePasswordExtension.m */; settings = {ASSET_TAGS = (); }; };
+		D2BB40E91BAC7E9C009BB9E3 /* 1Password.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2BB40E81BAC7E9C009BB9E3 /* 1Password.xcassets */; };
+		D2BB40F11BAC7EC5009BB9E3 /* OnePasswordExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BB40F01BAC7EC5009BB9E3 /* OnePasswordExtension.m */; };
 		D2BB41021BAC90E3009BB9E3 /* Vera.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2E0DADB19F74E5600E79615 /* Vera.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2BB41031BAC919B009BB9E3 /* Locksmith.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2B667F01BAC526F0055C7E6 /* Locksmith.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2BB41131BACA900009BB9E3 /* Locksmith.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2B667F01BAC526F0055C7E6 /* Locksmith.framework */; };
 		D2BB41141BACA90A009BB9E3 /* CryptoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BB410D1BACA8E2009BB9E3 /* CryptoSwift.framework */; };
 		D2BB41151BACA916009BB9E3 /* CryptoSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2BB410D1BACA8E2009BB9E3 /* CryptoSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D2BB412C1BACA966009BB9E3 /* XCGLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BB41201BACA945009BB9E3 /* XCGLogger.framework */; };
-		D2BB412D1BACA96E009BB9E3 /* XCGLogger.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2BB41201BACA945009BB9E3 /* XCGLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2BB41451BACA99E009BB9E3 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BB41391BACA981009BB9E3 /* Alamofire.framework */; };
 		D2BB41461BACA9AB009BB9E3 /* Alamofire.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2BB41391BACA981009BB9E3 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2CEE4C419F8AA4D00D59BAF /* ToDo.txt in Resources */ = {isa = PBXBuildFile; fileRef = D2CEE4C319F8AA4D00D59BAF /* ToDo.txt */; };
@@ -58,6 +56,97 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		D2A87D121D8475F300D2E5FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2BB41301BACA981009BB9E3 /* Alamofire.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4CF626EF1BA7CB3E0011A099;
+			remoteInfo = "Alamofire tvOS";
+		};
+		D2A87D141D8475F300D2E5FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2BB41301BACA981009BB9E3 /* Alamofire.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4CF626F81BA7CB3E0011A099;
+			remoteInfo = "Alamofire tvOS Tests";
+		};
+		D2A87D1A1D8475F300D2E5FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2BB41061BACA8E2009BB9E3 /* CryptoSwift.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5596BDBB1BC8F220007E38D5;
+			remoteInfo = "CryptoSwift watchOS";
+		};
+		D2A87D1C1D8475F300D2E5FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2BB41061BACA8E2009BB9E3 /* CryptoSwift.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 75DF77721BC8EB59006E9520;
+			remoteInfo = "CryptoSwift OSX";
+		};
+		D2A87D1E1D8475F300D2E5FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2BB41061BACA8E2009BB9E3 /* CryptoSwift.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 75D614BF1BD844F2001358B2;
+			remoteInfo = "CryptoSwift tvOS";
+		};
+		D2A87D511D8476D500D2E5FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 55E3EE4519D76F280068C3A7;
+			remoteInfo = "XCGLogger (iOS)";
+		};
+		D2A87D531D8476D500D2E5FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 554DF41719D76FE7005708BE;
+			remoteInfo = "XCGLogger (OS X)";
+		};
+		D2A87D551D8476D500D2E5FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 70CB94201B99E728007802FF;
+			remoteInfo = "XCGLogger (watchOS)";
+		};
+		D2A87D571D8476D500D2E5FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5515A3DF1BA119FA0047BA31;
+			remoteInfo = "XCGLogger (tvOS)";
+		};
+		D2A87D591D8476D500D2E5FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 55E3EE5019D76F280068C3A7;
+			remoteInfo = "XCGLoggerTests (iOS)";
+		};
+		D2A87D5B1D8476D500D2E5FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 55BB1F011B79DC7500709779;
+			remoteInfo = "XCGLoggerTests (OS X)";
+		};
+		D2A87D5D1D8476D500D2E5FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 558EEB851D6BAC61006A9C7A;
+			remoteInfo = "XCGLoggerTests (watchOS)";
+		};
+		D2A87D5F1D8476D500D2E5FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 558EEB921D6BAC66006A9C7A;
+			remoteInfo = "XCGLoggerTests (tvOS)";
+		};
 		D2B667EF1BAC526F0055C7E6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2B667E71BAC526E0055C7E6 /* Locksmith.xcodeproj */;
@@ -120,48 +209,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 754BE45419693E190098E6F3;
 			remoteInfo = CryptoSwift;
-		};
-		D2BB411F1BACA945009BB9E3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2BB41171BACA945009BB9E3 /* XCGLogger.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 55E3EE4519D76F280068C3A7;
-			remoteInfo = "XCGLogger (iOS)";
-		};
-		D2BB41211BACA945009BB9E3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2BB41171BACA945009BB9E3 /* XCGLogger.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 554DF41719D76FE7005708BE;
-			remoteInfo = "XCGLogger (OS X)";
-		};
-		D2BB41231BACA945009BB9E3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2BB41171BACA945009BB9E3 /* XCGLogger.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 70CB94201B99E728007802FF;
-			remoteInfo = "XCGLogger (watchOS)";
-		};
-		D2BB41251BACA945009BB9E3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2BB41171BACA945009BB9E3 /* XCGLogger.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 55E3EE5019D76F280068C3A7;
-			remoteInfo = "XCGLoggerTests (iOS)";
-		};
-		D2BB41271BACA945009BB9E3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2BB41171BACA945009BB9E3 /* XCGLogger.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 55BB1F011B79DC7500709779;
-			remoteInfo = "XCGLoggerTests (OS X)";
-		};
-		D2BB412A1BACA95B009BB9E3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2BB41171BACA945009BB9E3 /* XCGLogger.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 55E3EE4419D76F280068C3A7;
-			remoteInfo = "XCGLogger (iOS)";
 		};
 		D2BB41381BACA981009BB9E3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -231,7 +278,6 @@
 				D2BB41021BAC90E3009BB9E3 /* Vera.framework in CopyFiles */,
 				D2BB41031BAC919B009BB9E3 /* Locksmith.framework in CopyFiles */,
 				D2BB41151BACA916009BB9E3 /* CryptoSwift.framework in CopyFiles */,
-				D2BB412D1BACA96E009BB9E3 /* XCGLogger.framework in CopyFiles */,
 				D2BB41461BACA9AB009BB9E3 /* Alamofire.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -274,13 +320,13 @@
 		D29867E81A15B628000E99E7 /* ReleaseNotes.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReleaseNotes.txt; sourceTree = "<group>"; };
 		D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnDeviceCell.swift; sourceTree = "<group>"; };
 		D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioCell.swift; sourceTree = "<group>"; };
+		D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = XCGLogger.xcodeproj; path = External/XCGLogger/Sources/XCGLogger.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D2B667E71BAC526E0055C7E6 /* Locksmith.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Locksmith.xcodeproj; path = External/Locksmith/Locksmith.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D2BB40E81BAC7E9C009BB9E3 /* 1Password.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = 1Password.xcassets; path = "External/onepassword-app-extension/1Password.xcassets"; sourceTree = SOURCE_ROOT; };
 		D2BB40EE1BAC7EC4009BB9E3 /* Automation-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Automation-Bridging-Header.h"; sourceTree = "<group>"; };
 		D2BB40EF1BAC7EC5009BB9E3 /* OnePasswordExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OnePasswordExtension.h; path = "External/onepassword-app-extension/OnePasswordExtension.h"; sourceTree = SOURCE_ROOT; };
 		D2BB40F01BAC7EC5009BB9E3 /* OnePasswordExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OnePasswordExtension.m; path = "External/onepassword-app-extension/OnePasswordExtension.m"; sourceTree = SOURCE_ROOT; };
 		D2BB41061BACA8E2009BB9E3 /* CryptoSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CryptoSwift.xcodeproj; path = External/CryptoSwift/CryptoSwift.xcodeproj; sourceTree = SOURCE_ROOT; };
-		D2BB41171BACA945009BB9E3 /* XCGLogger.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = XCGLogger.xcodeproj; path = External/XCGLogger/XCGLogger/Library/XCGLogger.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D2BB41301BACA981009BB9E3 /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = External/Alamofire/Alamofire.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D2CEE4C319F8AA4D00D59BAF /* ToDo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ToDo.txt; sourceTree = "<group>"; };
 		D2E0DAD519F74E5500E79615 /* Vera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Vera.xcodeproj; path = Vera/Vera.xcodeproj; sourceTree = "<group>"; };
@@ -298,7 +344,6 @@
 				D2E0DAEF19F74F8A00E79615 /* Vera.framework in Frameworks */,
 				D2BB41131BACA900009BB9E3 /* Locksmith.framework in Frameworks */,
 				D2BB41141BACA90A009BB9E3 /* CryptoSwift.framework in Frameworks */,
-				D2BB412C1BACA966009BB9E3 /* XCGLogger.framework in Frameworks */,
 				D2BB41451BACA99E009BB9E3 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -419,6 +464,21 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		D2A87D471D8476D500D2E5FD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2A87D521D8476D500D2E5FD /* XCGLogger.framework */,
+				D2A87D541D8476D500D2E5FD /* XCGLogger.framework */,
+				D2A87D561D8476D500D2E5FD /* XCGLogger.framework */,
+				D2A87D581D8476D500D2E5FD /* XCGLogger.framework */,
+				D2A87D5A1D8476D500D2E5FD /* XCGLoggerTests (iOS).xctest */,
+				D2A87D5C1D8476D500D2E5FD /* XCGLoggerTests (OS X).xctest */,
+				D2A87D5E1D8476D500D2E5FD /* XCGLoggerTests (watchOS).xctest */,
+				D2A87D601D8476D500D2E5FD /* XCGLoggerTests (tvOS).xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		D2B667E81BAC526E0055C7E6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -452,6 +512,9 @@
 			isa = PBXGroup;
 			children = (
 				D2BB410D1BACA8E2009BB9E3 /* CryptoSwift.framework */,
+				D2A87D1B1D8475F300D2E5FD /* CryptoSwift.framework */,
+				D2A87D1D1D8475F300D2E5FD /* CryptoSwift.framework */,
+				D2A87D1F1D8475F300D2E5FD /* CryptoSwift.framework */,
 				D2BB410F1BACA8E2009BB9E3 /* CryptoSwiftTests.xctest */,
 			);
 			name = Products;
@@ -478,22 +541,10 @@
 			name = External;
 			sourceTree = "<group>";
 		};
-		D2BB41181BACA945009BB9E3 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D2BB41201BACA945009BB9E3 /* XCGLogger.framework */,
-				D2BB41221BACA945009BB9E3 /* XCGLogger.framework */,
-				D2BB41241BACA945009BB9E3 /* XCGLogger.framework */,
-				D2BB41261BACA945009BB9E3 /* XCGLoggerTests (iOS).xctest */,
-				D2BB41281BACA945009BB9E3 /* XCGLoggerTests (OS X).xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		D2BB41291BACA94B009BB9E3 /* XCGLogger */ = {
 			isa = PBXGroup;
 			children = (
-				D2BB41171BACA945009BB9E3 /* XCGLogger.xcodeproj */,
+				D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */,
 			);
 			name = XCGLogger;
 			sourceTree = "<group>";
@@ -502,10 +553,12 @@
 			isa = PBXGroup;
 			children = (
 				D2BB41391BACA981009BB9E3 /* Alamofire.framework */,
-				D2BB413B1BACA981009BB9E3 /* Alamofire.framework */,
-				D2BB413D1BACA981009BB9E3 /* Alamofire.framework */,
 				D2BB413F1BACA981009BB9E3 /* Alamofire iOS Tests.xctest */,
+				D2BB413B1BACA981009BB9E3 /* Alamofire.framework */,
 				D2BB41411BACA981009BB9E3 /* Alamofire OSX Tests.xctest */,
+				D2A87D131D8475F300D2E5FD /* Alamofire.framework */,
+				D2A87D151D8475F300D2E5FD /* Alamofire tvOS Tests.xctest */,
+				D2BB413D1BACA981009BB9E3 /* Alamofire.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -543,7 +596,6 @@
 			);
 			dependencies = (
 				D2BB41441BACA994009BB9E3 /* PBXTargetDependency */,
-				D2BB412B1BACA95B009BB9E3 /* PBXTargetDependency */,
 				D2BB41121BACA8F9009BB9E3 /* PBXTargetDependency */,
 				D2B667FB1BAC52890055C7E6 /* PBXTargetDependency */,
 				D2E0DAEE19F74F4E00E79615 /* PBXTargetDependency */,
@@ -560,11 +612,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Gruby Solutions";
 				TargetAttributes = {
 					D2843B3519E0E798007CC520 = {
 						CreatedOnToolsVersion = 6.0.1;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -597,8 +650,8 @@
 					ProjectRef = D2E0DAD519F74E5500E79615 /* Vera.xcodeproj */;
 				},
 				{
-					ProductGroup = D2BB41181BACA945009BB9E3 /* Products */;
-					ProjectRef = D2BB41171BACA945009BB9E3 /* XCGLogger.xcodeproj */;
+					ProductGroup = D2A87D471D8476D500D2E5FD /* Products */;
+					ProjectRef = D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -609,6 +662,97 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		D2A87D131D8475F300D2E5FD /* Alamofire.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Alamofire.framework;
+			remoteRef = D2A87D121D8475F300D2E5FD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D2A87D151D8475F300D2E5FD /* Alamofire tvOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Alamofire tvOS Tests.xctest";
+			remoteRef = D2A87D141D8475F300D2E5FD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D2A87D1B1D8475F300D2E5FD /* CryptoSwift.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CryptoSwift.framework;
+			remoteRef = D2A87D1A1D8475F300D2E5FD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D2A87D1D1D8475F300D2E5FD /* CryptoSwift.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CryptoSwift.framework;
+			remoteRef = D2A87D1C1D8475F300D2E5FD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D2A87D1F1D8475F300D2E5FD /* CryptoSwift.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CryptoSwift.framework;
+			remoteRef = D2A87D1E1D8475F300D2E5FD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D2A87D521D8476D500D2E5FD /* XCGLogger.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = XCGLogger.framework;
+			remoteRef = D2A87D511D8476D500D2E5FD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D2A87D541D8476D500D2E5FD /* XCGLogger.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = XCGLogger.framework;
+			remoteRef = D2A87D531D8476D500D2E5FD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D2A87D561D8476D500D2E5FD /* XCGLogger.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = XCGLogger.framework;
+			remoteRef = D2A87D551D8476D500D2E5FD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D2A87D581D8476D500D2E5FD /* XCGLogger.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = XCGLogger.framework;
+			remoteRef = D2A87D571D8476D500D2E5FD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D2A87D5A1D8476D500D2E5FD /* XCGLoggerTests (iOS).xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "XCGLoggerTests (iOS).xctest";
+			remoteRef = D2A87D591D8476D500D2E5FD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D2A87D5C1D8476D500D2E5FD /* XCGLoggerTests (OS X).xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "XCGLoggerTests (OS X).xctest";
+			remoteRef = D2A87D5B1D8476D500D2E5FD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D2A87D5E1D8476D500D2E5FD /* XCGLoggerTests (watchOS).xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "XCGLoggerTests (watchOS).xctest";
+			remoteRef = D2A87D5D1D8476D500D2E5FD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D2A87D601D8476D500D2E5FD /* XCGLoggerTests (tvOS).xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "XCGLoggerTests (tvOS).xctest";
+			remoteRef = D2A87D5F1D8476D500D2E5FD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		D2B667F01BAC526F0055C7E6 /* Locksmith.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -656,41 +800,6 @@
 			fileType = wrapper.cfbundle;
 			path = CryptoSwiftTests.xctest;
 			remoteRef = D2BB410E1BACA8E2009BB9E3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D2BB41201BACA945009BB9E3 /* XCGLogger.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = XCGLogger.framework;
-			remoteRef = D2BB411F1BACA945009BB9E3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D2BB41221BACA945009BB9E3 /* XCGLogger.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = XCGLogger.framework;
-			remoteRef = D2BB41211BACA945009BB9E3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D2BB41241BACA945009BB9E3 /* XCGLogger.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = XCGLogger.framework;
-			remoteRef = D2BB41231BACA945009BB9E3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D2BB41261BACA945009BB9E3 /* XCGLoggerTests (iOS).xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "XCGLoggerTests (iOS).xctest";
-			remoteRef = D2BB41251BACA945009BB9E3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D2BB41281BACA945009BB9E3 /* XCGLoggerTests (OS X).xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "XCGLoggerTests (OS X).xctest";
-			remoteRef = D2BB41271BACA945009BB9E3 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D2BB41391BACA981009BB9E3 /* Alamofire.framework */ = {
@@ -824,11 +933,6 @@
 			name = CryptoSwift;
 			targetProxy = D2BB41111BACA8F9009BB9E3 /* PBXContainerItemProxy */;
 		};
-		D2BB412B1BACA95B009BB9E3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "XCGLogger (iOS)";
-			targetProxy = D2BB412A1BACA95B009BB9E3 /* PBXContainerItemProxy */;
-		};
 		D2BB41441BACA994009BB9E3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "Alamofire iOS";
@@ -938,8 +1042,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -948,6 +1054,7 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -983,8 +1090,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
@@ -992,6 +1101,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -1023,6 +1133,7 @@
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Automation/Automation-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -1041,7 +1152,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Automation/Automation-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
