@@ -326,6 +326,7 @@
 		D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioCell.swift; sourceTree = "<group>"; };
 		D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = XCGLogger.xcodeproj; path = External/XCGLogger/Sources/XCGLogger.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D2A87D811D847A9400D2E5FD /* KeychainSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = KeychainSwift.xcodeproj; path = "External/keychain-swift/KeychainSwift.xcodeproj"; sourceTree = SOURCE_ROOT; };
+		D2A87DCD1D848BA000D2E5FD /* Automation.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Automation.entitlements; sourceTree = "<group>"; };
 		D2BB40E81BAC7E9C009BB9E3 /* 1Password.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = 1Password.xcassets; path = "External/onepassword-app-extension/1Password.xcassets"; sourceTree = SOURCE_ROOT; };
 		D2BB40EE1BAC7EC4009BB9E3 /* Automation-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Automation-Bridging-Header.h"; sourceTree = "<group>"; };
 		D2BB40EF1BAC7EC5009BB9E3 /* OnePasswordExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OnePasswordExtension.h; path = "External/onepassword-app-extension/OnePasswordExtension.h"; sourceTree = SOURCE_ROOT; };
@@ -449,6 +450,7 @@
 		D2843B3819E0E798007CC520 /* Automation */ = {
 			isa = PBXGroup;
 			children = (
+				D2A87DCD1D848BA000D2E5FD /* Automation.entitlements */,
 				D2BB41161BACA936009BB9E3 /* External */,
 				D21CB84D19E1FEAF0054A7D4 /* Resources */,
 				D21CB85419E1FEAF0054A7D4 /* Source */,
@@ -621,7 +623,13 @@
 				TargetAttributes = {
 					D2843B3519E0E798007CC520 = {
 						CreatedOnToolsVersion = 6.0.1;
+						DevelopmentTeam = 87ZMTDNHLV;
 						LastSwiftMigration = 0800;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -1131,6 +1139,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Automation/Automation.entitlements;
+				DEVELOPMENT_TEAM = 87ZMTDNHLV;
 				INFOPLIST_FILE = Automation/Resources/Info.plist;
 				INFOPLIST_PREFIX_HEADER = Automation/Defines.h;
 				INFOPLIST_PREPROCESS = YES;
@@ -1151,6 +1161,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Automation/Automation.entitlements;
+				DEVELOPMENT_TEAM = 87ZMTDNHLV;
 				INFOPLIST_FILE = Automation/Resources/Info.plist;
 				INFOPLIST_PREFIX_HEADER = Automation/Defines.h;
 				INFOPLIST_PREPROCESS = YES;

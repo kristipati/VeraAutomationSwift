@@ -207,13 +207,6 @@
 			path = ../../External/Reachability;
 			sourceTree = "<group>";
 		};
-		D244CC1A19F7573000CC78A9 /* Set */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Set;
-			sourceTree = "<group>";
-		};
 		D244CC1B19F7573C00CC78A9 /* JSONHelper */ = {
 			isa = PBXGroup;
 			children = (
@@ -322,7 +315,6 @@
 				D27998E61BABC2B60040D462 /* XCGLogger */,
 				D2432B1A1A467E7E00D09A40 /* Reachability */,
 				D2EB6C5C1A3A3B8B001F658A /* CryptoSwift */,
-				D244CC1A19F7573000CC78A9 /* Set */,
 				D244CC1B19F7573C00CC78A9 /* JSONHelper */,
 				D244CC1C19F7574500CC78A9 /* Alamofire */,
 			);
