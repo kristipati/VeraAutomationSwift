@@ -10,6 +10,7 @@ import Foundation
 import Alamofire
 import CryptoSwift
 import XCGLogger
+import PMHTTP
 
 public let VeraUnitInfoUpdated = "com.grubysolutions.veraautomation.infoupdated"
 public let VeraUnitInfoFullLoad = "com.grubysolutions.veraautomation.infoupdated.fullload"
@@ -53,32 +54,19 @@ open class VeraAPI {
     let passwordSeed = "oZ7QE6LcLJp6fiWzdqZc"
     let log = XCGLogger.default
     
-    struct ActivityManager {
-        
-        static var activitiesCount = 0
-        
-        static func addActivity() {
-            if activitiesCount == 0 {
-                UIApplication.shared.isNetworkActivityIndicatorVisible = true
-            }
-            
-            activitiesCount += 1
-        }
-        
-        static func removeActivity() {
-            if activitiesCount > 0 {
-                activitiesCount -= 1
-                
-                if activitiesCount == 0 {
-                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                }
-            }
-        }
-    }
-
     public init() {
         let configuration = URLSessionConfiguration.default
         log.setup(level: .verbose, showThreadName: true, showLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil, fileLevel: .debug)
+        
+        HTTPManager.networkActivityHandler = { active in
+            UIApplication.shared.isNetworkActivityIndicatorVisible = active > 0
+        }
+        
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 30
+        config.timeoutIntervalForResource = 30
+        // PMHTTP defines a default User-Agent but we can supply our own
+        HTTP.sessionConfiguration = config
         
         self.manager = Alamofire.SessionManager(configuration: configuration)
         self.reachability = Reachability.forLocalWiFi()
@@ -98,13 +86,33 @@ open class VeraAPI {
             return
         }
 
-        let requestString = "http://ipv4.ipogre.com"
-        self.requestWithActivityIndicator(URLString: requestString, headers:["User-Agent":"curl"]).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-            self.log.info("External IP String: \(responseString)")
-            if responseString != nil {
-                self.currentExternalIPAddress = responseString?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                self.log.info("External IP address: \(self.currentExternalIPAddress)")
-                self.lastExternalIPAddressCheck = Date()
+        let requestString = "https://ip.gruby.com"
+        HTTP.request(GET: requestString).parse(with: { response, data -> String in
+            if data.count > 0 {
+                let address = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as! String
+                return address
+            }
+            
+            return ""
+            
+        }).performRequest(withCompletionQueue: .main) { (task, result) in
+            self.log.debug("Got a result")
+            switch result {
+                case let .success(response, data):
+                    self.log.debug("Success: \(response) data: \(data)")
+                    if data.isEmpty == false {
+                        self.currentExternalIPAddress = data.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                        self.log.info("External IP address: \(self.currentExternalIPAddress)")
+                        self.lastExternalIPAddressCheck = Date()
+                    }
+                    break
+                
+                case let .error(response, error):
+                    self.log.debug("Error: \(error) - \(response)")
+                    break
+                    
+                case .canceled:
+                    break
             }
         }
     }
@@ -145,35 +153,98 @@ open class VeraAPI {
     }
     
     fileprivate func getSessionTokenForServer(_ server: String, completionHandler: @escaping (_ token:String?)->Void) {
-        self.requestWithActivityIndicator(URLString: "https://\(server)/info/session/token", headers: self.authTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-            self.log.info("Response with session token: \(response)")
-            self.log.info("ResponseString: \(responseString)")
-            
-            if let statusCode = response?.statusCode {
-                if statusCode / 200 == 1 {
-                    completionHandler(responseString)
-                    return
+        
+        let req = HTTP.request(GET: "https://\(server)/info/session/token")
+        if self.authTokenHeaders() != nil {
+            if let theHeaders = self.authTokenHeaders() {
+                for (key, value) in theHeaders {
+                    req?.__objc_setValue(value, forHeaderField: key)
                 }
             }
-
-            completionHandler(nil)
         }
+
+        req?.parse(with: { (response, data) -> String in
+            if data.count > 0 {
+                let token = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as! String
+                return token
+            }
+
+            return "" }).performRequest(withCompletionQueue: .main, completion: { (tasl, result) in
+                self.log.debug("Got a result")
+                switch result {
+                case let .success(response, data):
+                    self.log.debug("Success: \(response) data: \(data)")
+                    if let statusCode = (response as? HTTPURLResponse)?.statusCode {
+                        if statusCode / 200 == 1 {
+                            completionHandler(data)
+                            return
+                        }
+                    }
+                    
+                    completionHandler(nil)
+                    break
+                    
+                case let .error(response, error):
+                    self.log.debug("Error: \(error) - \(response)")
+                    break
+                    
+                case .canceled:
+                    break
+                }
+            })
     }
     
     fileprivate func getAuthenticationToken(_ completionhandler: @escaping (_ auth: Auth?)->Void) {
         let stringToHash = self.username!.lowercased() + self.password! + self.passwordSeed
         let hashedString = stringToHash.sha1()
         let requestString = "https://us-autha11.mios.com/autha/auth/username/\(self.username!.lowercased())?SHA1Password=\(hashedString)&PK_Oem=1"
-        self.requestWithActivityIndicator(URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-            if (responseString != nil) {
-                var auth:Auth?
-                auth <-- responseString!
-                self.log.info("Auth response: \(responseString)")
-                completionhandler(auth)
-            } else {
+        
+        
+        HTTP.request(GET: requestString).parse(with: { response, data -> String in
+            if data.count > 0 {
+                let result = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as! String
+                return result
+            }
+            
+            return ""
+            
+        }).performRequest(withCompletionQueue: .main) { (task, result) in
+            self.log.debug("Got a result")
+            switch result {
+            case let .success(response, data):
+                self.log.debug("Success: \(response) data: \(data)")
+                if data.isEmpty == false {
+                    var auth:Auth?
+                    auth <-- data
+                    self.log.info("Auth response: \(data)")
+                    completionhandler(auth)
+                } else {
+                    completionhandler(nil)
+                }
+                break
+                
+            case let .error(response, error):
+                self.log.debug("Error: \(error) - \(response)")
                 completionhandler(nil)
+                break
+                
+            case .canceled:
+                completionhandler(nil)
+                break
             }
         }
+
+    
+//        self.requestWithActivityIndicator(URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
+//            if (responseString != nil) {
+//                var auth:Auth?
+//                auth <-- responseString!
+//                self.log.info("Auth response: \(responseString)")
+//                completionhandler(auth)
+//            } else {
+//                completionhandler(nil)
+//            }
+//        }
     }
 
     fileprivate func getVeraDevices(_ completionHandler:@escaping (_ device: String?, _ internalIP: String?, _ serverDevice: String?)->Void) {
@@ -332,7 +403,6 @@ open class VeraAPI {
         
         log.info("Sending request: \(URLString)")
         
-        ActivityManager.addActivity()
         let mutableURLRequest = NSMutableURLRequest(url: URL(string: URLString.urlString)!)
         mutableURLRequest.httpMethod = "GET"
         if let theHeaders = headers {
@@ -715,7 +785,6 @@ extension Request {
 
     func responseStringWithActivityIndicator(_ completionHandler: @escaping (URLRequest?, HTTPURLResponse?, String?, NSError?) -> Void) -> Self {
         let responseHandler: (URLRequest?, HTTPURLResponse?, Data?, Error?) -> (Void) = {request, urlResponse, data, error in
-            VeraAPI.ActivityManager.removeActivity()
             completionHandler(request, urlResponse, NSString(data: data!, encoding: String.Encoding.utf8.rawValue) as? String, nil)
         }
         

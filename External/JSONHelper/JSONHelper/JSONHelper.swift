@@ -54,7 +54,6 @@ private func convertToNilIfNull(_ object: AnyObject?) -> AnyObject? {
 // For optionals.
 public func <-- <T>(property: inout T?, value: AnyObject?) -> T? {
   var newValue: T?
-  ""
   if let unwrappedValue: AnyObject = convertToNilIfNull(value) {
     // We unwrapped the given value successfully, try to convert.
     if let convertedValue = unwrappedValue as? T {
