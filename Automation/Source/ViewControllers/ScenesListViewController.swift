@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Vera
 
 class ScenesListViewController: UITableViewController {
 
@@ -30,7 +29,7 @@ class ScenesListViewController: UITableViewController {
         self.tableView.estimatedRowHeight = 44
         self.tableView.rowHeight = UITableViewAutomaticDimension;
 
-        NotificationCenter.default.addObserver(self, selector: #selector(ScenesListViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: Vera.VeraUnitInfoUpdated), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ScenesListViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
         self.loadRooms(true)
         self.tableView.reloadData()
     }

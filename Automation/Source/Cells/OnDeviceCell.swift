@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Vera
 
 class OnDeviceCell: BaseCell {
 

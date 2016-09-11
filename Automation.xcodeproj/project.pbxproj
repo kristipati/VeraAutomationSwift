@@ -36,15 +36,21 @@
 		D27B15AD1A0730B5003790CE /* BaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27B15AC1A0730B5003790CE /* BaseCell.swift */; };
 		D28002AF1A09B5C6005894C3 /* VeraUIExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28002AE1A09B5C6005894C3 /* VeraUIExtension.swift */; };
 		D28002B11A09D23A005894C3 /* SFSwiftNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28002B01A09D23A005894C3 /* SFSwiftNotification.swift */; };
+		D28514561D85BCC400162FDE /* VeraAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = D285144F1D85BCC400162FDE /* VeraAuth.swift */; };
+		D28514571D85BCC400162FDE /* VeraDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28514501D85BCC400162FDE /* VeraDevice.swift */; };
+		D28514581D85BCC400162FDE /* VeraRoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28514511D85BCC400162FDE /* VeraRoom.swift */; };
+		D28514591D85BCC400162FDE /* VeraScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28514521D85BCC400162FDE /* VeraScene.swift */; };
+		D285145A1D85BCC400162FDE /* VeraUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28514531D85BCC400162FDE /* VeraUnit.swift */; };
+		D285145B1D85BCC400162FDE /* VeraUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28514541D85BCC400162FDE /* VeraUser.swift */; };
+		D285145C1D85BCC400162FDE /* VeraAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28514551D85BCC400162FDE /* VeraAPI.swift */; };
+		D28514931D85BDCA00162FDE /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D28514921D85BDCA00162FDE /* Reachability.m */; };
 		D2A2A6DD1A0FFA4800BE65EE /* OnDeviceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */; };
 		D2A2A6DF1A101AF500BE65EE /* AudioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */; };
 		D2BB40E91BAC7E9C009BB9E3 /* 1Password.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2BB40E81BAC7E9C009BB9E3 /* 1Password.xcassets */; };
 		D2BB40F11BAC7EC5009BB9E3 /* OnePasswordExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BB40F01BAC7EC5009BB9E3 /* OnePasswordExtension.m */; };
-		D2BB41021BAC90E3009BB9E3 /* Vera.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2E0DADB19F74E5600E79615 /* Vera.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2BB41141BACA90A009BB9E3 /* CryptoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BB410D1BACA8E2009BB9E3 /* CryptoSwift.framework */; };
 		D2BB41151BACA916009BB9E3 /* CryptoSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2BB410D1BACA8E2009BB9E3 /* CryptoSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2CEE4C419F8AA4D00D59BAF /* ToDo.txt in Resources */ = {isa = PBXBuildFile; fileRef = D2CEE4C319F8AA4D00D59BAF /* ToDo.txt */; };
-		D2E0DAEF19F74F8A00E79615 /* Vera.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2E0DADB19F74E5600E79615 /* Vera.framework */; };
 		D2E3597D1A104A0F00F30C32 /* LockCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E3597C1A104A0F00F30C32 /* LockCell.swift */; };
 		D2E3597F1A105E5500F30C32 /* ThermostatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E3597E1A105E5500F30C32 /* ThermostatCell.swift */; };
 		D2ED11371A15BC4D00B8F25B /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2ED11361A15BC4D00B8F25B /* ArrayExtension.swift */; };
@@ -52,6 +58,90 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		D28514651D85BCFE00162FDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D28514601D85BCFE00162FDE /* PMJSON.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9E1B24411BC73D7600E5BC19;
+			remoteInfo = PMJSON;
+		};
+		D28514671D85BCFE00162FDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D28514601D85BCFE00162FDE /* PMJSON.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9E1B244A1BC73D7600E5BC19;
+			remoteInfo = PMJSONTests;
+		};
+		D285146E1D85BD0400162FDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D28514691D85BD0400162FDE /* PMHTTP.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9E7DDF211C18F2B500EA43AD;
+			remoteInfo = PMHTTP;
+		};
+		D28514701D85BD0400162FDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D28514691D85BD0400162FDE /* PMHTTP.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9E7DDF2B1C18F2B600EA43AD;
+			remoteInfo = PMHTTPTests;
+		};
+		D28514721D85BD0D00162FDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D28514691D85BD0400162FDE /* PMHTTP.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 9E7DDF201C18F2B500EA43AD;
+			remoteInfo = PMHTTP;
+		};
+		D28514741D85BD1100162FDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D28514601D85BCFE00162FDE /* PMJSON.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 9E1B24401BC73D7600E5BC19;
+			remoteInfo = PMJSON;
+		};
+		D285147E1D85BD4900162FDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D28514761D85BD4900162FDE /* JSONHelper.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5FAD07641A70F2FC00C4D09E;
+			remoteInfo = JSONHelper;
+		};
+		D28514801D85BD4900162FDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D28514761D85BD4900162FDE /* JSONHelper.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D76C520A1ACD46B100B49735;
+			remoteInfo = "JSONHelper-Mac";
+		};
+		D28514821D85BD4900162FDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D28514761D85BD4900162FDE /* JSONHelper.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5FAD076F1A70F2FC00C4D09E;
+			remoteInfo = JSONHelperTests;
+		};
+		D28514841D85BD4900162FDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D28514761D85BD4900162FDE /* JSONHelper.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5FAD07841A70F31300C4D09E;
+			remoteInfo = JSONHelperExample;
+		};
+		D28514861D85BD4900162FDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D28514761D85BD4900162FDE /* JSONHelper.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5FAD07981A70F31300C4D09E;
+			remoteInfo = JSONHelperExampleTests;
+		};
+		D28514881D85BD5400162FDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D28514761D85BD4900162FDE /* JSONHelper.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5FAD07631A70F2FC00C4D09E;
+			remoteInfo = JSONHelper;
+		};
 		D2A87D511D8476D500D2E5FD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */;
@@ -199,20 +289,6 @@
 			remoteGlobalIDString = 754BE45419693E190098E6F3;
 			remoteInfo = CryptoSwift;
 		};
-		D2E0DADA19F74E5600E79615 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2E0DAD519F74E5500E79615 /* Vera.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D2E0DAB919F74E5500E79615;
-			remoteInfo = Vera;
-		};
-		D2E0DAED19F74F4E00E79615 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2E0DAD519F74E5500E79615 /* Vera.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2E0DAB819F74E5500E79615;
-			remoteInfo = Vera;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -222,7 +298,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D2BB41021BAC90E3009BB9E3 /* Vera.framework in CopyFiles */,
 				D2BB41151BACA916009BB9E3 /* CryptoSwift.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -262,6 +337,18 @@
 		D28002AE1A09B5C6005894C3 /* VeraUIExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraUIExtension.swift; sourceTree = "<group>"; };
 		D28002B01A09D23A005894C3 /* SFSwiftNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SFSwiftNotification.swift; path = External/SFSwiftNotification/Classes/SFSwiftNotification.swift; sourceTree = SOURCE_ROOT; };
 		D2843B3619E0E798007CC520 /* Automation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Automation.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D285144F1D85BCC400162FDE /* VeraAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraAuth.swift; sourceTree = "<group>"; };
+		D28514501D85BCC400162FDE /* VeraDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraDevice.swift; sourceTree = "<group>"; };
+		D28514511D85BCC400162FDE /* VeraRoom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraRoom.swift; sourceTree = "<group>"; };
+		D28514521D85BCC400162FDE /* VeraScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraScene.swift; sourceTree = "<group>"; };
+		D28514531D85BCC400162FDE /* VeraUnit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraUnit.swift; sourceTree = "<group>"; };
+		D28514541D85BCC400162FDE /* VeraUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraUser.swift; sourceTree = "<group>"; };
+		D28514551D85BCC400162FDE /* VeraAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraAPI.swift; sourceTree = "<group>"; };
+		D28514601D85BCFE00162FDE /* PMJSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PMJSON.xcodeproj; path = External/PMJSON/PMJSON.xcodeproj; sourceTree = SOURCE_ROOT; };
+		D28514691D85BD0400162FDE /* PMHTTP.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PMHTTP.xcodeproj; path = External/PMHTTP/PMHTTP.xcodeproj; sourceTree = SOURCE_ROOT; };
+		D28514761D85BD4900162FDE /* JSONHelper.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = JSONHelper.xcodeproj; path = External/JSONHelper/JSONHelper.xcodeproj; sourceTree = SOURCE_ROOT; };
+		D28514911D85BDCA00162FDE /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		D28514921D85BDCA00162FDE /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		D29867E81A15B628000E99E7 /* ReleaseNotes.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReleaseNotes.txt; sourceTree = "<group>"; };
 		D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnDeviceCell.swift; sourceTree = "<group>"; };
 		D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioCell.swift; sourceTree = "<group>"; };
@@ -274,7 +361,6 @@
 		D2BB40F01BAC7EC5009BB9E3 /* OnePasswordExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OnePasswordExtension.m; path = "External/onepassword-app-extension/OnePasswordExtension.m"; sourceTree = SOURCE_ROOT; };
 		D2BB41061BACA8E2009BB9E3 /* CryptoSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CryptoSwift.xcodeproj; path = External/CryptoSwift/CryptoSwift.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D2CEE4C319F8AA4D00D59BAF /* ToDo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ToDo.txt; sourceTree = "<group>"; };
-		D2E0DAD519F74E5500E79615 /* Vera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Vera.xcodeproj; path = Vera/Vera.xcodeproj; sourceTree = "<group>"; };
 		D2E3597C1A104A0F00F30C32 /* LockCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockCell.swift; sourceTree = "<group>"; };
 		D2E3597E1A105E5500F30C32 /* ThermostatCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThermostatCell.swift; sourceTree = "<group>"; };
 		D2ED11361A15BC4D00B8F25B /* ArrayExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
@@ -286,7 +372,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D2E0DAEF19F74F8A00E79615 /* Vera.framework in Frameworks */,
 				D2BB41141BACA90A009BB9E3 /* CryptoSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -320,6 +405,7 @@
 				D21CB85519E1FEAF0054A7D4 /* AppDelegate.swift */,
 				D28002AE1A09B5C6005894C3 /* VeraUIExtension.swift */,
 				D2ED11361A15BC4D00B8F25B /* ArrayExtension.swift */,
+				D285144D1D85BCC400162FDE /* Vera */,
 				D232108B1A07231400353F51 /* Cells */,
 				D23210741A07230500353F51 /* ViewControllers */,
 			);
@@ -394,7 +480,6 @@
 				D21CB84D19E1FEAF0054A7D4 /* Resources */,
 				D21CB85419E1FEAF0054A7D4 /* Source */,
 				D2843B3919E0E798007CC520 /* Supporting Files */,
-				D2E0DAD519F74E5500E79615 /* Vera.xcodeproj */,
 				D2BB40EE1BAC7EC4009BB9E3 /* Automation-Bridging-Header.h */,
 			);
 			path = Automation;
@@ -407,6 +492,69 @@
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
+		};
+		D285144D1D85BCC400162FDE /* Vera */ = {
+			isa = PBXGroup;
+			children = (
+				D285144E1D85BCC400162FDE /* DataModel */,
+				D28514551D85BCC400162FDE /* VeraAPI.swift */,
+			);
+			name = Vera;
+			path = Automation/Vera;
+			sourceTree = SOURCE_ROOT;
+		};
+		D285144E1D85BCC400162FDE /* DataModel */ = {
+			isa = PBXGroup;
+			children = (
+				D285144F1D85BCC400162FDE /* VeraAuth.swift */,
+				D28514501D85BCC400162FDE /* VeraDevice.swift */,
+				D28514511D85BCC400162FDE /* VeraRoom.swift */,
+				D28514521D85BCC400162FDE /* VeraScene.swift */,
+				D28514531D85BCC400162FDE /* VeraUnit.swift */,
+				D28514541D85BCC400162FDE /* VeraUser.swift */,
+			);
+			path = DataModel;
+			sourceTree = "<group>";
+		};
+		D28514611D85BCFE00162FDE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D28514661D85BCFE00162FDE /* PMJSON.framework */,
+				D28514681D85BCFE00162FDE /* PMJSONTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D285146A1D85BD0400162FDE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D285146F1D85BD0400162FDE /* PMHTTP.framework */,
+				D28514711D85BD0400162FDE /* PMHTTPTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D28514771D85BD4900162FDE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D285147F1D85BD4900162FDE /* JSONHelper.framework */,
+				D28514811D85BD4900162FDE /* JSONHelper.framework */,
+				D28514831D85BD4900162FDE /* JSONHelperTests.xctest */,
+				D28514851D85BD4900162FDE /* JSONHelperExample.app */,
+				D28514871D85BD4900162FDE /* JSONHelperExampleTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D28514901D85BDCA00162FDE /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				D28514911D85BDCA00162FDE /* Reachability.h */,
+				D28514921D85BDCA00162FDE /* Reachability.m */,
+			);
+			name = Reachability;
+			path = External/Reachability;
+			sourceTree = SOURCE_ROOT;
 		};
 		D2A87D471D8476D500D2E5FD /* Products */ = {
 			isa = PBXGroup;
@@ -421,14 +569,6 @@
 				D2A87D601D8476D500D2E5FD /* XCGLoggerTests (tvOS).xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		D2A87D801D847A8A00D2E5FD /* KeychainSwift */ = {
-			isa = PBXGroup;
-			children = (
-				D2A87D811D847A9400D2E5FD /* KeychainSwift.xcodeproj */,
-			);
-			name = KeychainSwift;
 			sourceTree = "<group>";
 		};
 		D2A87D821D847A9400D2E5FD /* Products */ = {
@@ -464,40 +604,20 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D2BB41101BACA8EB009BB9E3 /* CryptoSwift */ = {
-			isa = PBXGroup;
-			children = (
-				D2BB41061BACA8E2009BB9E3 /* CryptoSwift.xcodeproj */,
-			);
-			name = CryptoSwift;
-			sourceTree = "<group>";
-		};
 		D2BB41161BACA936009BB9E3 /* External */ = {
 			isa = PBXGroup;
 			children = (
-				D2A87D801D847A8A00D2E5FD /* KeychainSwift */,
-				D2BB41291BACA94B009BB9E3 /* XCGLogger */,
-				D2BB41101BACA8EB009BB9E3 /* CryptoSwift */,
+				D28514761D85BD4900162FDE /* JSONHelper.xcodeproj */,
+				D28514691D85BD0400162FDE /* PMHTTP.xcodeproj */,
+				D28514601D85BCFE00162FDE /* PMJSON.xcodeproj */,
+				D2BB41061BACA8E2009BB9E3 /* CryptoSwift.xcodeproj */,
+				D2A87D811D847A9400D2E5FD /* KeychainSwift.xcodeproj */,
+				D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */,
+				D28514901D85BDCA00162FDE /* Reachability */,
 				D2BB40F21BAC7ED8009BB9E3 /* OnePasswordExtension */,
 				D28002B21A09D240005894C3 /* SFSwiftNotification */,
 			);
 			name = External;
-			sourceTree = "<group>";
-		};
-		D2BB41291BACA94B009BB9E3 /* XCGLogger */ = {
-			isa = PBXGroup;
-			children = (
-				D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */,
-			);
-			name = XCGLogger;
-			sourceTree = "<group>";
-		};
-		D2E0DAD619F74E5500E79615 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D2E0DADB19F74E5600E79615 /* Vera.framework */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -516,10 +636,12 @@
 			buildRules = (
 			);
 			dependencies = (
+				D28514891D85BD5400162FDE /* PBXTargetDependency */,
+				D28514751D85BD1100162FDE /* PBXTargetDependency */,
+				D28514731D85BD0D00162FDE /* PBXTargetDependency */,
 				D2A87D9E1D847A9F00D2E5FD /* PBXTargetDependency */,
 				D2A87D621D8479D900D2E5FD /* PBXTargetDependency */,
 				D2BB41121BACA8F9009BB9E3 /* PBXTargetDependency */,
-				D2E0DAEE19F74F4E00E79615 /* PBXTargetDependency */,
 			);
 			name = Automation;
 			productName = Automation;
@@ -565,12 +687,20 @@
 					ProjectRef = D2BB41061BACA8E2009BB9E3 /* CryptoSwift.xcodeproj */;
 				},
 				{
+					ProductGroup = D28514771D85BD4900162FDE /* Products */;
+					ProjectRef = D28514761D85BD4900162FDE /* JSONHelper.xcodeproj */;
+				},
+				{
 					ProductGroup = D2A87D821D847A9400D2E5FD /* Products */;
 					ProjectRef = D2A87D811D847A9400D2E5FD /* KeychainSwift.xcodeproj */;
 				},
 				{
-					ProductGroup = D2E0DAD619F74E5500E79615 /* Products */;
-					ProjectRef = D2E0DAD519F74E5500E79615 /* Vera.xcodeproj */;
+					ProductGroup = D285146A1D85BD0400162FDE /* Products */;
+					ProjectRef = D28514691D85BD0400162FDE /* PMHTTP.xcodeproj */;
+				},
+				{
+					ProductGroup = D28514611D85BCFE00162FDE /* Products */;
+					ProjectRef = D28514601D85BCFE00162FDE /* PMJSON.xcodeproj */;
 				},
 				{
 					ProductGroup = D2A87D471D8476D500D2E5FD /* Products */;
@@ -585,6 +715,69 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		D28514661D85BCFE00162FDE /* PMJSON.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = PMJSON.framework;
+			remoteRef = D28514651D85BCFE00162FDE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D28514681D85BCFE00162FDE /* PMJSONTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = PMJSONTests.xctest;
+			remoteRef = D28514671D85BCFE00162FDE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D285146F1D85BD0400162FDE /* PMHTTP.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = PMHTTP.framework;
+			remoteRef = D285146E1D85BD0400162FDE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D28514711D85BD0400162FDE /* PMHTTPTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = PMHTTPTests.xctest;
+			remoteRef = D28514701D85BD0400162FDE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D285147F1D85BD4900162FDE /* JSONHelper.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = JSONHelper.framework;
+			remoteRef = D285147E1D85BD4900162FDE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D28514811D85BD4900162FDE /* JSONHelper.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = JSONHelper.framework;
+			remoteRef = D28514801D85BD4900162FDE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D28514831D85BD4900162FDE /* JSONHelperTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = JSONHelperTests.xctest;
+			remoteRef = D28514821D85BD4900162FDE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D28514851D85BD4900162FDE /* JSONHelperExample.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = JSONHelperExample.app;
+			remoteRef = D28514841D85BD4900162FDE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D28514871D85BD4900162FDE /* JSONHelperExampleTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = JSONHelperExampleTests.xctest;
+			remoteRef = D28514861D85BD4900162FDE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		D2A87D521D8476D500D2E5FD /* XCGLogger.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -711,13 +904,6 @@
 			remoteRef = D2BB410E1BACA8E2009BB9E3 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		D2E0DADB19F74E5600E79615 /* Vera.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Vera.framework;
-			remoteRef = D2E0DADA19F74E5600E79615 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -768,13 +954,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D285145C1D85BCC400162FDE /* VeraAPI.swift in Sources */,
+				D28514581D85BCC400162FDE /* VeraRoom.swift in Sources */,
 				D21CB85C19E1FEAF0054A7D4 /* AppDelegate.swift in Sources */,
+				D28514561D85BCC400162FDE /* VeraAuth.swift in Sources */,
+				D285145A1D85BCC400162FDE /* VeraUnit.swift in Sources */,
 				D23210821A07230500353F51 /* ClimateViewController.swift in Sources */,
 				D2A2A6DD1A0FFA4800BE65EE /* OnDeviceCell.swift in Sources */,
 				D2ED11371A15BC4D00B8F25B /* ArrayExtension.swift in Sources */,
 				D23210851A07230500353F51 /* OnViewController.swift in Sources */,
 				D232108A1A07230500353F51 /* SwitchesViewController.swift in Sources */,
 				D27B15AD1A0730B5003790CE /* BaseCell.swift in Sources */,
+				D28514931D85BDCA00162FDE /* Reachability.m in Sources */,
 				D2E3597F1A105E5500F30C32 /* ThermostatCell.swift in Sources */,
 				D23210871A07230500353F51 /* ScenesViewController.swift in Sources */,
 				D23210891A07230500353F51 /* SwitchesListViewController.swift in Sources */,
@@ -783,12 +974,15 @@
 				D2BB40F11BAC7EC5009BB9E3 /* OnePasswordExtension.m in Sources */,
 				D2E3597D1A104A0F00F30C32 /* LockCell.swift in Sources */,
 				D23210841A07230500353F51 /* LocksViewController.swift in Sources */,
+				D28514571D85BCC400162FDE /* VeraDevice.swift in Sources */,
 				D2A2A6DF1A101AF500BE65EE /* AudioCell.swift in Sources */,
 				D232108D1A07232600353F51 /* DeviceCell.swift in Sources */,
 				D28002AF1A09B5C6005894C3 /* VeraUIExtension.swift in Sources */,
 				D28002B11A09D23A005894C3 /* SFSwiftNotification.swift in Sources */,
 				D23210861A07230500353F51 /* ScenesListViewController.swift in Sources */,
 				D23210881A07230500353F51 /* SettingsViewController.swift in Sources */,
+				D28514591D85BCC400162FDE /* VeraScene.swift in Sources */,
+				D285145B1D85BCC400162FDE /* VeraUser.swift in Sources */,
 				D23210801A07230500353F51 /* AudioListViewController.swift in Sources */,
 				D23210831A07230500353F51 /* ExcludedItemsViewController.swift in Sources */,
 			);
@@ -797,6 +991,21 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		D28514731D85BD0D00162FDE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = PMHTTP;
+			targetProxy = D28514721D85BD0D00162FDE /* PBXContainerItemProxy */;
+		};
+		D28514751D85BD1100162FDE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = PMJSON;
+			targetProxy = D28514741D85BD1100162FDE /* PBXContainerItemProxy */;
+		};
+		D28514891D85BD5400162FDE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = JSONHelper;
+			targetProxy = D28514881D85BD5400162FDE /* PBXContainerItemProxy */;
+		};
 		D2A87D621D8479D900D2E5FD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "XCGLogger (iOS)";
@@ -811,11 +1020,6 @@
 			isa = PBXTargetDependency;
 			name = CryptoSwift;
 			targetProxy = D2BB41111BACA8F9009BB9E3 /* PBXContainerItemProxy */;
-		};
-		D2E0DAEE19F74F4E00E79615 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Vera;
-			targetProxy = D2E0DAED19F74F4E00E79615 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

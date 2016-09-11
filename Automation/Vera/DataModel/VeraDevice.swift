@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Gruby Solutions. All rights reserved.
 //
 
+import JSONHelper
+
 open class VeraDevice: Deserializable, CustomStringConvertible {
     public enum HVACMode {
         case off

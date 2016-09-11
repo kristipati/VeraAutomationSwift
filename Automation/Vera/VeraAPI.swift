@@ -10,6 +10,7 @@ import Foundation
 import CryptoSwift
 import XCGLogger
 import PMHTTP
+import JSONHelper
 
 public let VeraUnitInfoUpdated = "com.grubysolutions.veraautomation.infoupdated"
 public let VeraUnitInfoFullLoad = "com.grubysolutions.veraautomation.infoupdated.fullload"

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Vera
 
 class ExcludedItemsViewController: UITableViewController {
     var showScenes = false

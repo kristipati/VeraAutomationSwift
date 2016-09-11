@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Vera
 import XCGLogger
 import KeychainSwift
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
@@ -47,7 +46,7 @@ let sTimeForCheck:TimeInterval = 4.0
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate, UITabBarControllerDelegate {
 
     let log = XCGLogger.default
-    var veraAPI = Vera.VeraAPI()
+    var veraAPI = VeraAPI()
     var periodicTimer: Timer?
     var lastUnitCheck: Date?
     var handlingLogin = false

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Vera
+
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
@@ -30,7 +30,7 @@ class ClimateViewController: UICollectionViewController, ThermostatProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(ClimateViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: Vera.VeraUnitInfoUpdated), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ClimateViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
         
         self.loadThermostats()
     }
@@ -41,9 +41,9 @@ class ClimateViewController: UICollectionViewController, ThermostatProtocol {
     
     func loadThermostats () {
         var devices = [VeraDevice]()
-        if let roomsWithThermostats = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.VeraDevice.Category.thermostat) {
+        if let roomsWithThermostats = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.thermostat) {
             for room in roomsWithThermostats {
-                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: Vera.VeraDevice.Category.thermostat) {
+                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: VeraDevice.Category.thermostat) {
                     for device in roomDevices {
                             devices.append(device)
                     }

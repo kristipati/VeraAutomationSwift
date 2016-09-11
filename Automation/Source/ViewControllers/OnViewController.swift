@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Vera
+
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
@@ -26,7 +26,7 @@ class OnViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(OnViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: Vera.VeraUnitInfoUpdated), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(OnViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
         
         self.loadOnDevices()
     }
@@ -37,9 +37,9 @@ class OnViewController: UICollectionViewController {
     
     func loadOnDevices () {
         var devices = [VeraDevice]()
-        if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.VeraDevice.Category.switch, Vera.VeraDevice.Category.dimmableLight) {
+        if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.switch, VeraDevice.Category.dimmableLight) {
             for room in roomsWithSwitches {
-                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: Vera.VeraDevice.Category.switch, Vera.VeraDevice.Category.dimmableLight) {
+                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: VeraDevice.Category.switch, VeraDevice.Category.dimmableLight) {
                     for device in roomDevices {
                         if let status = device.status {
                             if status == 1 {

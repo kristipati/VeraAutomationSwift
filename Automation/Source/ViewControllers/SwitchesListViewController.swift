@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Vera
 
 class SwitchesListViewController: UITableViewController {
 
@@ -27,7 +26,7 @@ class SwitchesListViewController: UITableViewController {
         self.tableView.estimatedRowHeight = 44
         self.tableView.rowHeight = UITableViewAutomaticDimension;
 
-        NotificationCenter.default.addObserver(self, selector: #selector(SwitchesListViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: Vera.VeraUnitInfoUpdated), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(SwitchesListViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
         self.loadRooms(true)
     }
     
@@ -57,7 +56,7 @@ class SwitchesListViewController: UITableViewController {
         if segue.identifier == "showDetail" {
             let controller = (segue.destination as! UINavigationController).topViewController as! SwitchesViewController
             if let indexPath = self.tableView.indexPathForSelectedRow {
-                if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.VeraDevice.Category.switch, Vera.VeraDevice.Category.dimmableLight) {
+                if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.switch, VeraDevice.Category.dimmableLight) {
                     let room = roomsWithSwitches[(indexPath as NSIndexPath).row]
                     controller.room = room
                 }
@@ -71,7 +70,7 @@ class SwitchesListViewController: UITableViewController {
     // MARK: - Table View
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.VeraDevice.Category.switch, Vera.VeraDevice.Category.dimmableLight) {
+        if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.switch, VeraDevice.Category.dimmableLight) {
                 return roomsWithSwitches.count
             }
         
@@ -81,7 +80,7 @@ class SwitchesListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
 
-        if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.VeraDevice.Category.switch, Vera.VeraDevice.Category.dimmableLight) {
+        if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.switch, VeraDevice.Category.dimmableLight) {
             let room = roomsWithSwitches[(indexPath as NSIndexPath).row]
             cell.textLabel!.text = room.name
         }

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Vera
+
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
@@ -30,7 +30,7 @@ class LocksViewController: UICollectionViewController, LockProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(LocksViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: Vera.VeraUnitInfoUpdated), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(LocksViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
         
         self.loadLockDevices()
     }
@@ -41,9 +41,9 @@ class LocksViewController: UICollectionViewController, LockProtocol {
     
     func loadLockDevices () {
         var devices = [VeraDevice]()
-        if let roomsWithLocks = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.VeraDevice.Category.lock) {
+        if let roomsWithLocks = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.lock) {
             for room in roomsWithLocks {
-                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: Vera.VeraDevice.Category.lock) {
+                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: VeraDevice.Category.lock) {
                         for device in roomDevices {
                             devices.append(device)
                         }

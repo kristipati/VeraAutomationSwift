@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import JSONHelper
 
 open class VeraAuth : Deserializable, CustomStringConvertible {
     

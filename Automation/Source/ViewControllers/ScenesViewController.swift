@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Vera
+
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
@@ -32,7 +32,7 @@ class ScenesViewController: UICollectionViewController {
             self.title = self.room?.name
         }
 
-        NotificationCenter.default.addObserver(self, selector: #selector(ScenesViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: Vera.VeraUnitInfoUpdated), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ScenesViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
     }
 
     func unitInfoUpdated(_ notification: Notification) {

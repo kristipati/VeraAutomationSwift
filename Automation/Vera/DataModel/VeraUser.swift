@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import JSONHelper
 
 class VeraUser : Deserializable {
     var units:[VeraUnit]?

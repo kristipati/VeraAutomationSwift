@@ -1,26 +1,24 @@
 //
-//  Scene.swift
+//  Room.swift
 //  Vera
 //
 //  Created by Scott Gruby on 10/21/14.
 //  Copyright (c) 2014 Gruby Solutions. All rights reserved.
 //
 
-open class VeraScene: Deserializable, CustomStringConvertible {
-    open var id: Int?
-    var active: Bool?
-    var state: Int?
-    open var name: String?
-    open var roomID: Int?
-    var comment: String?
+import JSONHelper
+
+public func ==(lhs: VeraRoom, rhs: VeraRoom) -> Bool {
+    return lhs.id == rhs.id && lhs.name == rhs.name
+}
+
+open class VeraRoom: Deserializable, CustomStringConvertible, Hashable {
+    open var name:String?
+    var id:Int?
     
     public required init(data: [String: AnyObject]) {
-        id <-- data["id"]
-        active <-- data["active"]
         name <-- data["name"]
-        state <-- data["state"]
-        roomID <-- data ["room"]
-        comment <-- data ["comment"]
+        id <-- data["id"]
     }
     
     open var description: String {
@@ -34,5 +32,14 @@ open class VeraScene: Deserializable, CustomStringConvertible {
         }
         
         return desc
+    }
+    
+    open var hashValue : Int {
+        get {
+            if self.id == nil {
+                return 0
+            }
+            return self.id!
+        }
     }
 }
