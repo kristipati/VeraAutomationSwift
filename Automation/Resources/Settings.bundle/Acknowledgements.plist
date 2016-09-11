@@ -222,6 +222,42 @@
                         <key>FooterText</key>
                         <string>SFSwiftNotification5</string>
                 </dict>
+                <dict>
+                        <key>Type</key>
+                        <string>PSGroupSpecifier</string>
+                        <key>FooterText</key>
+                        <string>XCGLogger</string>
+                </dict>
+                <dict>
+                        <key>Type</key>
+                        <string>PSGroupSpecifier</string>
+                        <key>FooterText</key>
+                        <string>XCGLogger2</string>
+                </dict>
+                <dict>
+                        <key>Type</key>
+                        <string>PSGroupSpecifier</string>
+                        <key>FooterText</key>
+                        <string>XCGLogger3</string>
+                </dict>
+                <dict>
+                        <key>Type</key>
+                        <string>PSGroupSpecifier</string>
+                        <key>FooterText</key>
+                        <string>XCGLogger4</string>
+                </dict>
+                <dict>
+                        <key>Type</key>
+                        <string>PSGroupSpecifier</string>
+                        <key>FooterText</key>
+                        <string>XCGLogger5</string>
+                </dict>
+                <dict>
+                        <key>Type</key>
+                        <string>PSGroupSpecifier</string>
+                        <key>FooterText</key>
+                        <string>XCGLogger6</string>
+                </dict>
         </array>
 </dict>
 </plist>
