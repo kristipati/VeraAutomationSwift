@@ -1,3 +1,7 @@
+1.0.0 Build 5
+--------------
+- Fixed font on scenes tab for rooms
+
 1.0.0 Build 4
 --------------
 - Tapping a tab bar icon pops to root view controller

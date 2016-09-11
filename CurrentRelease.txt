@@ -1,3 +1,5 @@
-1.0.0 Build 5
+1.0.0 Build 8
 --------------
-- Fixed font on scenes tab for rooms
+- Updated for Swift 3
+- Switched to using self hosted IP address checking tool
+- Switched to 
