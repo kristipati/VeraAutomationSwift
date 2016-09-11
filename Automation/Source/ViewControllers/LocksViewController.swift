@@ -81,9 +81,7 @@ class LocksViewController: UICollectionViewController, LockProtocol {
     }
     
     func setDeviceLocked(_ device:Device, locked: Bool) {
-        AppDelegate.appDelegate().veraAPI.setLockStateWithNotification(device, locked:locked, completionHandler: { (error: NSError?) -> Void in
-            
-        })
+        AppDelegate.appDelegate().veraAPI.setLockStateWithNotification(device, locked:locked)
     }
 
 

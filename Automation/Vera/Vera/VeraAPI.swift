@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 import CryptoSwift
 import XCGLogger
 import PMHTTP
@@ -21,7 +20,7 @@ open class JSON : Deserializable {
     public required init(data: [String: AnyObject]) {
         self.data = data
     }
-
+    
     fileprivate subscript(key: String) -> AnyObject? {
         get {
             if self.data != nil {
@@ -46,7 +45,6 @@ open class VeraAPI {
     var user : User?
     var auth: Auth?
     var sessionToken: String?
-    var manager: Alamofire.SessionManager?
     var reachability: Reachability?
     var currentExternalIPAddress:String?
     var lastExternalIPAddressCheck:Date?
@@ -55,7 +53,6 @@ open class VeraAPI {
     let log = XCGLogger.default
     
     public init() {
-        let configuration = URLSessionConfiguration.default
         log.setup(level: .verbose, showThreadName: true, showLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil, fileLevel: .debug)
         
         HTTPManager.networkActivityHandler = { active in
@@ -65,54 +62,52 @@ open class VeraAPI {
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 30
         config.timeoutIntervalForResource = 30
-        // PMHTTP defines a default User-Agent but we can supply our own
         HTTP.sessionConfiguration = config
         
-        self.manager = Alamofire.SessionManager(configuration: configuration)
         self.reachability = Reachability.forLocalWiFi()
         self.reachability?.startNotifier()
         NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged(_:)), name: NSNotification.Name.reachabilityChanged, object: nil)
         self.getExternalIPAddress()
     }
-
+    
     @objc func reachabilityChanged(_ notification: Notification) {
         self.log.info("Reachability Changed")
         self.lastExternalIPAddressCheck = nil
         getExternalIPAddress()
     }
     
+    let stringParseHandler: (URLResponse, Data) throws -> String? = {response, data in
+        if data.count > 0 {
+            return NSString(data: data, encoding: String.Encoding.utf8.rawValue) as? String
+        }
+        
+        return nil
+    }
+    
     func getExternalIPAddress () {
         if self.lastExternalIPAddressCheck != nil && self.currentExternalIPAddress != nil && Date().timeIntervalSince(self.lastExternalIPAddressCheck!) < 300 {
             return
         }
-
+        
         let requestString = "https://ip.gruby.com"
-        HTTP.request(GET: requestString).parse(with: { response, data -> String in
-            if data.count > 0 {
-                let address = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as! String
-                return address
-            }
-            
-            return ""
-            
-        }).performRequest(withCompletionQueue: .main) { (task, result) in
+        HTTP.request(GET: requestString).parse(with: stringParseHandler).performRequest(withCompletionQueue: .main) { (task, result) in
             self.log.debug("Got a result")
             switch result {
-                case let .success(response, data):
-                    self.log.debug("Success: \(response) data: \(data)")
-                    if data.isEmpty == false {
-                        self.currentExternalIPAddress = data.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        self.log.info("External IP address: \(self.currentExternalIPAddress)")
-                        self.lastExternalIPAddressCheck = Date()
-                    }
-                    break
+            case let .success(response, data):
+                self.log.debug("Success: \(response) data: \(data)")
+                if data != nil {
+                    self.currentExternalIPAddress = data?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                    self.log.info("External IP address: \(self.currentExternalIPAddress)")
+                    self.lastExternalIPAddressCheck = Date()
+                }
+                break
                 
-                case let .error(response, error):
-                    self.log.debug("Error: \(error) - \(response)")
-                    break
-                    
-                case .canceled:
-                    break
+            case let .error(response, error):
+                self.log.debug("Error: \(error) - \(response)")
+                break
+                
+            case .canceled:
+                break
             }
         }
     }
@@ -132,19 +127,19 @@ open class VeraAPI {
         
         return nil
     }
-
+    
     func authTokenHeaders()->Dictionary<String, String>? {
         var dict: [String:String] = [:]
         if let localAuth = self.auth {
             if let localAuthToken = localAuth.authToken {
                 dict["MMSAuth"] = localAuthToken
             }
-
+            
             if let localAuthSigToken = localAuth.authSigToken {
                 dict["MMSAuthSig"] = localAuthSigToken
             }
         }
-
+        
         if dict.isEmpty {
             return nil
         }
@@ -162,14 +157,8 @@ open class VeraAPI {
                 }
             }
         }
-
-        req?.parse(with: { (response, data) -> String in
-            if data.count > 0 {
-                let token = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as! String
-                return token
-            }
-
-            return "" }).performRequest(withCompletionQueue: .main, completion: { (tasl, result) in
+        
+        req?.parse(with: stringParseHandler).performRequest(withCompletionQueue: .main, completion: { (task, result) in
                 self.log.debug("Got a result")
                 switch result {
                 case let .success(response, data):
@@ -194,28 +183,21 @@ open class VeraAPI {
             })
     }
     
+    
     fileprivate func getAuthenticationToken(_ completionhandler: @escaping (_ auth: Auth?)->Void) {
         let stringToHash = self.username!.lowercased() + self.password! + self.passwordSeed
         let hashedString = stringToHash.sha1()
         let requestString = "https://us-autha11.mios.com/autha/auth/username/\(self.username!.lowercased())?SHA1Password=\(hashedString)&PK_Oem=1"
         
         
-        HTTP.request(GET: requestString).parse(with: { response, data -> String in
-            if data.count > 0 {
-                let result = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as! String
-                return result
-            }
-            
-            return ""
-            
-        }).performRequest(withCompletionQueue: .main) { (task, result) in
+        HTTP.request(GET: requestString).parse(with: stringParseHandler).performRequest(withCompletionQueue: .main) { (task, result) in
             self.log.debug("Got a result")
             switch result {
             case let .success(response, data):
                 self.log.debug("Success: \(response) data: \(data)")
-                if data.isEmpty == false {
+                if data != nil {
                     var auth:Auth?
-                    auth <-- data
+                    auth <-- data!
                     self.log.info("Auth response: \(data)")
                     completionhandler(auth)
                 } else {
@@ -233,20 +215,8 @@ open class VeraAPI {
                 break
             }
         }
-
-    
-//        self.requestWithActivityIndicator(URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-//            if (responseString != nil) {
-//                var auth:Auth?
-//                auth <-- responseString!
-//                self.log.info("Auth response: \(responseString)")
-//                completionhandler(auth)
-//            } else {
-//                completionhandler(nil)
-//            }
-//        }
     }
-
+    
     fileprivate func getVeraDevices(_ completionHandler:@escaping (_ device: String?, _ internalIP: String?, _ serverDevice: String?)->Void) {
         if (self.auth != nil && self.auth!.authToken != nil) {
             if let data = Data(base64Encoded: self.auth!.authToken!, options: NSData.Base64DecodingOptions(rawValue: 0)) {
@@ -262,66 +232,106 @@ open class VeraAPI {
             if (self.auth?.account != nil && self.auth?.serverAccount != nil) {
                 let requestString = "https://\(self.auth!.serverAccount!)/account/account/account/\(self.auth!.account!)/devices"
                 self.getSessionTokenForServer(self.auth!.serverAccount!, completionHandler: { (token) -> Void in
+                    
                     if (token != nil) {
-                        self.requestWithActivityIndicator(URLString: requestString, headers:["MMSSession":token!]).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-                            self.log.info("Response for locator: \(responseString)")
-                            if (responseString != nil) {
-                                var tempUser:User?
-                                tempUser <-- responseString!
-                                self.user = tempUser
-                            }
-                            
-                            // Grab the device info
-                            
-                            if let unit = self.getVeraUnit() {
-                                if (unit.serverDevice != nil && unit.serialNumber != nil) {
-                                    self.getSessionTokenForServer(unit.serverDevice!, completionHandler: { (token) -> Void in
-                                        if (token != nil) {
-                                            let requestString = "https://\(unit.serverDevice!)/device/device/device/\(unit.serialNumber!)"
-                                            self.requestWithActivityIndicator(URLString: requestString, headers:["MMSSession":token!]).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-                                                self.log.info("Response for device info: \(responseString)")
-                                                if (responseString != nil) {
-                                                    var tempUnit:Unit?
-                                                    tempUnit <-- responseString!
-                                                    if (tempUnit != nil) {
-                                                        unit.ipAddress = tempUnit!.ipAddress
-                                                        unit.externalIPAddress = tempUnit!.externalIPAddress
-                                                        unit.serverRelay = tempUnit!.serverRelay
-                                                    }
-                                                }
-                                                self.log.info("unit: \(unit)")
-                                                if (unit.serverRelay != nil) {
-                                                    self.getSessionTokenForServer(unit.serverRelay!, completionHandler: { (token) -> Void in
-                                                        self.sessionToken = token
-                                                        self.log.info("Session token: \(token)")
-                                                        completionHandler(nil, nil, nil)
-                                                    })
+                        let req = HTTP.request(GET: requestString)
+                        req?.__objc_setValue(token!, forHeaderField: "MMSSession")
+                        
+                        req?.parse(with: self.stringParseHandler).performRequest(withCompletionQueue: .main, completion: { (task, result) in
+                                
+                                switch result {
+                                case let .success(_, responseString):
+                                    self.log.info("Response for locator: \(responseString)")
+                                    if (responseString != nil) {
+                                        var tempUser:User?
+                                        tempUser <-- responseString!
+                                        self.user = tempUser
+                                    }
+                                    
+                                    // Grab the device info
+                                    
+                                    if let unit = self.getVeraUnit() {
+                                        if (unit.serverDevice != nil && unit.serialNumber != nil) {
+                                            self.getSessionTokenForServer(unit.serverDevice!, completionHandler: { (token) -> Void in
+                                                if (token != nil) {
+                                                    let requestString = "https://\(unit.serverDevice!)/device/device/device/\(unit.serialNumber!)"
+                                                    
+                                                    let req = HTTP.request(GET: requestString)
+                                                    req?.__objc_setValue(token!, forHeaderField: "MMSSession")
+                                                    
+                                                    req?.parse(with: self.stringParseHandler).performRequest(withCompletionQueue: .main, completion: { (task, result) in
+                                                            switch result {
+                                                            case let .success(response, responseString):
+                                                                self.log.debug("Success: \(response) data: \(responseString)")
+                                                                if responseString?.isEmpty == false {
+                                                                    if (responseString != nil) {
+                                                                        var tempUnit:Unit?
+                                                                        tempUnit <-- responseString!
+                                                                        if (tempUnit != nil) {
+                                                                            unit.ipAddress = tempUnit!.ipAddress
+                                                                            unit.externalIPAddress = tempUnit!.externalIPAddress
+                                                                            unit.serverRelay = tempUnit!.serverRelay
+                                                                        }
+                                                                    }
+                                                                    self.log.info("unit: \(unit)")
+                                                                    if (unit.serverRelay != nil) {
+                                                                        self.getSessionTokenForServer(unit.serverRelay!, completionHandler: { (token) -> Void in
+                                                                            self.sessionToken = token
+                                                                            self.log.info("Session token: \(token)")
+                                                                            completionHandler(nil, nil, nil)
+                                                                        })
+                                                                    } else {
+                                                                        completionHandler(nil, nil, nil)
+                                                                    }
+                                                                    
+                                                                } else {
+                                                                }
+                                                                break
+                                                                
+                                                            case let .error(response, error):
+                                                                self.log.debug("Error: \(error) - \(response)")
+                                                                completionHandler(nil, nil, nil)
+                                                                break
+                                                                
+                                                            case .canceled:
+                                                                completionHandler(nil, nil, nil)
+                                                                break
+                                                            }
+                                                        }
+                                                    )
+                                                    
+                                                    
                                                 } else {
                                                     completionHandler(nil, nil, nil)
                                                 }
-                                            }
+                                            })
                                         } else {
                                             completionHandler(nil, nil, nil)
                                         }
-                                    })
-                                } else {
+                                    } else {
+                                        completionHandler(nil, nil, nil)
+                                    }
+                                    
+                                    break
+                                    
+                                case let .error(response, error):
+                                    self.log.debug("Error: \(error) - \(response)")
                                     completionHandler(nil, nil, nil)
+                                    break
+                                    
+                                case .canceled:
+                                    completionHandler(nil, nil, nil)
+                                    break
                                 }
-                            } else {
-                                completionHandler(nil, nil, nil)
-                            }
-                        }
-                    } else {
-                        completionHandler(nil, nil, nil)
+                                
+                                
+                            } )// End completion
                     }
                 })
             }
-            
-        } else {
-            completionHandler(nil, nil, nil)
         }
     }
-
+    
     
     open func getUnitsInformationForUser(_ completionHandler: @escaping (_ success:Bool)->Void) {
         if self.username != nil && self.password != nil {
@@ -339,26 +349,40 @@ open class VeraAPI {
             completionHandler(false)
         }
     }
-       fileprivate func getUnitsInformationForUser(server: Int, completionHandler: @escaping (_ success: Bool) -> Void) {
+    fileprivate func getUnitsInformationForUser(server: Int, completionHandler: @escaping (_ success: Bool) -> Void) {
         if self.username == nil {
             completionHandler(false)
             return;
         }
         let requestString = "https://sta\(server).mios.com/locator_json.php?username=\(self.username!)"
         log.info("Request: \(requestString)")
-        self.requestWithActivityIndicator(URLString: requestString).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-            self.log.info("Response: \(response)")
-            self.log.info("ResponseString: \(responseString)")
-            if responseString != nil {
-                self.user <-- responseString!
-                if let units = self.user?.units {
-                    for unit in units {
-                        self.log.info("Unit: \(unit)")
+        
+        HTTP.request(GET: requestString).parse(with: stringParseHandler).performRequest(withCompletionQueue: .main) { (task, result) in
+            self.log.debug("Got a result")
+            switch result {
+            case let .success(response, responseString):
+                self.log.info("Response: \(response)")
+                self.log.info("ResponseString: \(responseString)")
+                if responseString != nil {
+                    self.user <-- responseString!
+                    if let units = self.user?.units {
+                        for unit in units {
+                            self.log.info("Unit: \(unit)")
+                        }
                     }
                 }
+                completionHandler(self.user != nil)
+                break
+                
+            case let .error(response, error):
+                self.log.debug("Error: \(error) - \(response)")
+                completionHandler(false)
+                break
+                
+            case .canceled:
+                completionHandler(false)
+                break
             }
-            
-            completionHandler(self.user != nil)
         }
     }
     
@@ -399,37 +423,6 @@ open class VeraAPI {
         return nil
     }
 
-    func requestWithActivityIndicator(URLString: URLStringConvertible, parameters: [String: AnyObject]? = nil, headers: Dictionary<String, String>? = nil) -> Request {
-        
-        log.info("Sending request: \(URLString)")
-        
-        let mutableURLRequest = NSMutableURLRequest(url: URL(string: URLString.urlString)!)
-        mutableURLRequest.httpMethod = "GET"
-        if let theHeaders = headers {
-            for (key, value) in theHeaders {
-                mutableURLRequest.setValue(value, forHTTPHeaderField: key)
-            }
-        }
-
-        
-        let request = self.manager!.request(URLString)
-//        let request = self.manager!.request(encoding.encode(mutableURLRequest, parameters: parameters).0)
-        
-        let time = DispatchTime.now() + Double(Int64(30.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-        DispatchQueue.main.asyncAfter(deadline: time, execute: { (_) in
-            self.checkForRequestCompletion(request)
-        })
-
-        return request
-    }
-
-    func checkForRequestCompletion(_ request: Request) {
-        if request.task.state != .completed {
-            log.info("request for: \(request.request) timed out")
-                request.cancel()
-        }
-    }
-
     open func scenesForRoom(_ room: Room, showExcluded: Bool = false)->[Scene]? {
         if let unit = self.getVeraUnit() {
             return unit.scenesForRoom(room, excluded: showExcluded == true ? nil : self.excludedScenes)
@@ -459,7 +452,7 @@ open class VeraAPI {
         
         return nil
     }
-
+    
     // Mark methods that operate on the first unit
     open func getUnitInformation(_ completionHandler:@escaping (_ success:Bool, _ fullload: Bool) -> Void) {
         self.getExternalIPAddress()
@@ -488,35 +481,59 @@ open class VeraAPI {
                 }
                 
                 log.info("request: \(requestString)")
-                self.requestWithActivityIndicator(URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-                    self.log.info("Response: \(response)")
-                    self.log.info("ResponseString: \(responseString)")
-                    if responseString != nil {
-                        var newUnit:Unit?
-                        var fullload = false
-                        newUnit <-- responseString!
-                        if newUnit != nil {
-                            unit.dataversion = newUnit!.dataversion
-                            unit.loadtime = newUnit!.loadtime
-                            
-                            if let tempFullload = newUnit!.fullload {
-                                if tempFullload == true {
-                                    unit.rooms = newUnit?.rooms
-                                    unit.devices = newUnit?.devices
-                                    unit.scenes = newUnit?.scenes
-                                    fullload = true
-                                } else {
-                                    unit.updateUnitInfo(newUnit!)
-                                    fullload = false
-                                }
-                            }
+                
+                
+                let req = HTTP.request(GET: requestString)
+                if self.sessionTokenHeaders() != nil {
+                    if let theHeaders = self.sessionTokenHeaders() {
+                        for (key, value) in theHeaders {
+                            req?.__objc_setValue(value, forHeaderField: key)
                         }
-                        
-                        self.log.info("Unit: \(unit)")
-                        
-                        completionHandler((newUnit != nil), fullload)
                     }
                 }
+                
+                req?.parse(with: stringParseHandler).performRequest(withCompletionQueue: .main, completion: { (task, result) in
+                    self.log.debug("Got a result")
+                    switch result {
+                    case let .success(response, responseString):
+                        self.log.debug("Success: \(response) data: \(responseString)")
+                        if responseString != nil {
+                            var newUnit:Unit?
+                            var fullload = false
+                            newUnit <-- responseString!
+                            if newUnit != nil {
+                                unit.dataversion = newUnit!.dataversion
+                                unit.loadtime = newUnit!.loadtime
+                                
+                                if let tempFullload = newUnit!.fullload {
+                                    if tempFullload == true {
+                                        unit.rooms = newUnit?.rooms
+                                        unit.devices = newUnit?.devices
+                                        unit.scenes = newUnit?.scenes
+                                        fullload = true
+                                    } else {
+                                        unit.updateUnitInfo(newUnit!)
+                                        fullload = false
+                                    }
+                                }
+                            }
+                            
+                            self.log.info("Unit: \(unit)")
+                            
+                            completionHandler((newUnit != nil), fullload)
+                        }
+                        break
+                        
+                    case let .error(response, error):
+                        self.log.debug("Error: \(error) - \(response)")
+                        completionHandler(false, false)
+                        break
+                        
+                    case .canceled:
+                        completionHandler(false, false)
+                        break
+                    }
+                })
             } else {
                 completionHandler(false, false)
             }
@@ -524,21 +541,18 @@ open class VeraAPI {
             completionHandler(false, false)
         }
     }
-
-    open func setDeviceStatus(_ device: Device, newDeviceStatus: Int?, newDeviceLevel: Int?, completionHandler:@escaping (NSError?)->Void) -> Void {
+    
+    open func setDeviceStatus(_ device: Device, newDeviceStatus: Int?, newDeviceLevel: Int?) -> Void {
         self.setDeviceStatus(true, device: device, newDeviceStatus: newDeviceStatus, newDeviceLevel: newDeviceLevel) { (error) -> Void in
-            if (error == nil) {
-                completionHandler(error)
-            } else {
+            if (error != nil) {
                 self.setDeviceStatus(false, device: device, newDeviceStatus: newDeviceStatus, newDeviceLevel: newDeviceLevel) { (error) -> Void in
-                    completionHandler(error)
                 }
             }
         }
     }
     
     func setDeviceStatus(_ useLocalServer:Bool, device: Device, newDeviceStatus: Int?, newDeviceLevel: Int?, completionHandler:@escaping (NSError?)->Void) -> Void {
-
+        
         if let prefix = self.requestPrefix(useLocalServer) {
             if let deviceID = device.id {
                 var requestString: String?
@@ -549,25 +563,18 @@ open class VeraAPI {
                 else if let level = newDeviceLevel {
                     requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:upnp-org:serviceId:Dimming1&action=SetLoadLevelTarget&newLoadlevelTarget=\(level)"
                 }
-
-                if requestString != nil {
-                    self.requestWithActivityIndicator(URLString: requestString!, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-                        completionHandler(error)
-                    }
-                }
+                
+                self.executeRequest(requestString: requestString)
             }
         } else {
             completionHandler(NSError(domain: NSURLErrorDomain, code: NSURLErrorCannotConnectToHost, userInfo: nil))
         }
     }
-
-    open func runScene(_ scene: Scene, completionHandler:@escaping (NSError?)->Void) -> Void {
+    
+    open func runScene(_ scene: Scene) {
         self.runScene(true, scene:scene) { (error) -> Void in
-            if (error == nil) {
-                completionHandler(error)
-            } else {
+            if (error != nil) {
                 self.runScene(false, scene:scene) { (error) -> Void in
-                    completionHandler(error)
                 }
             }
         }
@@ -576,25 +583,19 @@ open class VeraAPI {
     func runScene(_ useLocalServer:Bool, scene: Scene, completionHandler:@escaping (NSError?)->Void) -> Void {
         if let prefix = self.requestPrefix(useLocalServer) {
             if let sceneID = scene.id {
-
-                let requestString = prefix + "lu_action&serviceId=urn:micasaverde-com:serviceId:HomeAutomationGateway1&action=RunScene&SceneNum=\(sceneID)"
                 
-                self.requestWithActivityIndicator(URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-                    completionHandler(error)
-                }
+                let requestString = prefix + "lu_action&serviceId=urn:micasaverde-com:serviceId:HomeAutomationGateway1&action=RunScene&SceneNum=\(sceneID)"
+                self.executeRequest(requestString: requestString)
             }
         } else {
             completionHandler(NSError(domain: NSURLErrorDomain, code: NSURLErrorCannotConnectToHost, userInfo: nil))
         }
     }
-
-    open func setAudioPower(_ device: Device, on: Bool, completionHandler:@escaping (NSError?)->Void) -> Void {
+    
+    open func setAudioPower(_ device: Device, on: Bool) {
         self.setAudioPower(true, device:device, on:on) { (error) -> Void in
-            if (error == nil) {
-                completionHandler(error)
-            } else {
+            if (error != nil) {
                 self.setAudioPower(false, device:device, on:on) { (error) -> Void in
-                    completionHandler(error)
                 }
             }
         }
@@ -616,23 +617,17 @@ open class VeraAPI {
                 } else {
                     requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:micasaverde-com:serviceId:SwitchPower1&action=SetTarget&newTargetValue=\(on == true ? 1 : 0)"
                 }
-
-                self.requestWithActivityIndicator(URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-                    completionHandler(error)
-                }
+                self.executeRequest(requestString: requestString)
             }
         } else {
             completionHandler(NSError(domain: NSURLErrorDomain, code: NSURLErrorCannotConnectToHost, userInfo: nil))
         }
     }
-
-    open func changeAudioVolume(_ device: Device, increase: Bool, completionHandler:@escaping (NSError?)->Void) -> Void {
+    
+    open func changeAudioVolume(_ device: Device, increase: Bool) {
         self.changeAudioVolume(true, device:device, increase:increase) { (error) -> Void in
-            if (error == nil) {
-                completionHandler(error)
-            } else {
+            if (error != nil) {
                 self.changeAudioVolume(false, device:device, increase:increase) { (error) -> Void in
-                    completionHandler(error)
                 }
             }
         }
@@ -647,23 +642,17 @@ open class VeraAPI {
                 }
                 
                 let requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:micasaverde-com:serviceId:Volume1&action=\(newAction)"
-                
-                self.requestWithActivityIndicator(URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-                    completionHandler(error)
-                }
+                self.executeRequest(requestString: requestString)
             }
         } else {
             completionHandler(NSError(domain: NSURLErrorDomain, code: NSURLErrorCannotConnectToHost, userInfo: nil))
         }
     }
-
-    open func setAudioInput(_ device: Device, input: Int, completionHandler:@escaping (NSError?)->Void) -> Void {
+    
+    open func setAudioInput(_ device: Device, input: Int) {
         self.setAudioInput(true, device:device, input:input) { (error) -> Void in
-            if (error == nil) {
-                completionHandler(error)
-            } else {
+            if (error != nil) {
                 self.setAudioInput(false, device:device, input:input) { (error) -> Void in
-                    completionHandler(error)
                 }
             }
         }
@@ -673,23 +662,17 @@ open class VeraAPI {
         if let prefix = self.requestPrefix(useLocalServer) {
             if let deviceID = device.id {
                 let requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:micasaverde-com:serviceId:InputSelection1&action=Input\(input)"
-                
-                self.requestWithActivityIndicator(URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-                    completionHandler(error)
-                }
+                self.executeRequest(requestString: requestString)
             }
         } else {
             completionHandler(NSError(domain: NSURLErrorDomain, code: NSURLErrorCannotConnectToHost, userInfo: nil))
         }
     }
-
-    open func setLockState(_ device: Device, locked: Bool, completionHandler:@escaping (NSError?)->Void) -> Void {
+    
+    open func setLockState(_ device: Device, locked: Bool) {
         self.setLockState(true, device:device, locked:locked) { (error) -> Void in
-            if (error == nil) {
-                completionHandler(error)
-            } else {
+            if (error != nil) {
                 self.setLockState(false, device:device, locked:locked) { (error) -> Void in
-                    completionHandler(error)
                 }
             }
         }
@@ -699,23 +682,17 @@ open class VeraAPI {
         if let prefix = self.requestPrefix(useLocalServer) {
             if let deviceID = device.id {
                 let requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:micasaverde-com:serviceId:DoorLock1&action=SetTarget&newTargetValue=\(locked == true ? 1 : 0)"
-                
-                self.requestWithActivityIndicator(URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-                    completionHandler(error)
-                }
+                self.executeRequest(requestString: requestString)
             }
         } else {
             completionHandler(NSError(domain: NSURLErrorDomain, code: NSURLErrorCannotConnectToHost, userInfo: nil))
         }
     }
-
-    open func changeHVAC(_ device: Device, fanMode: Device.FanMode?, hvacMode: Device.HVACMode?, coolTemp: Int?, heatTemp: Int?, completionHandler:@escaping (NSError?)->Void) -> Void {
+    
+    open func changeHVAC(_ device: Device, fanMode: Device.FanMode?, hvacMode: Device.HVACMode?, coolTemp: Int?, heatTemp: Int?) {
         self.changeHVAC(true, device:device, fanMode:fanMode, hvacMode:hvacMode, coolTemp: coolTemp, heatTemp: heatTemp) { (error) -> Void in
-            if (error == nil) {
-                completionHandler(error)
-            } else {
+            if (error != nil) {
                 self.changeHVAC(false, device:device, fanMode:fanMode, hvacMode:hvacMode, coolTemp: coolTemp, heatTemp: heatTemp) { (error) -> Void in
-                    completionHandler(error)
                 }
             }
         }
@@ -729,10 +706,10 @@ open class VeraAPI {
                 if let mode = fanMode {
                     var modeString = ""
                     switch mode {
-                        case .auto:
-                            modeString = "Auto"
-                        case .on:
-                            modeString = "ContinuousOn"
+                    case .auto:
+                        modeString = "Auto"
+                    case .on:
+                        modeString = "ContinuousOn"
                     }
                     
                     requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:upnp-org:serviceId:HVAC_FanOperatingMode1&action=SetMode&NewMode="
@@ -741,7 +718,7 @@ open class VeraAPI {
                 
                 if let mode = hvacMode {
                     var modeString = ""
-
+                    
                     switch mode {
                     case .auto:
                         modeString = "AutoChangeOver"
@@ -752,7 +729,7 @@ open class VeraAPI {
                     case .cool:
                         modeString = "CoolOn"
                     }
-
+                    
                     requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:upnp-org:serviceId:HVAC_UserOperatingMode1&action=SetModeTarget&NewModeTarget="
                     requestString += modeString
                 }
@@ -765,30 +742,41 @@ open class VeraAPI {
                     requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:upnp-org:serviceId:TemperatureSetpoint1_Heat&action=SetCurrentSetpoint&NewCurrentSetpoint=\(temp)"
                 }
                 
-                if requestString.isEmpty == false {
-                    self.requestWithActivityIndicator(URLString: requestString, headers: self.sessionTokenHeaders()).responseStringWithActivityIndicator { (_, response, responseString, error) -> Void in
-                        completionHandler(error)
-                    }
-                }
+                self.executeRequest(requestString: requestString)
             }
         } else {
             completionHandler(NSError(domain: NSURLErrorDomain, code: NSURLErrorCannotConnectToHost, userInfo: nil))
         }
-
+        
     }
-}
-
-extension Request {
-//    func responseData(completionHandler: (NSURLRequest?, NSHTTPURLResponse?, Result<NSData>) -> Void) -> Self {
-//        return response(responseSerializer: Request.dataResponseSerializer(), completionHandler: completionHandler)
-//    }
-
-    func responseStringWithActivityIndicator(_ completionHandler: @escaping (URLRequest?, HTTPURLResponse?, String?, NSError?) -> Void) -> Self {
-        let responseHandler: (URLRequest?, HTTPURLResponse?, Data?, Error?) -> (Void) = {request, urlResponse, data, error in
-            completionHandler(request, urlResponse, NSString(data: data!, encoding: String.Encoding.utf8.rawValue) as? String, nil)
+    
+    
+    func executeRequest(requestString: String?) {
+        guard let requestString = requestString else {return}
+        if requestString.isEmpty {return}
+        let req = HTTP.request(GET: requestString)
+        if self.sessionTokenHeaders() != nil {
+            if let theHeaders = self.sessionTokenHeaders() {
+                for (key, value) in theHeaders {
+                    req?.__objc_setValue(value, forHeaderField: key)
+                }
+            }
         }
         
-//        return response(completionHandler: responseHandler)
-        return self
+        req?.parse(with: stringParseHandler).performRequest(withCompletionQueue: .main, completion: { (task, result) in
+            self.log.debug("Got a result")
+            switch result {
+            case let .success(response, responseString):
+                self.log.debug("Success: \(response) data: \(responseString)")
+                break
+                
+            case let .error(response, error):
+                self.log.debug("Error: \(error) - \(response)")
+                break
+                
+            case .canceled:
+                break
+            }
+        })
     }
 }

@@ -79,10 +79,8 @@ class ScenesViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if (indexPath as NSIndexPath).row < self.scenes?.count {
             let scene = self.scenes![(indexPath as NSIndexPath).row]
-//            Swell.info("Selected: \(scene)")
             
-            AppDelegate.appDelegate().veraAPI.runSceneWithNotification(scene, completionHandler: { (error: NSError?) -> Void in
-            })
+            AppDelegate.appDelegate().veraAPI.runSceneWithNotification(scene)
         }
     }
 }

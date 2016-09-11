@@ -81,17 +81,14 @@ class AudioViewController: UICollectionViewController, AudioProtocol {
     }
 
     func setDevicePower(_ device:Device, turnOn: Bool) {
-        AppDelegate.appDelegate().veraAPI.setAudioPowerWithNotification(device, on:turnOn, completionHandler: { (error: NSError?) -> Void in
-        })
+        AppDelegate.appDelegate().veraAPI.setAudioPowerWithNotification(device, on:turnOn)
     }
     
     func changeDeviceVolume(_ device:Device, increase: Bool) {
-        AppDelegate.appDelegate().veraAPI.changeAudioVolumeWithNotification(device, increase:increase, completionHandler: { (error: NSError?) -> Void in
-        })
+        AppDelegate.appDelegate().veraAPI.changeAudioVolumeWithNotification(device, increase:increase)
     }
     
     func setDeviceServer(_ device:Device, server: Int) {
-        AppDelegate.appDelegate().veraAPI.setAudioInputWithNotification(device, input:server, completionHandler: { (error: NSError?) -> Void in
-        })
+        AppDelegate.appDelegate().veraAPI.setAudioInputWithNotification(device, input:server)
     }
 }

@@ -92,15 +92,11 @@ class SwitchesViewController: UICollectionViewController, SwitchProtocol {
                 }
             }
             
-            AppDelegate.appDelegate().veraAPI.setDeviceStatusWithNotification(device, newDeviceStatus: newStatus, newDeviceLevel: nil, completionHandler: { (error: NSError?) -> Void in
-                
-            })
+            AppDelegate.appDelegate().veraAPI.setDeviceStatusWithNotification(device, newDeviceStatus: newStatus, newDeviceLevel: nil)
         }
     }
     
     func changeDeviceLevel(_ device: Device, level: Int) {
-        AppDelegate.appDelegate().veraAPI.setDeviceStatusWithNotification(device, newDeviceStatus: nil, newDeviceLevel: level, completionHandler: { (error: NSError?) -> Void in
-            
-        })
+        AppDelegate.appDelegate().veraAPI.setDeviceStatusWithNotification(device, newDeviceStatus: nil, newDeviceLevel: level)
     }
 }

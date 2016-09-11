@@ -80,9 +80,7 @@ class OnViewController: UICollectionViewController {
         if (indexPath as NSIndexPath).row < self.devices?.count {
             let device = self.devices![(indexPath as NSIndexPath).row]
             
-            AppDelegate.appDelegate().veraAPI.setDeviceStatusWithNotification(device, newDeviceStatus: 0, newDeviceLevel: nil, completionHandler: { (error: NSError?) -> Void in
-                
-            })
+            AppDelegate.appDelegate().veraAPI.setDeviceStatusWithNotification(device, newDeviceStatus: 0, newDeviceLevel: nil)
         }
     }
 }

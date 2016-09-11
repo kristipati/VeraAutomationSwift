@@ -10,7 +10,7 @@ import UIKit
 import Vera
 
 extension VeraAPI {
-    public func setDeviceStatusWithNotification(_ device: Device, newDeviceStatus: Int?, newDeviceLevel: Int?, completionHandler:@escaping (NSError?)->Void) -> Void {
+    public func setDeviceStatusWithNotification(_ device: Device, newDeviceStatus: Int?, newDeviceLevel: Int?) -> Void {
         
         var notificationText = ""
         var deviceName = ""
@@ -27,32 +27,25 @@ extension VeraAPI {
         } else if let level = newDeviceLevel {
             notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_MESSAGE_LEVEL_%@_%ld", comment: "") as NSString, deviceName, level) as String
         }
-        
-        
-        
-//        Swell.info("Changing status \(notificationText)")
-        
+
         AppDelegate.appDelegate().showMessageWithTitle(notificationText)
         
-        self.setDeviceStatus(device, newDeviceStatus: newDeviceStatus, newDeviceLevel: newDeviceLevel, completionHandler: completionHandler)
+        self.setDeviceStatus(device, newDeviceStatus: newDeviceStatus, newDeviceLevel: newDeviceLevel)
     }
    
-    public func runSceneWithNotification(_ scene: Scene, completionHandler:@escaping (NSError?)->Void) -> Void {
+    public func runSceneWithNotification(_ scene: Scene) {
         var sceneName = ""
         if scene.name != nil {
             sceneName = scene.name!
         }
         
         let notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_RUN_SCENE_MESSAGE_%@", comment: "") as NSString, sceneName) as String
-        
-//        Swell.info("Running scene: \(notificationText)")
-        
         AppDelegate.appDelegate().showMessageWithTitle(notificationText)
         
-        self.runScene(scene, completionHandler: completionHandler)
+        self.runScene(scene)
     }
     
-    public func setAudioPowerWithNotification(_ device: Device, on: Bool, completionHandler:@escaping (NSError?)->Void) -> Void {
+    public func setAudioPowerWithNotification(_ device: Device, on: Bool) {
         var deviceName = ""
         if device.name != nil {
             deviceName = device.name!
@@ -68,10 +61,10 @@ extension VeraAPI {
         
         AppDelegate.appDelegate().showMessageWithTitle(notificationText)
         
-        self.setAudioPower(device, on: on, completionHandler: completionHandler)
+        self.setAudioPower(device, on: on)
     }
 
-    public func changeAudioVolumeWithNotification(_ device: Device, increase: Bool, completionHandler:@escaping (NSError?)->Void) -> Void {
+    public func changeAudioVolumeWithNotification(_ device: Device, increase: Bool) {
         var deviceName = ""
         if device.name != nil {
             deviceName = device.name!
@@ -87,10 +80,10 @@ extension VeraAPI {
         
         AppDelegate.appDelegate().showMessageWithTitle(notificationText)
         
-        self.changeAudioVolume(device, increase: increase, completionHandler: completionHandler)
+        self.changeAudioVolume(device, increase: increase)
     }
 
-    public func setAudioInputWithNotification(_ device: Device, input: Int, completionHandler:@escaping (NSError?)->Void) -> Void {
+    public func setAudioInputWithNotification(_ device: Device, input: Int) {
         var deviceName = ""
         if device.name != nil {
             deviceName = device.name!
@@ -102,11 +95,11 @@ extension VeraAPI {
 
         AppDelegate.appDelegate().showMessageWithTitle(notificationText)
         
-        self.setAudioInput(device, input: input, completionHandler: completionHandler)
+        self.setAudioInput(device, input: input)
     }
 
 
-    public func setLockStateWithNotification(_ device: Device, locked: Bool, completionHandler:@escaping (NSError?)->Void) -> Void {
+    public func setLockStateWithNotification(_ device: Device, locked: Bool) {
         var deviceName = ""
         if device.name != nil {
             deviceName = device.name!
@@ -122,10 +115,10 @@ extension VeraAPI {
         
         AppDelegate.appDelegate().showMessageWithTitle(notificationText)
         
-        self.setLockState(device, locked: locked, completionHandler: completionHandler)
+        self.setLockState(device, locked: locked)
     }
     
-    public func changeHVACWithNotification(_ device: Device, fanMode: Device.FanMode?, hvacMode: Device.HVACMode?, coolTemp: Int?, heatTemp: Int?, completionHandler:@escaping (NSError?)->Void) -> Void {
+    public func changeHVACWithNotification(_ device: Device, fanMode: Device.FanMode?, hvacMode: Device.HVACMode?, coolTemp: Int?, heatTemp: Int?) {
         
         var deviceName = ""
         if device.name != nil {
@@ -166,7 +159,7 @@ extension VeraAPI {
         
         AppDelegate.appDelegate().showMessageWithTitle(notificationText)
 
-        self.changeHVAC(device, fanMode: fanMode, hvacMode: hvacMode, coolTemp: coolTemp, heatTemp: heatTemp, completionHandler:completionHandler)
+        self.changeHVAC(device, fanMode: fanMode, hvacMode: hvacMode, coolTemp: coolTemp, heatTemp: heatTemp)
     }
 
 }
