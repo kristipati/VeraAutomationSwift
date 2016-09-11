@@ -35,7 +35,7 @@ import Foundation
 public typealias JSONDictionary = [String: AnyObject]
 
 /// Operator for use in deserialization operations.
-infix operator <-- { associativity right precedence 150 }
+infix operator <-- : MultiplicationPrecedence
 
 /// Returns nil if given object is of type NSNull.
 ///

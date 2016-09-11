@@ -17,13 +17,13 @@ open class VeraAuth : Deserializable, CustomStringConvertible {
     var account:String?
 
     public required init(data: [String: AnyObject]) {
-        authToken <-- data["Identity"]
-        authSigToken <-- data["IdentitySignature"]
-        serverAccount <-- data["Server_Account"]
-        account <-- data["PK_Account"]
+        _ = authToken <-- data["Identity"]
+        _ = authSigToken <-- data["IdentitySignature"]
+        _ = serverAccount <-- data["Server_Account"]
+        _ = account <-- data["PK_Account"]
         if (account == nil) {
             var accountNumber: Int?
-            accountNumber <-- data["PK_Account"]
+            _ = accountNumber <-- data["PK_Account"]
             if (accountNumber != nil) {
                 account = "\(accountNumber!)"
             }

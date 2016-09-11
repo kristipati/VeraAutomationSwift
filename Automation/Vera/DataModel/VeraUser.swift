@@ -13,10 +13,10 @@ class VeraUser : Deserializable {
     var units:[VeraUnit]?
     required init(data: [String: AnyObject]) {
         if (data["units"] != nil) {
-            units <-- data["units"]
+            _ = units <-- data["units"]
         }
         else if (data["Devices"] != nil) {
-            units <-- data["Devices"]
+            _ = units <-- data["Devices"]
         }
     }
 

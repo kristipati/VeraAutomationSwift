@@ -42,33 +42,33 @@ open class VeraUnit : Deserializable, CustomStringConvertible {
     open var serverRelay:String?
     
     public required init(data: [String: AnyObject]) {
-        serialNumber <-- data["serialNumber"]
-        firmwareVersion <-- data["FirmwareVersion"]
-        name <-- data["name"]
-        ipAddress <-- data["ipAddress"]
-        users <-- data["users"]
-        activeServer <-- data["active_server"]
-        rooms <-- data["rooms"]
-        fullload <-- data["full"]
-        devices <-- data["devices"]
-        scenes <-- data["scenes"]
-        loadtime <-- data["loadtime"]
-        dataversion <-- data["dataversion"]
+        _ = serialNumber <-- data["serialNumber"]
+        _ = firmwareVersion <-- data["FirmwareVersion"]
+        _ = name <-- data["name"]
+        _ = ipAddress <-- data["ipAddress"]
+        _ = users <-- data["users"]
+        _ = activeServer <-- data["active_server"]
+        _ = rooms <-- data["rooms"]
+        _ = fullload <-- data["full"]
+        _ = devices <-- data["devices"]
+        _ = scenes <-- data["scenes"]
+        _ = loadtime <-- data["loadtime"]
+        _ = dataversion <-- data["dataversion"]
         
         if serialNumber == nil {
-            serialNumber <-- data["PK_Device"]
+            _ = serialNumber <-- data["PK_Device"]
         }
         
         if ipAddress == nil {
-            ipAddress <-- data["InternalIP"]
+            _ = ipAddress <-- data["InternalIP"]
         }
 
         if externalIPAddress == nil {
-            externalIPAddress <-- data["ExternalIP"]
+            _ = externalIPAddress <-- data["ExternalIP"]
         }
 
-        serverDevice <-- data["Server_Device"]
-        serverRelay <-- data["Server_Relay"]
+        _ = serverDevice <-- data["Server_Device"]
+        _ = serverRelay <-- data["Server_Relay"]
     }
 
     open var description: String {

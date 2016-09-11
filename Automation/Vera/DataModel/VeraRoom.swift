@@ -17,8 +17,8 @@ open class VeraRoom: Deserializable, CustomStringConvertible, Hashable {
     var id:Int?
     
     public required init(data: [String: AnyObject]) {
-        name <-- data["name"]
-        id <-- data["id"]
+        _ = name <-- data["name"]
+        _ = id <-- data["id"]
     }
     
     open var description: String {

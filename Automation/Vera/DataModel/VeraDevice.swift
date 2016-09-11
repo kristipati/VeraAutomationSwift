@@ -125,11 +125,11 @@ open class VeraDevice: Deserializable, CustomStringConvertible {
     var altID: Int?
     
     public required init(data: [String: AnyObject]) {
-        id <-- data["id"]
-        parentID <-- data["parent"]
-        name <-- data["name"]
+        _ = id <-- data["id"]
+        _ = parentID <-- data["parent"]
+        _ = name <-- data["name"]
         var tempCategory:Int?
-        tempCategory <-- data["category"]
+        _ = tempCategory <-- data["category"]
         if tempCategory != nil {
             category = Category(rawValue: tempCategory!)
             
@@ -141,23 +141,23 @@ open class VeraDevice: Deserializable, CustomStringConvertible {
                 }
             }
         }
-        subcategory <-- data["subcategory"]
-        status <-- data["status"]
-        state <-- data["state"]
-        comment <-- data["comment"]
-        roomID <-- data["room"]
-        armed <-- data["armed"]
-        humidity <-- data["humidity"]
-        batteryLevel <-- data["batterylevel"]
-        pinCodes <-- data["pincodes"]
+        _ = subcategory <-- data["subcategory"]
+        _ = status <-- data["status"]
+        _ = state <-- data["state"]
+        _ = comment <-- data["comment"]
+        _ = roomID <-- data["room"]
+        _ = armed <-- data["armed"]
+        _ = humidity <-- data["humidity"]
+        _ = batteryLevel <-- data["batterylevel"]
+        _ = pinCodes <-- data["pincodes"]
         
         let temp: String? = data["temperature"] as! String?
         if temp != nil {
             temperature = Double(temp!)
         }
 
-        heatTemperatureSetPoint <-- data["heatsp"]
-        coolTemperatureSetPoint <-- data["coolsp"]
+        _ = heatTemperatureSetPoint <-- data["heatsp"]
+        _ = coolTemperatureSetPoint <-- data["coolsp"]
 
         let heatTemp: String? = data["heat"] as! String?
         if heatTemp != nil {
@@ -173,7 +173,7 @@ open class VeraDevice: Deserializable, CustomStringConvertible {
 
         var tempInt: Int?
         
-        tempInt <-- data["locked"]
+        _ = tempInt <-- data["locked"]
         if let lockedState = tempInt {
             if lockedState == 1 {
                 locked = true
@@ -183,26 +183,26 @@ open class VeraDevice: Deserializable, CustomStringConvertible {
             }
         }
         
-        tripped <-- data["tripped"]
-        lastTripped <-- data["lasttrip"]
-        level <-- data["level"]
-        ip <-- data["ip"]
-        vendorStatusCode <-- data["vendorstatuscode"]
-        vendorStatusData <-- data["vendorstatusdata"]
-        vendorStatus <-- data["vendorstatus"]
-        memoryUsed <-- data["memoryUsed"]
-        memoryFree <-- data["memoryFree"]
-        memoryAvailable <-- data["memoryAvailable"]
-        objectStatusMap <-- data["objectstatusmap"]
-        systemVeraRestart <-- data["systemVeraRestart"]
-        systemLuupRestart <-- data["systemLuupRestart"]
-        conditionSatisfied <-- data["conditionsatisfied"]
-        detailedArmMode <-- data["detailedarmmode"]
-        armMode <-- data["armmode"]
-        hvacState <-- data["hvacstate"]
-        altID <-- data["altid"]
+        _ = tripped <-- data["tripped"]
+        _ = lastTripped <-- data["lasttrip"]
+        _ = level <-- data["level"]
+        _ = ip <-- data["ip"]
+        _ = vendorStatusCode <-- data["vendorstatuscode"]
+        _ = vendorStatusData <-- data["vendorstatusdata"]
+        _ = vendorStatus <-- data["vendorstatus"]
+        _ = memoryUsed <-- data["memoryUsed"]
+        _ = memoryFree <-- data["memoryFree"]
+        _ = memoryAvailable <-- data["memoryAvailable"]
+        _ = objectStatusMap <-- data["objectstatusmap"]
+        _ = systemVeraRestart <-- data["systemVeraRestart"]
+        _ = systemLuupRestart <-- data["systemLuupRestart"]
+        _ = conditionSatisfied <-- data["conditionsatisfied"]
+        _ = detailedArmMode <-- data["detailedarmmode"]
+        _ = armMode <-- data["armmode"]
+        _ = hvacState <-- data["hvacstate"]
+        _ = altID <-- data["altid"]
         var mode:String?
-        mode <-- data["mode"]
+        _ = mode <-- data["mode"]
         if mode != nil {
             switch mode!.lowercased() {
             case "off":
@@ -218,7 +218,7 @@ open class VeraDevice: Deserializable, CustomStringConvertible {
             }
         }
         
-        mode <-- data["fanmode"]
+        _ = mode <-- data["fanmode"]
         if mode != nil {
             switch mode!.lowercased() {
             case "auto":

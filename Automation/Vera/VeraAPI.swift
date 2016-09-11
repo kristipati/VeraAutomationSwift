@@ -198,7 +198,7 @@ open class VeraAPI {
                 self.log.debug("Success: \(response) data: \(data)")
                 if data != nil {
                     var auth:VeraAuth?
-                    auth <-- data!
+                    _ = auth <-- data!
                     self.log.info("Auth response: \(data)")
                     completionhandler(auth)
                 } else {
@@ -223,7 +223,7 @@ open class VeraAPI {
             if let data = Data(base64Encoded: self.auth!.authToken!, options: NSData.Base64DecodingOptions(rawValue: 0)) {
                 let decodedString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as! String
                 var tempAuth:VeraAuth?
-                tempAuth <-- decodedString
+                _ = tempAuth <-- decodedString
                 if (tempAuth != nil) {
                     self.auth?.account = tempAuth?.account
                 }
@@ -245,7 +245,7 @@ open class VeraAPI {
                                     self.log.info("Response for locator: \(responseString)")
                                     if (responseString != nil) {
                                         var tempUser:VeraUser?
-                                        tempUser <-- responseString!
+                                        _ = tempUser <-- responseString!
                                         self.user = tempUser
                                     }
                                     
@@ -267,7 +267,7 @@ open class VeraAPI {
                                                                 if responseString?.isEmpty == false {
                                                                     if (responseString != nil) {
                                                                         var tempUnit:VeraUnit?
-                                                                        tempUnit <-- responseString!
+                                                                        _ = tempUnit <-- responseString!
                                                                         if (tempUnit != nil) {
                                                                             unit.ipAddress = tempUnit!.ipAddress
                                                                             unit.externalIPAddress = tempUnit!.externalIPAddress
@@ -365,7 +365,7 @@ open class VeraAPI {
                 self.log.info("Response: \(response)")
                 self.log.info("ResponseString: \(responseString)")
                 if responseString != nil {
-                    self.user <-- responseString!
+                    _ = self.user <-- responseString!
                     if let units = self.user?.units {
                         for unit in units {
                             self.log.info("Unit: \(unit)")
@@ -501,7 +501,7 @@ open class VeraAPI {
                         if responseString != nil {
                             var newUnit:VeraUnit?
                             var fullload = false
-                            newUnit <-- responseString!
+                            _ = newUnit <-- responseString!
                             if newUnit != nil {
                                 unit.dataversion = newUnit!.dataversion
                                 unit.loadtime = newUnit!.loadtime
