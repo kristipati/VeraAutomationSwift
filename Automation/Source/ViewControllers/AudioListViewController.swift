@@ -41,7 +41,7 @@ class AudioListViewController: UITableViewController {
         if segue.identifier == "showDetail" {
             let controller = (segue.destination as! UINavigationController).topViewController as! AudioViewController
             if let indexPath = self.tableView.indexPathForSelectedRow {
-                if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.audio) {
+                if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.VeraDevice.Category.audio) {
                     let room = roomsWithSwitches[(indexPath as NSIndexPath).row]
                     controller.room = room
                 }
@@ -64,7 +64,7 @@ class AudioListViewController: UITableViewController {
     
     func loadRooms(_ fullload: Bool) {
         if fullload == true {
-            self.navigationController?.popToRootViewController(animated: false)
+            _ = self.navigationController?.popToRootViewController(animated: false)
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 self.tableView.deselectRow(at: indexPath, animated: false)
             }
@@ -74,7 +74,7 @@ class AudioListViewController: UITableViewController {
 
     // MARK: - Table View
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let roomsWithAudio = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.audio) {
+        if let roomsWithAudio = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.VeraDevice.Category.audio) {
             return roomsWithAudio.count
         }
         
@@ -84,7 +84,7 @@ class AudioListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) 
         
-        if let roomsWithAudio = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.audio) {
+        if let roomsWithAudio = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.VeraDevice.Category.audio) {
             let room = roomsWithAudio[(indexPath as NSIndexPath).row]
             cell.textLabel!.text = room.name
         }

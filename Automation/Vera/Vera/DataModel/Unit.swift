@@ -20,7 +20,7 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 }
 
 
-open class Unit : Deserializable, CustomStringConvertible {
+open class VeraUnit : Deserializable, CustomStringConvertible {
 
     open var serialNumber:String?
     var firmwareVersion:String?
@@ -32,9 +32,9 @@ open class Unit : Deserializable, CustomStringConvertible {
     var loadtime = 0
     var dataversion = 0
     open var fullload:Bool?
-    open var rooms:[Room]?
-    open var devices:[Device]?
-    open var scenes:[Scene]?
+    open var rooms:[VeraRoom]?
+    open var devices:[VeraDevice]?
+    open var scenes:[VeraScene]?
     open var serverDevice:String?
     open var serverRelay:String?
     
@@ -119,9 +119,9 @@ open class Unit : Deserializable, CustomStringConvertible {
         return desc
     }
     
-    func scenesForRoom(_ room: Room, excluded:[Int]? = nil)->[Scene]? {
+    func scenesForRoom(_ room: VeraRoom, excluded:[Int]? = nil)->[VeraScene]? {
         let roomID = room.id!
-        var sceneArray = [Scene]()
+        var sceneArray = [VeraScene]()
         if scenes != nil {
             for scene in scenes! {
                 if excluded != nil && scene.id != nil && excluded!.contains(scene.id!) == true {
@@ -143,9 +143,9 @@ open class Unit : Deserializable, CustomStringConvertible {
         return nil
     }
 
-    func devicesForRoom(_ room: Room, excluded:[Int]? = nil, categories: [Device.Category])->[Device]? {
+    func devicesForRoom(_ room: VeraRoom, excluded:[Int]? = nil, categories: [VeraDevice.Category])->[VeraDevice]? {
         let roomID = room.id!
-        var deviceArray = [Device]()
+        var deviceArray = [VeraDevice]()
         if self.devices != nil {
             for device in self.devices! {
                 if let deviceRoomID = device.roomID {
@@ -172,8 +172,8 @@ open class Unit : Deserializable, CustomStringConvertible {
         return nil
     }
 
-    func roomsWithDevices(_ excluded:[Int]? = nil, categories: [Device.Category])->[Room]? {
-        var roomSet = Set<Room>()
+    func roomsWithDevices(_ excluded:[Int]? = nil, categories: [VeraDevice.Category])->[VeraRoom]? {
+        var roomSet = Set<VeraRoom>()
         if let rooms = self.rooms {
             for room in rooms {
                 if let _ = self.devicesForRoom(room, excluded: excluded, categories: categories) {
@@ -189,8 +189,8 @@ open class Unit : Deserializable, CustomStringConvertible {
         return nil
     }
 
-    func roomsWithScenes(_ excluded:[Int]? = nil)->[Room]? {
-        var roomSet = Set<Room>()
+    func roomsWithScenes(_ excluded:[Int]? = nil)->[VeraRoom]? {
+        var roomSet = Set<VeraRoom>()
         if let rooms = self.rooms {
             for room in rooms {
                 if let _ = scenesForRoom(room, excluded: excluded) {
@@ -206,7 +206,7 @@ open class Unit : Deserializable, CustomStringConvertible {
         return nil
     }
 
-    func deviceWithIdentifier(_ identifier: Int)->Device? {
+    func deviceWithIdentifier(_ identifier: Int)->VeraDevice? {
         if let deviceArray = self.devices {
             for device in deviceArray {
                 if let deviceID = device.id {
@@ -220,7 +220,7 @@ open class Unit : Deserializable, CustomStringConvertible {
         return nil
     }
 
-    func roomWithIdentifier(_ identifier: Int)->Room? {
+    func roomWithIdentifier(_ identifier: Int)->VeraRoom? {
         if let roomArray = self.rooms {
             for room in roomArray {
                 if let roomID = room.id {
@@ -234,7 +234,7 @@ open class Unit : Deserializable, CustomStringConvertible {
         return nil
     }
 
-    func updateUnitInfo(_ unit: Unit) {
+    func updateUnitInfo(_ unit: VeraUnit) {
         dataversion = unit.dataversion
         loadtime = unit.loadtime
         

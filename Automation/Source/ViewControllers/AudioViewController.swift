@@ -21,15 +21,15 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 
 protocol AudioProtocol {
-    func setDevicePower(_ device:Device, turnOn: Bool)
-    func changeDeviceVolume(_ device:Device, increase: Bool)
-    func setDeviceServer(_ device:Device, server: Int)
+    func setDevicePower(_ device:VeraDevice, turnOn: Bool)
+    func changeDeviceVolume(_ device:VeraDevice, increase: Bool)
+    func setDeviceServer(_ device:VeraDevice, server: Int)
 }
 
 
 class AudioViewController: UICollectionViewController, AudioProtocol {
-    var room: Room?
-    var devices: [Device]?
+    var room: VeraRoom?
+    var devices: [VeraDevice]?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -80,15 +80,15 @@ class AudioViewController: UICollectionViewController, AudioProtocol {
         return cell as UICollectionViewCell
     }
 
-    func setDevicePower(_ device:Device, turnOn: Bool) {
+    func setDevicePower(_ device:VeraDevice, turnOn: Bool) {
         AppDelegate.appDelegate().veraAPI.setAudioPowerWithNotification(device, on:turnOn)
     }
     
-    func changeDeviceVolume(_ device:Device, increase: Bool) {
+    func changeDeviceVolume(_ device:VeraDevice, increase: Bool) {
         AppDelegate.appDelegate().veraAPI.changeAudioVolumeWithNotification(device, increase:increase)
     }
     
-    func setDeviceServer(_ device:Device, server: Int) {
+    func setDeviceServer(_ device:VeraDevice, server: Int) {
         AppDelegate.appDelegate().veraAPI.setAudioInputWithNotification(device, input:server)
     }
 }

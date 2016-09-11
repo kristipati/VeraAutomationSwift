@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Gruby Solutions. All rights reserved.
 //
 
-open class Device: Deserializable, CustomStringConvertible {
+open class VeraDevice: Deserializable, CustomStringConvertible {
     public enum HVACMode {
         case off
         case heat

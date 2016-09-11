@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Gruby Solutions. All rights reserved.
 //
 
-open class Scene: Deserializable, CustomStringConvertible {
+open class VeraScene: Deserializable, CustomStringConvertible {
     open var id: Int?
     var active: Bool?
     var state: Int?

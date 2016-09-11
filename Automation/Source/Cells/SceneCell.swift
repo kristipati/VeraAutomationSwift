@@ -11,7 +11,7 @@ import Vera
 
 class SceneCell: BaseCell {
 
-    var scene: Scene?
+    var scene: VeraScene?
 
     @IBOutlet weak var titleLabel: UILabel!
     

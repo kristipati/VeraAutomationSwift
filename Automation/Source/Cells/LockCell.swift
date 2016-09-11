@@ -13,7 +13,7 @@ class LockCell: BaseCell {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
-    var device: Device?
+    var device: VeraDevice?
     var delegate: LockProtocol?
     
     override func setup() {

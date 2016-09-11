@@ -21,11 +21,11 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 
 protocol LockProtocol {
-    func setDeviceLocked(_ device:Device, locked: Bool)
+    func setDeviceLocked(_ device:VeraDevice, locked: Bool)
 }
 
 class LocksViewController: UICollectionViewController, LockProtocol {
-    var devices: [Device]?
+    var devices: [VeraDevice]?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,10 +40,10 @@ class LocksViewController: UICollectionViewController, LockProtocol {
     }
     
     func loadLockDevices () {
-        var devices = [Device]()
-        if let roomsWithLocks = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.lock) {
+        var devices = [VeraDevice]()
+        if let roomsWithLocks = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.VeraDevice.Category.lock) {
             for room in roomsWithLocks {
-                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: Vera.Device.Category.lock) {
+                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: Vera.VeraDevice.Category.lock) {
                         for device in roomDevices {
                             devices.append(device)
                         }
@@ -80,7 +80,7 @@ class LocksViewController: UICollectionViewController, LockProtocol {
         return cell as UICollectionViewCell
     }
     
-    func setDeviceLocked(_ device:Device, locked: Bool) {
+    func setDeviceLocked(_ device:VeraDevice, locked: Bool) {
         AppDelegate.appDelegate().veraAPI.setLockStateWithNotification(device, locked:locked)
     }
 

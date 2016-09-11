@@ -10,7 +10,7 @@ import UIKit
 import Vera
 
 extension VeraAPI {
-    public func setDeviceStatusWithNotification(_ device: Device, newDeviceStatus: Int?, newDeviceLevel: Int?) -> Void {
+    public func setDeviceStatusWithNotification(_ device: VeraDevice, newDeviceStatus: Int?, newDeviceLevel: Int?) -> Void {
         
         var notificationText = ""
         var deviceName = ""
@@ -33,7 +33,7 @@ extension VeraAPI {
         self.setDeviceStatus(device, newDeviceStatus: newDeviceStatus, newDeviceLevel: newDeviceLevel)
     }
    
-    public func runSceneWithNotification(_ scene: Scene) {
+    public func runSceneWithNotification(_ scene: VeraScene) {
         var sceneName = ""
         if scene.name != nil {
             sceneName = scene.name!
@@ -45,7 +45,7 @@ extension VeraAPI {
         self.runScene(scene)
     }
     
-    public func setAudioPowerWithNotification(_ device: Device, on: Bool) {
+    public func setAudioPowerWithNotification(_ device: VeraDevice, on: Bool) {
         var deviceName = ""
         if device.name != nil {
             deviceName = device.name!
@@ -64,7 +64,7 @@ extension VeraAPI {
         self.setAudioPower(device, on: on)
     }
 
-    public func changeAudioVolumeWithNotification(_ device: Device, increase: Bool) {
+    public func changeAudioVolumeWithNotification(_ device: VeraDevice, increase: Bool) {
         var deviceName = ""
         if device.name != nil {
             deviceName = device.name!
@@ -83,7 +83,7 @@ extension VeraAPI {
         self.changeAudioVolume(device, increase: increase)
     }
 
-    public func setAudioInputWithNotification(_ device: Device, input: Int) {
+    public func setAudioInputWithNotification(_ device: VeraDevice, input: Int) {
         var deviceName = ""
         if device.name != nil {
             deviceName = device.name!
@@ -99,7 +99,7 @@ extension VeraAPI {
     }
 
 
-    public func setLockStateWithNotification(_ device: Device, locked: Bool) {
+    public func setLockStateWithNotification(_ device: VeraDevice, locked: Bool) {
         var deviceName = ""
         if device.name != nil {
             deviceName = device.name!
@@ -118,7 +118,7 @@ extension VeraAPI {
         self.setLockState(device, locked: locked)
     }
     
-    public func changeHVACWithNotification(_ device: Device, fanMode: Device.FanMode?, hvacMode: Device.HVACMode?, coolTemp: Int?, heatTemp: Int?) {
+    public func changeHVACWithNotification(_ device: VeraDevice, fanMode: VeraDevice.FanMode?, hvacMode: VeraDevice.HVACMode?, coolTemp: Int?, heatTemp: Int?) {
         
         var deviceName = ""
         if device.name != nil {

@@ -43,7 +43,7 @@ class SwitchesListViewController: UITableViewController {
 
     func loadRooms(_ fullload: Bool) {
         if fullload == true {
-            self.navigationController?.popToRootViewController(animated: false)
+            _ = self.navigationController?.popToRootViewController(animated: false)
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 self.tableView.deselectRow(at: indexPath, animated: false)
             }
@@ -57,7 +57,7 @@ class SwitchesListViewController: UITableViewController {
         if segue.identifier == "showDetail" {
             let controller = (segue.destination as! UINavigationController).topViewController as! SwitchesViewController
             if let indexPath = self.tableView.indexPathForSelectedRow {
-                if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.switch, Vera.Device.Category.dimmableLight) {
+                if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.VeraDevice.Category.switch, Vera.VeraDevice.Category.dimmableLight) {
                     let room = roomsWithSwitches[(indexPath as NSIndexPath).row]
                     controller.room = room
                 }
@@ -71,7 +71,7 @@ class SwitchesListViewController: UITableViewController {
     // MARK: - Table View
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.switch, Vera.Device.Category.dimmableLight) {
+        if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.VeraDevice.Category.switch, Vera.VeraDevice.Category.dimmableLight) {
                 return roomsWithSwitches.count
             }
         
@@ -81,7 +81,7 @@ class SwitchesListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
 
-        if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.switch, Vera.Device.Category.dimmableLight) {
+        if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.VeraDevice.Category.switch, Vera.VeraDevice.Category.dimmableLight) {
             let room = roomsWithSwitches[(indexPath as NSIndexPath).row]
             cell.textLabel!.text = room.name
         }

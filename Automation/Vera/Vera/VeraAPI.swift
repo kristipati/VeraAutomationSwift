@@ -42,8 +42,8 @@ open class VeraAPI {
     open var password : String?
     open var excludedScenes: [Int]?
     open var excludedDevices: [Int]?
-    var user : User?
-    var auth: Auth?
+    var user : VeraUser?
+    var auth: VeraAuth?
     var sessionToken: String?
     var reachability: Reachability?
     var currentExternalIPAddress:String?
@@ -184,7 +184,7 @@ open class VeraAPI {
     }
     
     
-    fileprivate func getAuthenticationToken(_ completionhandler: @escaping (_ auth: Auth?)->Void) {
+    fileprivate func getAuthenticationToken(_ completionhandler: @escaping (_ auth: VeraAuth?)->Void) {
         let stringToHash = self.username!.lowercased() + self.password! + self.passwordSeed
         let hashedString = stringToHash.sha1()
         let requestString = "https://us-autha11.mios.com/autha/auth/username/\(self.username!.lowercased())?SHA1Password=\(hashedString)&PK_Oem=1"
@@ -196,7 +196,7 @@ open class VeraAPI {
             case let .success(response, data):
                 self.log.debug("Success: \(response) data: \(data)")
                 if data != nil {
-                    var auth:Auth?
+                    var auth:VeraAuth?
                     auth <-- data!
                     self.log.info("Auth response: \(data)")
                     completionhandler(auth)
@@ -221,7 +221,7 @@ open class VeraAPI {
         if (self.auth != nil && self.auth!.authToken != nil) {
             if let data = Data(base64Encoded: self.auth!.authToken!, options: NSData.Base64DecodingOptions(rawValue: 0)) {
                 let decodedString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as! String
-                var tempAuth:Auth?
+                var tempAuth:VeraAuth?
                 tempAuth <-- decodedString
                 if (tempAuth != nil) {
                     self.auth?.account = tempAuth?.account
@@ -243,7 +243,7 @@ open class VeraAPI {
                                 case let .success(_, responseString):
                                     self.log.info("Response for locator: \(responseString)")
                                     if (responseString != nil) {
-                                        var tempUser:User?
+                                        var tempUser:VeraUser?
                                         tempUser <-- responseString!
                                         self.user = tempUser
                                     }
@@ -265,7 +265,7 @@ open class VeraAPI {
                                                                 self.log.debug("Success: \(response) data: \(responseString)")
                                                                 if responseString?.isEmpty == false {
                                                                     if (responseString != nil) {
-                                                                        var tempUnit:Unit?
+                                                                        var tempUnit:VeraUnit?
                                                                         tempUnit <-- responseString!
                                                                         if (tempUnit != nil) {
                                                                             unit.ipAddress = tempUnit!.ipAddress
@@ -387,7 +387,7 @@ open class VeraAPI {
     }
     
     // We just want the first vera unit
-    open func getVeraUnit() -> Unit? {
+    open func getVeraUnit() -> VeraUnit? {
         return self.user?.units?.first
     }
     
@@ -423,7 +423,7 @@ open class VeraAPI {
         return nil
     }
 
-    open func scenesForRoom(_ room: Room, showExcluded: Bool = false)->[Scene]? {
+    open func scenesForRoom(_ room: VeraRoom, showExcluded: Bool = false)->[VeraScene]? {
         if let unit = self.getVeraUnit() {
             return unit.scenesForRoom(room, excluded: showExcluded == true ? nil : self.excludedScenes)
         }
@@ -431,21 +431,21 @@ open class VeraAPI {
         return nil
     }
     
-    open func devicesForRoom(_ room: Room, showExcluded: Bool = false, categories: Device.Category...)->[Device]? {
+    open func devicesForRoom(_ room: VeraRoom, showExcluded: Bool = false, categories: VeraDevice.Category...)->[VeraDevice]? {
         if let unit = self.getVeraUnit() {
             return unit.devicesForRoom(room, excluded: showExcluded == true ? nil : self.excludedDevices, categories:categories)
         }
         return nil
     }
     
-    open func roomsWithDevices(_ showExcluded: Bool = false, categories: Device.Category...)->[Room]? {
+    open func roomsWithDevices(_ showExcluded: Bool = false, categories: VeraDevice.Category...)->[VeraRoom]? {
         if let unit = self.getVeraUnit() {
             return unit.roomsWithDevices(showExcluded == true ? nil : self.excludedDevices, categories:categories)
         }
         return nil
     }
     
-    open func roomsWithScenes(_ showExcluded: Bool = false)->[Room]? {
+    open func roomsWithScenes(_ showExcluded: Bool = false)->[VeraRoom]? {
         if let unit = self.getVeraUnit() {
             return unit.roomsWithScenes(showExcluded == true ? nil : self.excludedScenes)
         }
@@ -498,7 +498,7 @@ open class VeraAPI {
                     case let .success(response, responseString):
                         self.log.debug("Success: \(response) data: \(responseString)")
                         if responseString != nil {
-                            var newUnit:Unit?
+                            var newUnit:VeraUnit?
                             var fullload = false
                             newUnit <-- responseString!
                             if newUnit != nil {
@@ -542,7 +542,7 @@ open class VeraAPI {
         }
     }
     
-    open func setDeviceStatus(_ device: Device, newDeviceStatus: Int?, newDeviceLevel: Int?) -> Void {
+    open func setDeviceStatus(_ device: VeraDevice, newDeviceStatus: Int?, newDeviceLevel: Int?) -> Void {
         self.setDeviceStatus(true, device: device, newDeviceStatus: newDeviceStatus, newDeviceLevel: newDeviceLevel) { (error) -> Void in
             if (error != nil) {
                 self.setDeviceStatus(false, device: device, newDeviceStatus: newDeviceStatus, newDeviceLevel: newDeviceLevel) { (error) -> Void in
@@ -551,7 +551,7 @@ open class VeraAPI {
         }
     }
     
-    func setDeviceStatus(_ useLocalServer:Bool, device: Device, newDeviceStatus: Int?, newDeviceLevel: Int?, completionHandler:@escaping (NSError?)->Void) -> Void {
+    func setDeviceStatus(_ useLocalServer:Bool, device: VeraDevice, newDeviceStatus: Int?, newDeviceLevel: Int?, completionHandler:@escaping (NSError?)->Void) -> Void {
         
         if let prefix = self.requestPrefix(useLocalServer) {
             if let deviceID = device.id {
@@ -571,7 +571,7 @@ open class VeraAPI {
         }
     }
     
-    open func runScene(_ scene: Scene) {
+    open func runScene(_ scene: VeraScene) {
         self.runScene(true, scene:scene) { (error) -> Void in
             if (error != nil) {
                 self.runScene(false, scene:scene) { (error) -> Void in
@@ -580,7 +580,7 @@ open class VeraAPI {
         }
     }
     
-    func runScene(_ useLocalServer:Bool, scene: Scene, completionHandler:@escaping (NSError?)->Void) -> Void {
+    func runScene(_ useLocalServer:Bool, scene: VeraScene, completionHandler:@escaping (NSError?)->Void) -> Void {
         if let prefix = self.requestPrefix(useLocalServer) {
             if let sceneID = scene.id {
                 
@@ -592,7 +592,7 @@ open class VeraAPI {
         }
     }
     
-    open func setAudioPower(_ device: Device, on: Bool) {
+    open func setAudioPower(_ device: VeraDevice, on: Bool) {
         self.setAudioPower(true, device:device, on:on) { (error) -> Void in
             if (error != nil) {
                 self.setAudioPower(false, device:device, on:on) { (error) -> Void in
@@ -601,7 +601,7 @@ open class VeraAPI {
         }
     }
     
-    func setAudioPower(_ useLocalServer:Bool, device: Device, on: Bool, completionHandler:@escaping (NSError?)->Void) -> Void {
+    func setAudioPower(_ useLocalServer:Bool, device: VeraDevice, on: Bool, completionHandler:@escaping (NSError?)->Void) -> Void {
         if let prefix = self.requestPrefix(useLocalServer) {
             if let deviceID = device.id {
                 
@@ -624,7 +624,7 @@ open class VeraAPI {
         }
     }
     
-    open func changeAudioVolume(_ device: Device, increase: Bool) {
+    open func changeAudioVolume(_ device: VeraDevice, increase: Bool) {
         self.changeAudioVolume(true, device:device, increase:increase) { (error) -> Void in
             if (error != nil) {
                 self.changeAudioVolume(false, device:device, increase:increase) { (error) -> Void in
@@ -633,7 +633,7 @@ open class VeraAPI {
         }
     }
     
-    func changeAudioVolume(_ useLocalServer:Bool, device: Device, increase: Bool, completionHandler:@escaping (NSError?)->Void) -> Void {
+    func changeAudioVolume(_ useLocalServer:Bool, device: VeraDevice, increase: Bool, completionHandler:@escaping (NSError?)->Void) -> Void {
         if let prefix = self.requestPrefix(useLocalServer) {
             if let deviceID = device.id {
                 var newAction = "Up"
@@ -649,7 +649,7 @@ open class VeraAPI {
         }
     }
     
-    open func setAudioInput(_ device: Device, input: Int) {
+    open func setAudioInput(_ device: VeraDevice, input: Int) {
         self.setAudioInput(true, device:device, input:input) { (error) -> Void in
             if (error != nil) {
                 self.setAudioInput(false, device:device, input:input) { (error) -> Void in
@@ -658,7 +658,7 @@ open class VeraAPI {
         }
     }
     
-    func setAudioInput(_ useLocalServer:Bool, device: Device, input: Int, completionHandler:@escaping (NSError?)->Void) -> Void {
+    func setAudioInput(_ useLocalServer:Bool, device: VeraDevice, input: Int, completionHandler:@escaping (NSError?)->Void) -> Void {
         if let prefix = self.requestPrefix(useLocalServer) {
             if let deviceID = device.id {
                 let requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:micasaverde-com:serviceId:InputSelection1&action=Input\(input)"
@@ -669,7 +669,7 @@ open class VeraAPI {
         }
     }
     
-    open func setLockState(_ device: Device, locked: Bool) {
+    open func setLockState(_ device: VeraDevice, locked: Bool) {
         self.setLockState(true, device:device, locked:locked) { (error) -> Void in
             if (error != nil) {
                 self.setLockState(false, device:device, locked:locked) { (error) -> Void in
@@ -678,7 +678,7 @@ open class VeraAPI {
         }
     }
     
-    func setLockState(_ useLocalServer:Bool, device: Device, locked: Bool, completionHandler:@escaping (NSError?)->Void) -> Void {
+    func setLockState(_ useLocalServer:Bool, device: VeraDevice, locked: Bool, completionHandler:@escaping (NSError?)->Void) -> Void {
         if let prefix = self.requestPrefix(useLocalServer) {
             if let deviceID = device.id {
                 let requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:micasaverde-com:serviceId:DoorLock1&action=SetTarget&newTargetValue=\(locked == true ? 1 : 0)"
@@ -689,7 +689,7 @@ open class VeraAPI {
         }
     }
     
-    open func changeHVAC(_ device: Device, fanMode: Device.FanMode?, hvacMode: Device.HVACMode?, coolTemp: Int?, heatTemp: Int?) {
+    open func changeHVAC(_ device: VeraDevice, fanMode: VeraDevice.FanMode?, hvacMode: VeraDevice.HVACMode?, coolTemp: Int?, heatTemp: Int?) {
         self.changeHVAC(true, device:device, fanMode:fanMode, hvacMode:hvacMode, coolTemp: coolTemp, heatTemp: heatTemp) { (error) -> Void in
             if (error != nil) {
                 self.changeHVAC(false, device:device, fanMode:fanMode, hvacMode:hvacMode, coolTemp: coolTemp, heatTemp: heatTemp) { (error) -> Void in
@@ -698,7 +698,7 @@ open class VeraAPI {
         }
     }
     
-    func changeHVAC(_ useLocalServer:Bool, device: Device, fanMode: Device.FanMode?, hvacMode: Device.HVACMode?, coolTemp: Int?, heatTemp: Int?, completionHandler:@escaping (NSError?)->Void) -> Void {
+    func changeHVAC(_ useLocalServer:Bool, device: VeraDevice, fanMode: VeraDevice.FanMode?, hvacMode: VeraDevice.HVACMode?, coolTemp: Int?, heatTemp: Int?, completionHandler:@escaping (NSError?)->Void) -> Void {
         if let prefix = self.requestPrefix(useLocalServer) {
             if let deviceID = device.id {
                 var requestString = ""

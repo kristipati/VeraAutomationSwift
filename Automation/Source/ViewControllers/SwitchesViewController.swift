@@ -21,12 +21,12 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 
 protocol SwitchProtocol {
-    func changeDeviceLevel(_ device: Device, level: Int)
+    func changeDeviceLevel(_ device: VeraDevice, level: Int)
 }
 
 class SwitchesViewController: UICollectionViewController, SwitchProtocol {
-    var room: Room?
-    var devices: [Device]?
+    var room: VeraRoom?
+    var devices: [VeraDevice]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -96,7 +96,7 @@ class SwitchesViewController: UICollectionViewController, SwitchProtocol {
         }
     }
     
-    func changeDeviceLevel(_ device: Device, level: Int) {
+    func changeDeviceLevel(_ device: VeraDevice, level: Int) {
         AppDelegate.appDelegate().veraAPI.setDeviceStatusWithNotification(device, newDeviceStatus: nil, newDeviceLevel: level)
     }
 }

@@ -11,7 +11,7 @@ import Vera
 
 class ExcludedItemsViewController: UITableViewController {
     var showScenes = false
-    var roomList = [Room]()
+    var roomList = [VeraRoom]()
     var idsToExclude = [Int]()
     
     override func viewDidLoad() {
@@ -72,13 +72,13 @@ class ExcludedItemsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let room = roomList[section] as Room
+        let room = roomList[section] as VeraRoom
         return room.name
     }
 
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let room = roomList[section] as Room
+        let room = roomList[section] as VeraRoom
 
         if self.showScenes == true {
             if let scenes = AppDelegate.appDelegate().veraAPI.scenesForRoom(room, showExcluded: true) {
@@ -97,7 +97,7 @@ class ExcludedItemsViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DeviceCellIdentifier", for: indexPath)
         cell.accessoryType = .none
         
-        let room = roomList[(indexPath as NSIndexPath).section] as Room
+        let room = roomList[(indexPath as NSIndexPath).section] as VeraRoom
 
         if self.showScenes == true {
             if let scenes = AppDelegate.appDelegate().veraAPI.scenesForRoom(room, showExcluded: true) {
@@ -129,7 +129,7 @@ class ExcludedItemsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let room = roomList[(indexPath as NSIndexPath).section] as Room
+        let room = roomList[(indexPath as NSIndexPath).section] as VeraRoom
 
         if self.showScenes == true {
             if let scenes = AppDelegate.appDelegate().veraAPI.scenesForRoom(room, showExcluded: true) {

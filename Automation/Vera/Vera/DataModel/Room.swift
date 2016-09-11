@@ -6,11 +6,11 @@
 //  Copyright (c) 2014 Gruby Solutions. All rights reserved.
 //
 
-public func ==(lhs: Room, rhs: Room) -> Bool {
+public func ==(lhs: VeraRoom, rhs: VeraRoom) -> Bool {
     return lhs.id == rhs.id && lhs.name == rhs.name
 }
 
-open class Room: Deserializable, CustomStringConvertible, Hashable {
+open class VeraRoom: Deserializable, CustomStringConvertible, Hashable {
     open var name:String?
     var id:Int?
     

@@ -8,7 +8,7 @@
 
 import Foundation
 
-open class Auth : Deserializable, CustomStringConvertible {
+open class VeraAuth : Deserializable, CustomStringConvertible {
     
     var authToken:String?
     var authSigToken:String?

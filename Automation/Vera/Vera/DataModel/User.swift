@@ -8,8 +8,8 @@
 
 import Foundation
 
-class User : Deserializable {
-    var units:[Unit]?
+class VeraUser : Deserializable {
+    var units:[VeraUnit]?
     required init(data: [String: AnyObject]) {
         if (data["units"] != nil) {
             units <-- data["units"]

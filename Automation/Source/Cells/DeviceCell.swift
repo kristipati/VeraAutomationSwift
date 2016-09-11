@@ -15,7 +15,7 @@ class DeviceCell: BaseCell {
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var slider: UISlider!
     
-    var device: Device?
+    var device: VeraDevice?
     var delegate: SwitchProtocol?
     
     @IBAction func sliderTouchUpAction(_ sender: UISlider) {

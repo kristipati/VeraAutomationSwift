@@ -21,11 +21,11 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 
 protocol ThermostatProtocol {
-    func changeHVAC(_ device: Device, fanMode: Device.FanMode?, hvacMode: Device.HVACMode?, coolTemp: Int?, heatTemp: Int?)
+    func changeHVAC(_ device: VeraDevice, fanMode: VeraDevice.FanMode?, hvacMode: VeraDevice.HVACMode?, coolTemp: Int?, heatTemp: Int?)
 }
 
 class ClimateViewController: UICollectionViewController, ThermostatProtocol {
-    var devices: [Device]?
+    var devices: [VeraDevice]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,10 +40,10 @@ class ClimateViewController: UICollectionViewController, ThermostatProtocol {
     }
     
     func loadThermostats () {
-        var devices = [Device]()
-        if let roomsWithThermostats = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.thermostat) {
+        var devices = [VeraDevice]()
+        if let roomsWithThermostats = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.VeraDevice.Category.thermostat) {
             for room in roomsWithThermostats {
-                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: Vera.Device.Category.thermostat) {
+                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: Vera.VeraDevice.Category.thermostat) {
                     for device in roomDevices {
                             devices.append(device)
                     }
@@ -77,7 +77,7 @@ class ClimateViewController: UICollectionViewController, ThermostatProtocol {
         return cell as UICollectionViewCell
     }
     
-    func changeHVAC(_ device: Device, fanMode: Device.FanMode?, hvacMode: Device.HVACMode?, coolTemp: Int?, heatTemp: Int?) {
+    func changeHVAC(_ device: VeraDevice, fanMode: VeraDevice.FanMode?, hvacMode: VeraDevice.HVACMode?, coolTemp: Int?, heatTemp: Int?) {
         AppDelegate.appDelegate().veraAPI.changeHVACWithNotification(device, fanMode: fanMode, hvacMode: hvacMode, coolTemp: coolTemp, heatTemp: heatTemp)
         
     }

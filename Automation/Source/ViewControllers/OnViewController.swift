@@ -21,7 +21,7 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 
 class OnViewController: UICollectionViewController {
-    var devices: [Device]?
+    var devices: [VeraDevice]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,10 +36,10 @@ class OnViewController: UICollectionViewController {
     }
     
     func loadOnDevices () {
-        var devices = [Device]()
-        if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.Device.Category.switch, Vera.Device.Category.dimmableLight) {
+        var devices = [VeraDevice]()
+        if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: Vera.VeraDevice.Category.switch, Vera.VeraDevice.Category.dimmableLight) {
             for room in roomsWithSwitches {
-                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: Vera.Device.Category.switch, Vera.Device.Category.dimmableLight) {
+                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: Vera.VeraDevice.Category.switch, Vera.VeraDevice.Category.dimmableLight) {
                     for device in roomDevices {
                         if let status = device.status {
                             if status == 1 {

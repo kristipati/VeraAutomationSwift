@@ -21,8 +21,8 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 
 class ScenesViewController: UICollectionViewController {
-    var room: Room?
-    var scenes: [Scene]?
+    var room: VeraRoom?
+    var scenes: [VeraScene]?
 
     override func viewDidLoad() {
         super.viewDidLoad()

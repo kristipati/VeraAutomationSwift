@@ -22,7 +22,7 @@ class ThermostatCell: BaseCell {
     @IBOutlet weak var coolSetLabel: UILabel!
 
     var delegate: ThermostatProtocol?
-    var device: Device?
+    var device: VeraDevice?
 
     override func setup() {
         super.setup()
@@ -76,7 +76,7 @@ class ThermostatCell: BaseCell {
     }
 
     @IBAction func hvacStateChanged(_ sender: AnyObject) {
-        var hvacMode: Device.HVACMode = .auto
+        var hvacMode: VeraDevice.HVACMode = .auto
         if self.hvacSegmentedControl.selectedSegmentIndex == 0 {
             hvacMode = .off
         }
@@ -95,7 +95,7 @@ class ThermostatCell: BaseCell {
     }
     
     @IBAction func fanChanged(_ sender: AnyObject) {
-        var fanMode: Device.FanMode = .auto
+        var fanMode: VeraDevice.FanMode = .auto
         if self.fanSegmentedControl.selectedSegmentIndex == 1 {
             fanMode = .on
         }

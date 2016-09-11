@@ -47,7 +47,7 @@ class ScenesListViewController: UITableViewController {
     
     func loadRooms(_ fullload: Bool) {
         if fullload == true {
-            self.navigationController?.popToRootViewController(animated: false)
+            _ = self.navigationController?.popToRootViewController(animated: false)
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 self.tableView.deselectRow(at: indexPath, animated: false)
             }
