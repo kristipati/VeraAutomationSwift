@@ -10,30 +10,6 @@
                         <key>Type</key>
                         <string>PSGroupSpecifier</string>
                         <key>FooterText</key>
-                        <string>Alamofire</string>
-                </dict>
-                <dict>
-                        <key>Type</key>
-                        <string>PSGroupSpecifier</string>
-                        <key>FooterText</key>
-                        <string>Alamofire2</string>
-                </dict>
-                <dict>
-                        <key>Type</key>
-                        <string>PSGroupSpecifier</string>
-                        <key>FooterText</key>
-                        <string>Alamofire3</string>
-                </dict>
-                <dict>
-                        <key>Type</key>
-                        <string>PSGroupSpecifier</string>
-                        <key>FooterText</key>
-                        <string>Alamofire4</string>
-                </dict>
-                <dict>
-                        <key>Type</key>
-                        <string>PSGroupSpecifier</string>
-                        <key>FooterText</key>
                         <string>CryptoSwift</string>
                 </dict>
                 <dict>
@@ -160,25 +136,61 @@
                         <key>Type</key>
                         <string>PSGroupSpecifier</string>
                         <key>FooterText</key>
-                        <string>Locksmith</string>
+                        <string>KeychainSwift</string>
                 </dict>
                 <dict>
                         <key>Type</key>
                         <string>PSGroupSpecifier</string>
                         <key>FooterText</key>
-                        <string>Locksmith2</string>
+                        <string>KeychainSwift2</string>
                 </dict>
                 <dict>
                         <key>Type</key>
                         <string>PSGroupSpecifier</string>
                         <key>FooterText</key>
-                        <string>Locksmith3</string>
+                        <string>KeychainSwift3</string>
                 </dict>
                 <dict>
                         <key>Type</key>
                         <string>PSGroupSpecifier</string>
                         <key>FooterText</key>
-                        <string>Locksmith4</string>
+                        <string>KeychainSwift4</string>
+                </dict>
+                <dict>
+                        <key>Type</key>
+                        <string>PSGroupSpecifier</string>
+                        <key>FooterText</key>
+                        <string>KeychainSwift5</string>
+                </dict>
+                <dict>
+                        <key>Type</key>
+                        <string>PSGroupSpecifier</string>
+                        <key>FooterText</key>
+                        <string>PMHTTP</string>
+                </dict>
+                <dict>
+                        <key>Type</key>
+                        <string>PSGroupSpecifier</string>
+                        <key>FooterText</key>
+                        <string>PMHTTP2</string>
+                </dict>
+                <dict>
+                        <key>Type</key>
+                        <string>PSGroupSpecifier</string>
+                        <key>FooterText</key>
+                        <string>PMHTTP3</string>
+                </dict>
+                <dict>
+                        <key>Type</key>
+                        <string>PSGroupSpecifier</string>
+                        <key>FooterText</key>
+                        <string>PMHTTP4</string>
+                </dict>
+                <dict>
+                        <key>Type</key>
+                        <string>PSGroupSpecifier</string>
+                        <key>FooterText</key>
+                        <string>PMHTTP5</string>
                 </dict>
                 <dict>
                         <key>Type</key>
@@ -209,36 +221,6 @@
                         <string>PSGroupSpecifier</string>
                         <key>FooterText</key>
                         <string>SFSwiftNotification5</string>
-                </dict>
-                <dict>
-                        <key>Type</key>
-                        <string>PSGroupSpecifier</string>
-                        <key>FooterText</key>
-                        <string>Set</string>
-                </dict>
-                <dict>
-                        <key>Type</key>
-                        <string>PSGroupSpecifier</string>
-                        <key>FooterText</key>
-                        <string>Set2</string>
-                </dict>
-                <dict>
-                        <key>Type</key>
-                        <string>PSGroupSpecifier</string>
-                        <key>FooterText</key>
-                        <string>Set3</string>
-                </dict>
-                <dict>
-                        <key>Type</key>
-                        <string>PSGroupSpecifier</string>
-                        <key>FooterText</key>
-                        <string>Set4</string>
-                </dict>
-                <dict>
-                        <key>Type</key>
-                        <string>PSGroupSpecifier</string>
-                        <key>FooterText</key>
-                        <string>Set5</string>
                 </dict>
         </array>
 </dict>
