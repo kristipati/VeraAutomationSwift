@@ -27,9 +27,9 @@ extension VeraAPI {
             notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_MESSAGE_LEVEL_%@_%ld", comment: "") as NSString, deviceName, level) as String
         }
 
-        AppDelegate.appDelegate().showMessageWithTitle(notificationText)
+        AppDelegate.appDelegate().showMessageWithTitle(title: notificationText)
         
-        self.setDeviceStatus(device, newDeviceStatus: newDeviceStatus, newDeviceLevel: newDeviceLevel)
+        self.setDeviceStatus(device: device, newDeviceStatus: newDeviceStatus, newDeviceLevel: newDeviceLevel)
     }
    
     public func runSceneWithNotification(_ scene: VeraScene) {
@@ -39,9 +39,9 @@ extension VeraAPI {
         }
         
         let notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_RUN_SCENE_MESSAGE_%@", comment: "") as NSString, sceneName) as String
-        AppDelegate.appDelegate().showMessageWithTitle(notificationText)
+        AppDelegate.appDelegate().showMessageWithTitle(title: notificationText)
         
-        self.runScene(scene)
+        self.runScene(scene: scene)
     }
     
     public func setAudioPowerWithNotification(_ device: VeraDevice, on: Bool) {
@@ -58,9 +58,9 @@ extension VeraAPI {
             notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_MESSAGE_ON_%@", comment: "") as NSString, deviceName) as String
         }
         
-        AppDelegate.appDelegate().showMessageWithTitle(notificationText)
+        AppDelegate.appDelegate().showMessageWithTitle(title: notificationText)
         
-        self.setAudioPower(device, on: on)
+        self.setAudioPower(device: device, on: on)
     }
 
     public func changeAudioVolumeWithNotification(_ device: VeraDevice, increase: Bool) {
@@ -77,9 +77,9 @@ extension VeraAPI {
             notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_VOLUME_UP_%@", comment: "") as NSString, deviceName) as String
         }
         
-        AppDelegate.appDelegate().showMessageWithTitle(notificationText)
+        AppDelegate.appDelegate().showMessageWithTitle(title: notificationText)
         
-        self.changeAudioVolume(device, increase: increase)
+        self.changeAudioVolume(device: device, increase: increase)
     }
 
     public func setAudioInputWithNotification(_ device: VeraDevice, input: Int) {
@@ -92,9 +92,9 @@ extension VeraAPI {
         
         notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_INPUT_%@_%d", comment: "") as NSString, deviceName as String, input) as String
 
-        AppDelegate.appDelegate().showMessageWithTitle(notificationText)
+        AppDelegate.appDelegate().showMessageWithTitle(title: notificationText)
         
-        self.setAudioInput(device, input: input)
+        self.setAudioInput(device: device, input: input)
     }
 
 
@@ -112,9 +112,9 @@ extension VeraAPI {
             notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_UNLOCKING_%@", comment: "") as NSString, deviceName) as String
         }
         
-        AppDelegate.appDelegate().showMessageWithTitle(notificationText)
+        AppDelegate.appDelegate().showMessageWithTitle(title: notificationText)
         
-        self.setLockState(device, locked: locked)
+        self.setLockState(device: device, locked: locked)
     }
     
     public func changeHVACWithNotification(_ device: VeraDevice, fanMode: VeraDevice.FanMode?, hvacMode: VeraDevice.HVACMode?, coolTemp: Int?, heatTemp: Int?) {
@@ -156,9 +156,9 @@ extension VeraAPI {
             notificationText = NSString.localizedStringWithFormat(NSLocalizedString("COMMAND_SENT_HEAT_TEMPERATURE_%@_%d", comment: "") as NSString, deviceName, temp) as String
         }
         
-        AppDelegate.appDelegate().showMessageWithTitle(notificationText)
+        AppDelegate.appDelegate().showMessageWithTitle(title: notificationText)
 
-        self.changeHVAC(device, fanMode: fanMode, hvacMode: hvacMode, coolTemp: coolTemp, heatTemp: heatTemp)
+        self.changeHVAC(device: device, fanMode: fanMode, hvacMode: hvacMode, coolTemp: coolTemp, heatTemp: heatTemp)
     }
 
 }

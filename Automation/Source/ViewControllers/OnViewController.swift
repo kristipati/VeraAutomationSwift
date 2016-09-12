@@ -39,7 +39,7 @@ class OnViewController: UICollectionViewController {
         var devices = [VeraDevice]()
         if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.switch, VeraDevice.Category.dimmableLight) {
             for room in roomsWithSwitches {
-                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: VeraDevice.Category.switch, VeraDevice.Category.dimmableLight) {
+                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room: room, showExcluded: false, categories: VeraDevice.Category.switch, VeraDevice.Category.dimmableLight) {
                     for device in roomDevices {
                         if let status = device.status {
                             if status == 1 {

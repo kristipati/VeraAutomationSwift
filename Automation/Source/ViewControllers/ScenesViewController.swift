@@ -28,7 +28,7 @@ class ScenesViewController: UICollectionViewController {
         super.viewDidLoad()
 
         if self.room != nil {
-            self.scenes = AppDelegate.appDelegate().veraAPI.scenesForRoom(self.room!)
+            self.scenes = AppDelegate.appDelegate().veraAPI.scenesForRoom(room: self.room!)
             self.title = self.room?.name
         }
 

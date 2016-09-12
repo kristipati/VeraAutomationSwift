@@ -35,7 +35,7 @@ class AudioViewController: UICollectionViewController, AudioProtocol {
         super.viewDidLoad()
 
         if self.room != nil {
-            self.devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(self.room!, showExcluded: false, categories: .audio)
+            self.devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room: self.room!, showExcluded: false, categories: .audio)
             self.title = self.room?.name
         }
 

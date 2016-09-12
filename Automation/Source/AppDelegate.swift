@@ -167,7 +167,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         self.periodicTimer = Timer.scheduledTimer(timeInterval: sTimeForCheck, target: self, selector: #selector(AppDelegate.updateVeraInfo), userInfo: nil, repeats: true)
         
         
-        NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.orientationChanged(_:)), name: NSNotification.Name.UIApplicationWillChangeStatusBarOrientation, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.orientationChanged(notification:)), name: NSNotification.Name.UIApplicationWillChangeStatusBarOrientation, object: nil)
 
         let delay = 1.0 * Double(NSEC_PER_SEC)
         let time = DispatchTime.now() + Double(Int64(delay)) / Double(NSEC_PER_SEC)
@@ -229,7 +229,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
     func tabBarController(_ tabBarController: UITabBarController, didEndCustomizing viewControllers: [UIViewController], changed: Bool) {
         if (changed == true) {
-            self.saveTabOrder(viewControllers)
+            self.saveTabOrderWith(viewControllers: viewControllers)
             self.checkViewControllers()
         }
     }
@@ -246,7 +246,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         }
     }
 
-    func saveTabOrder (_ viewControllers: [UIViewController]) {
+    func saveTabOrderWith (viewControllers: [UIViewController]) {
         var orderViewControllerArray = [String]()
         for viewController in viewControllers {
             orderViewControllerArray.append(viewController.getBaseViewControllerName() as String)
@@ -286,7 +286,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                     newViewControllerArray.append(vc)
                 }
 
-                self.saveTabOrder(newViewControllerArray as [UIViewController])
+                self.saveTabOrderWith(viewControllers: newViewControllerArray as [UIViewController])
                 tabbarController.viewControllers = newViewControllerArray
             }
 
@@ -478,7 +478,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         self.checkViewControllers()
     }
     
-    func setExcludedDeviceArray(_ array: [Int]) {
+    func setExcludedDeviceArray(array: [Int]) {
         if array.isEmpty {
             UserDefaults.standard.removeObject(forKey: kExcludedDevices)
         } else {
@@ -501,7 +501,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         }
     }
 
-    func setExcludedSceneArray(_ array: [Int]) {
+    func setExcludedSceneArray(array: [Int]) {
         if array.isEmpty {
             UserDefaults.standard.removeObject(forKey: kExcludedScenes)
         } else {
@@ -523,13 +523,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         }
     }
     
-    func orientationChanged(_ notification: Notification) {
+    func orientationChanged(notification: Notification) {
         if (self.notifyView != nil) {
             self.notifyView!.hide()
         }
     }
     
-    func showMessageWithTitle(_ title: String) {
+    func showMessageWithTitle(title: String) {
         let tabbarController = self.window!.rootViewController as! UITabBarController
         _ = CGRect(x: 0, y: 0, width: tabbarController.view.frame.maxX, height: 64)
         if self.notifyView != nil {

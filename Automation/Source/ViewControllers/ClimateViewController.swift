@@ -43,7 +43,7 @@ class ClimateViewController: UICollectionViewController, ThermostatProtocol {
         var devices = [VeraDevice]()
         if let roomsWithThermostats = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.thermostat) {
             for room in roomsWithThermostats {
-                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: VeraDevice.Category.thermostat) {
+                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room: room, showExcluded: false, categories: VeraDevice.Category.thermostat) {
                     for device in roomDevices {
                             devices.append(device)
                     }

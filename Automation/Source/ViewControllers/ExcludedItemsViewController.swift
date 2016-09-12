@@ -37,9 +37,9 @@ class ExcludedItemsViewController: UITableViewController {
         super.viewWillDisappear(animated)
         
         if self.showScenes == true {
-            AppDelegate.appDelegate().setExcludedSceneArray(idsToExclude)
+            AppDelegate.appDelegate().setExcludedSceneArray(array: idsToExclude)
         } else {
-            AppDelegate.appDelegate().setExcludedDeviceArray(idsToExclude)
+            AppDelegate.appDelegate().setExcludedDeviceArray(array: idsToExclude)
         }
     }
     
@@ -47,13 +47,13 @@ class ExcludedItemsViewController: UITableViewController {
         if let rooms = AppDelegate.appDelegate().veraAPI.getVeraUnit()?.rooms {
             for room in rooms {
                 if self.showScenes {
-                    if let scenes = AppDelegate.appDelegate().veraAPI.scenesForRoom(room, showExcluded: true) {
+                    if let scenes = AppDelegate.appDelegate().veraAPI.scenesForRoom(room: room, showExcluded: true) {
                         if scenes.isEmpty == false {
                             roomList.append(room)
                         }
                     }
                 } else {
-                    if let devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: true, categories: .switch, .dimmableLight) {
+                    if let devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room: room, showExcluded: true, categories: .switch, .dimmableLight) {
                         if devices.isEmpty == false {
                             roomList.append(room)
                         }
@@ -80,11 +80,11 @@ class ExcludedItemsViewController: UITableViewController {
         let room = roomList[section] as VeraRoom
 
         if self.showScenes == true {
-            if let scenes = AppDelegate.appDelegate().veraAPI.scenesForRoom(room, showExcluded: true) {
+            if let scenes = AppDelegate.appDelegate().veraAPI.scenesForRoom(room: room, showExcluded: true) {
                 return scenes.count
             }
         } else {
-            if let devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: true, categories: .switch, .dimmableLight) {
+            if let devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room: room, showExcluded: true, categories: .switch, .dimmableLight) {
                 return devices.count
             }
         }
@@ -99,7 +99,7 @@ class ExcludedItemsViewController: UITableViewController {
         let room = roomList[(indexPath as NSIndexPath).section] as VeraRoom
 
         if self.showScenes == true {
-            if let scenes = AppDelegate.appDelegate().veraAPI.scenesForRoom(room, showExcluded: true) {
+            if let scenes = AppDelegate.appDelegate().veraAPI.scenesForRoom(room: room, showExcluded: true) {
                 let scene = scenes[(indexPath as NSIndexPath).row]
                 cell.textLabel!.text = scene.name
                 if let id = scene.id {
@@ -109,7 +109,7 @@ class ExcludedItemsViewController: UITableViewController {
                 }
             }
         } else {
-            if let devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: true, categories: .switch, .dimmableLight) {
+            if let devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room: room, showExcluded: true, categories: .switch, .dimmableLight) {
                 let device = devices[(indexPath as NSIndexPath).row]
                 cell.textLabel!.text = device.name
                 if let id = device.id {
@@ -131,7 +131,7 @@ class ExcludedItemsViewController: UITableViewController {
         let room = roomList[(indexPath as NSIndexPath).section] as VeraRoom
 
         if self.showScenes == true {
-            if let scenes = AppDelegate.appDelegate().veraAPI.scenesForRoom(room, showExcluded: true) {
+            if let scenes = AppDelegate.appDelegate().veraAPI.scenesForRoom(room: room, showExcluded: true) {
                 let scene = scenes[(indexPath as NSIndexPath).row]
                 if let id = scene.id {
                     if self.idsToExclude.contains(id) == true {
@@ -142,7 +142,7 @@ class ExcludedItemsViewController: UITableViewController {
                 }
             }
         } else {
-            if let devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: true, categories: .switch, .dimmableLight) {
+            if let devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room: room, showExcluded: true, categories: .switch, .dimmableLight) {
                 let device = devices[(indexPath as NSIndexPath).row]
                 if let id = device.id {
                     if self.idsToExclude.contains(id) == true {

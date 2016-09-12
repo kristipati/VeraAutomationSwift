@@ -43,7 +43,7 @@ class LocksViewController: UICollectionViewController, LockProtocol {
         var devices = [VeraDevice]()
         if let roomsWithLocks = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.lock) {
             for room in roomsWithLocks {
-                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room, showExcluded: false, categories: VeraDevice.Category.lock) {
+                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room: room, showExcluded: false, categories: VeraDevice.Category.lock) {
                         for device in roomDevices {
                             devices.append(device)
                         }

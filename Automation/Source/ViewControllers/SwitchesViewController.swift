@@ -32,7 +32,7 @@ class SwitchesViewController: UICollectionViewController, SwitchProtocol {
         super.viewDidLoad()
 
         if self.room != nil {
-            self.devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(self.room!, categories: .switch, .dimmableLight)
+            self.devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room: self.room!, categories: .switch, .dimmableLight)
             self.title = self.room?.name
         }
 
