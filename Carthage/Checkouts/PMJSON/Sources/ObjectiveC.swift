@@ -18,19 +18,31 @@
     
     extension JSON {
         /// Decodes a `Data` as JSON.
-        /// - Note: Invalid UTF8 sequences in the data are replaced with U+FFFD.
-        /// - Parameter strict: If `true`, trailing commas in arrays/objects are treated as errors. Default is `false`.
+        /// - Note: Invalid unicode sequences in the data are replaced with U+FFFD.
+        /// - Parameter data: The data to decode. Must be UTF-8, UTF-16, or UTF-32, and may start with a BOM.
+        /// - Parameter options: Options that controls JSON parsing. Defaults to no options. See `JSONOptions` for details.
         /// - Returns: A `JSON` value.
         /// - Throws: `JSONParserError` if the data does not contain valid JSON.
-        public static func decode(_ data: Data, strict: Bool = false) throws -> JSON {
-            return try JSON.decode(UTF8Decoder(data: data), strict: strict)
+        public static func decode(_ data: Data, options: JSONOptions = []) throws -> JSON {
+            if let endian = UTF32Decoder.encodes(data) {
+                return try JSON.decode(UTF32Decoder(data: data, endian: endian), options: options)
+            } else if let endian = UTF16Decoder.encodes(data) {
+                return try JSON.decode(UTF16Decoder(data: data, endian: endian), options: options)
+            } else {
+                return try JSON.decode(UTF8Decoder(data: data), options: options)
+            }
+        }
+        
+        @available(*, deprecated, message: "Use JSON.decode(_:options:) instead")
+        public static func decode(_ data: Data, strict: Bool) throws -> JSON {
+            return try JSON.decode(data, options: [.strict])
         }
         
         /// Encodes a `JSON` to a `Data`.
         /// - Parameter json: The `JSON` to encode.
-        /// - Parameter pretty: If `true`, include extra whitespace for formatting. Default is `false`.
+        /// - Parameter options: Options that controls JSON encoding. Defaults to no options. See `JSONEncoderOptions` for details.
         /// - Returns: An `NSData` with the JSON representation of *json*.
-        public static func encodeAsData(_ json: JSON, pretty: Bool = false) -> Data {
+        public static func encodeAsData(_ json: JSON, options: JSONEncoderOptions = []) -> Data {
             struct Output: TextOutputStream {
                 // NB: We use NSMutableData instead of Data because it's significantly faster as of Xcode 8b3
                 var data = NSMutableData()
@@ -44,8 +56,13 @@
                 }
             }
             var output = Output()
-            JSON.encode(json, toStream: &output, pretty: pretty)
+            JSON.encode(json, to: &output, options: options)
             return output.data as Data
+        }
+        
+        @available(*, deprecated, message: "Use JSON.encodeAsData(_:options:) instead")
+        public static func encodeAsData(_ json: JSON, pretty: Bool) -> Data {
+            return encodeAsData(json, options: JSONEncoderOptions(pretty: pretty))
         }
     }
     
@@ -156,6 +173,8 @@
         }
     }
     
+    // MARK: - Errors
+    
     /// An error that is thrown when converting from `AnyObject` to `JSON`.
     /// - SeeAlso: `JSON.init(ns:)`
     public enum JSONFoundationError: Error {
@@ -171,11 +190,29 @@
         }
     }
     
-    extension JSONParserError: LocalizedError {
-        public var errorDescription: String? {
-            return String(describing: self)
+    extension JSONParserError: CustomNSError {
+        public static let errorDomain: String = "PMJSON.JSONParserError"
+        
+        public var errorCode: Int {
+            return code.rawValue
+        }
+        
+        public var errorUserInfo: [String: Any] {
+            return [NSLocalizedDescriptionKey: String(describing: self)]
         }
     }
+    
+    extension JSONDecoderError: LocalizedError {
+        public var failureReason: String? {
+            switch self {
+            case .streamEnded: return "The JSON event stream ended."
+            case .unexpectedToken: return "The JSON event stream contained more than one top-level value."
+            case .exceededDepthLimit: return "The JSON event stream exceeded the nesting depth limit."
+            }
+        }
+    }
+    
+    // MARK: -
     
     private struct UTF8Decoder: Sequence {
         init(data: Data) {
@@ -194,7 +231,10 @@
                 self.data = data
                 let ptr = UnsafeBufferPointer(start: data.bytes.assumingMemoryBound(to: UInt8.self), count: data.length)
                 iter = ptr.makeIterator()
-                utf8 = UTF8()
+                if ptr.count >= 3 && ptr[0] == 0xEF && ptr[1] == 0xBB && ptr[2] == 0xBF {
+                    // UTF-8 BOM detected. Skip it.
+                    _ = iter.next(); _ = iter.next(); _ = iter.next()
+                }
             }
             
             mutating func next() -> UnicodeScalar? {
@@ -207,7 +247,183 @@
             
             private let data: NSData
             private var iter: UnsafeBufferPointerIterator<UInt8>
-            private var utf8: UTF8
+            private var utf8 = UTF8()
+        }
+    }
+    
+    private struct UTF16Decoder: Sequence {
+        /// Checks if the data appears to be UTF-16, and if so, returns the endianness.
+        /// Data is treated as UTF-16 if it starts with a UTF-16 BOM, or if it starts
+        /// with a non-NUL ASCII character encoded as UTF-16.
+        static func encodes(_ data: Data) -> Endian? {
+            guard data.count >= 2 else { return nil }
+            switch (data[0], data[1]) {
+            // BOM check
+            case (0xFE, 0xFF): return .big
+            case (0xFF, 0xFE): return .little
+            // Non-NUL ASCII character
+            case (0x00, 0x01...0x7F): return .big
+            case (0x01...0x7F, 0x00): return .little
+            default: return nil
+            }
+        }
+        
+        enum Endian {
+            case big
+            case little
+        }
+        
+        init(data: Data, endian: Endian) {
+            self.data = data as NSData
+            self.endian = endian
+        }
+        
+        func makeIterator() -> Iterator {
+            return Iterator(data: data, endian: endian)
+        }
+        
+        private let data: NSData
+        private let endian: Endian
+        
+        fileprivate struct Iterator: IteratorProtocol {
+            init(data: NSData, endian: Endian) {
+                iter = DataIterator(data: data, endian: endian)
+            }
+            
+            mutating func next() -> UnicodeScalar? {
+                switch utf16.decode(&iter) {
+                case .scalarValue(let scalar): return scalar
+                case .error: return "\u{FFFD}"
+                case .emptyInput: return nil
+                }
+            }
+            
+            private var iter: DataIterator
+            private var utf16 = UTF16()
+        }
+        
+        private struct DataIterator: IteratorProtocol {
+            init(data: NSData, endian: Endian) {
+                // NB: We use NSData instead of using Data's iterator because it's significantly faster as of Xcode 8b3
+                self.data = data
+                self.endian = endian
+                let ptr = UnsafeBufferPointer(start: data.bytes.assumingMemoryBound(to: UInt16.self), count: data.length / 2)
+                iter = ptr.makeIterator()
+                if !ptr.isEmpty {
+                    switch endian {
+                    case .big where UInt16(bigEndian: ptr[0]) == 0xFEFF: fallthrough
+                    case .little where UInt16(littleEndian: ptr[0]) == 0xFEFF:
+                        // Skip the BOM
+                        _ = iter.next()
+                    default: break
+                    }
+                }
+                trailingFFFD = data.length % 2 != 0
+            }
+            
+            mutating func next() -> UInt16? {
+                switch (iter.next(), endian) {
+                case (let x?, .big): return UInt16(bigEndian: x)
+                case (let x?, .little): return UInt16(littleEndian: x)
+                case (nil, _) where trailingFFFD:
+                    trailingFFFD = false
+                    return 0xFFFD
+                default: return nil
+                }
+            }
+            
+            private let data: NSData
+            private let endian: Endian
+            private var iter: UnsafeBufferPointerIterator<UInt16>
+            private var trailingFFFD: Bool
+        }
+    }
+    
+    private struct UTF32Decoder: Sequence {
+        /// Checks if the data appears to be UTF-32, and if so, returns the endianness.
+        /// Data is treated as UTF-32 if it starts with a UTF-32 BOM, or if it starts
+        /// with a non-NUL ASCII character encoded as UTF-32.
+        static func encodes(_ data: Data) -> Endian? {
+            guard data.count >= 4 else { return nil }
+            switch (data[0], data[1], data[2], data[3]) {
+            // BOM check
+            case (0x00, 0x00, 0xFE, 0xFF): return .big
+            case (0xFF, 0xFE, 0x00, 0x00): return .little
+            // Non-NUL ASCII character
+            case (0x00, 0x00, 0x00, 0x01...0x7F): return .big
+            case (0x01...0x7F, 0x00, 0x00, 0x00): return .little
+            default: return nil
+            }
+        }
+        
+        enum Endian {
+            case big
+            case little
+        }
+        
+        init(data: Data, endian: Endian) {
+            self.data = data as NSData
+            self.endian = endian
+        }
+        
+        func makeIterator() -> Iterator {
+            return Iterator(data: data, endian: endian)
+        }
+        
+        private let data: NSData
+        private let endian: Endian
+        
+        fileprivate struct Iterator: IteratorProtocol {
+            init(data: NSData, endian: Endian) {
+                iter = DataIterator(data: data, endian: endian)
+            }
+            
+            mutating func next() -> UnicodeScalar? {
+                switch utf32.decode(&iter) {
+                case .scalarValue(let scalar): return scalar
+                case .error: return "\u{FFFD}"
+                case .emptyInput: return nil
+                }
+            }
+            
+            private var iter: DataIterator
+            private var utf32 = UTF32()
+        }
+        
+        private struct DataIterator: IteratorProtocol {
+            init(data: NSData, endian: Endian) {
+                // NB: We use NSData instead of using Data's iterator because it's significantly faster as of Xcode 8b3
+                self.data = data
+                self.endian = endian
+                let ptr = UnsafeBufferPointer(start: data.bytes.assumingMemoryBound(to: UInt32.self), count: data.length / 4)
+                iter = ptr.makeIterator()
+                if !ptr.isEmpty {
+                    switch endian {
+                    case .big where UInt32(bigEndian: ptr[0]) == 0xFEFF: fallthrough
+                    case .little where UInt32(littleEndian: ptr[0]) == 0xFEFF:
+                        // Skip the BOM
+                        _ = iter.next()
+                    default: break
+                    }
+                }
+                trailingFFFD = data.length % 4 != 0
+            }
+            
+            mutating func next() -> UInt32? {
+                switch (iter.next(), endian) {
+                case (let x?, .big): return UInt32(bigEndian: x)
+                case (let x?, .little): return UInt32(littleEndian: x)
+                case (nil, _) where trailingFFFD:
+                    trailingFFFD = false
+                    return 0xFFFD
+                default: return nil
+                }
+            }
+            
+            private let data: NSData
+            private let endian: Endian
+            private var iter: UnsafeBufferPointerIterator<UInt32>
+            private var trailingFFFD: Bool
         }
     }
     

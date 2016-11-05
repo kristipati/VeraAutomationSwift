@@ -9,18 +9,20 @@
 /* Begin PBXBuildFile section */
 		0A0F2BAA1BF1BBE50095D290 /* JSONError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0F2BA91BF1BBE50095D290 /* JSONError.swift */; };
 		0A0F2BAC1BF30D1B0095D290 /* JSONObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0F2BAB1BF30D1B0095D290 /* JSONObject.swift */; };
-		0A0F2BBA1BF32C1D0095D290 /* JSONSwiftCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0F2BB91BF32C1D0095D290 /* JSONSwiftCheck.swift */; };
 		9E0317C51D664B9000096D9E /* sample.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E0317C41D664B9000096D9E /* sample.json */; };
 		9E0AD0C31C69B3360038B4F5 /* DecimalNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0AD0C21C69B3360038B4F5 /* DecimalNumber.swift */; };
 		9E1B24441BC73D7600E5BC19 /* PMJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E1B24431BC73D7600E5BC19 /* PMJSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E1B244B1BC73D7600E5BC19 /* PMJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E1B24411BC73D7600E5BC19 /* PMJSON.framework */; };
-		9E1B24501BC73D7600E5BC19 /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1B244F1BC73D7600E5BC19 /* JSONTests.swift */; };
+		9E1B24501BC73D7600E5BC19 /* JSONDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1B244F1BC73D7600E5BC19 /* JSONDecoderTests.swift */; };
 		9E1B24591BC73DA000E5BC19 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1B24581BC73DA000E5BC19 /* JSON.swift */; };
 		9E1B246B1BC7463D00E5BC19 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1B246A1BC7463D00E5BC19 /* Parser.swift */; };
 		9E5983DC1C60282F008495F6 /* Encoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5983DB1C60282F008495F6 /* Encoder.swift */; };
 		9E8793781BC7547800BC6A15 /* Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E8793771BC7547800BC6A15 /* Decoder.swift */; };
 		9E87937C1BC8341500BC6A15 /* ObjectiveC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E87937B1BC8341500BC6A15 /* ObjectiveC.swift */; };
 		9E87937E1BC835F500BC6A15 /* Accessors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E87937D1BC835F500BC6A15 /* Accessors.swift */; };
+		9EC4CD961DB83DE8003A4268 /* JSONParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC4CD951DB83DE8003A4268 /* JSONParserTests.swift */; };
+		9ECD04F51DC15C9800DBE7CA /* JSONTestSuite in Resources */ = {isa = PBXBuildFile; fileRef = 9ECD04F41DC15C9800DBE7CA /* JSONTestSuite */; };
+		9ECD04F71DC15CAD00DBE7CA /* JSONTestSuite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECD04F61DC15CAD00DBE7CA /* JSONTestSuite.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +38,6 @@
 /* Begin PBXFileReference section */
 		0A0F2BA91BF1BBE50095D290 /* JSONError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONError.swift; sourceTree = "<group>"; };
 		0A0F2BAB1BF30D1B0095D290 /* JSONObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONObject.swift; sourceTree = "<group>"; };
-		0A0F2BB91BF32C1D0095D290 /* JSONSwiftCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONSwiftCheck.swift; sourceTree = "<group>"; };
 		9E0317C41D664B9000096D9E /* sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sample.json; sourceTree = "<group>"; };
 		9E0317C61D664D7D00096D9E /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		9E0AD0C21C69B3360038B4F5 /* DecimalNumber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecimalNumber.swift; sourceTree = "<group>"; };
@@ -44,7 +45,7 @@
 		9E1B24431BC73D7600E5BC19 /* PMJSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PMJSON.h; sourceTree = "<group>"; };
 		9E1B24451BC73D7600E5BC19 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9E1B244A1BC73D7600E5BC19 /* PMJSONTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PMJSONTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		9E1B244F1BC73D7600E5BC19 /* JSONTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONTests.swift; sourceTree = "<group>"; };
+		9E1B244F1BC73D7600E5BC19 /* JSONDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDecoderTests.swift; sourceTree = "<group>"; };
 		9E1B24511BC73D7600E5BC19 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9E1B24581BC73DA000E5BC19 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		9E1B246A1BC7463D00E5BC19 /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
@@ -55,6 +56,9 @@
 		9E8793771BC7547800BC6A15 /* Decoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Decoder.swift; sourceTree = "<group>"; };
 		9E87937B1BC8341500BC6A15 /* ObjectiveC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectiveC.swift; sourceTree = "<group>"; };
 		9E87937D1BC835F500BC6A15 /* Accessors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Accessors.swift; sourceTree = "<group>"; };
+		9EC4CD951DB83DE8003A4268 /* JSONParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONParserTests.swift; sourceTree = "<group>"; };
+		9ECD04F41DC15C9800DBE7CA /* JSONTestSuite */ = {isa = PBXFileReference; lastKnownFileType = folder; path = JSONTestSuite; sourceTree = "<group>"; };
+		9ECD04F61DC15CAD00DBE7CA /* JSONTestSuite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONTestSuite.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,10 +123,12 @@
 		9E1B244E1BC73D7600E5BC19 /* JSONTests */ = {
 			isa = PBXGroup;
 			children = (
-				9E1B244F1BC73D7600E5BC19 /* JSONTests.swift */,
-				0A0F2BB91BF32C1D0095D290 /* JSONSwiftCheck.swift */,
+				9E1B244F1BC73D7600E5BC19 /* JSONDecoderTests.swift */,
+				9EC4CD951DB83DE8003A4268 /* JSONParserTests.swift */,
+				9ECD04F61DC15CAD00DBE7CA /* JSONTestSuite.swift */,
 				9E0317C61D664D7D00096D9E /* README.txt */,
 				9E0317C41D664B9000096D9E /* sample.json */,
+				9ECD04F41DC15C9800DBE7CA /* JSONTestSuite */,
 				9E1B24511BC73D7600E5BC19 /* Info.plist */,
 			);
 			name = JSONTests;
@@ -168,7 +174,6 @@
 				9E1B24461BC73D7600E5BC19 /* Sources */,
 				9E1B24471BC73D7600E5BC19 /* Frameworks */,
 				9E1B24481BC73D7600E5BC19 /* Resources */,
-				0A0F2BB41BF323E20095D290 /* Copy Carthage Frameworks */,
 			);
 			buildRules = (
 			);
@@ -231,29 +236,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E0317C51D664B9000096D9E /* sample.json in Resources */,
+				9ECD04F51DC15C9800DBE7CA /* JSONTestSuite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		0A0F2BB41BF323E20095D290 /* Copy Carthage Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				SwiftCheck.framework,
-			);
-			name = "Copy Carthage Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "case \"$PLATFORM_NAME\" in\n  macosx) export SCRIPT_INPUT_FILE_0=\"$SRCROOT\"/Carthage/Build/Mac/SwiftCheck.framework;;\n  iphone*) export SCRIPT_INPUT_FILE_0=\"$SRCROOT\"/Carthage/Build/iOS/SwiftCheck.framework;;\n  *) echo \"error: Unknown PLATFORM_NAME: $PLATFORM_NAME\"; exit 1;;\nesac\nexport SCRIPT_INPUT_FILE_COUNT=1\n\n/usr/local/bin/carthage copy-frameworks || exit\n\nfor (( n=0; n<$SCRIPT_INPUT_FILE_COUNT; n++)); do\n  VAR=SCRIPT_INPUT_FILE_$n\n  source=${!VAR}.dSYM\n  dest=${BUILT_PRODUCTS_DIR}/$(basename \"$source\")\n  ditto \"$source\" \"$dest\" || exit\ndone";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		9E1B243C1BC73D7600E5BC19 /* Sources */ = {
@@ -276,8 +263,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A0F2BBA1BF32C1D0095D290 /* JSONSwiftCheck.swift in Sources */,
-				9E1B24501BC73D7600E5BC19 /* JSONTests.swift in Sources */,
+				9EC4CD961DB83DE8003A4268 /* JSONParserTests.swift in Sources */,
+				9ECD04F71DC15CAD00DBE7CA /* JSONTestSuite.swift in Sources */,
+				9E1B24501BC73D7600E5BC19 /* JSONDecoderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,18 +471,6 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
-					"$(inherited)",
-					"$(SRCROOT)/Carthage/Build/iOS/",
-				);
-				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
-					"$(inherited)",
-					"$(SRCROOT)/Carthage/Build/iOS/",
-				);
-				"FRAMEWORK_SEARCH_PATHS[sdk=macosx*]" = (
-					"$(inherited)",
-					"$(SRCROOT)/Carthage/Build/Mac/",
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -545,18 +521,6 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
-					"$(inherited)",
-					"$(SRCROOT)/Carthage/Build/iOS/",
-				);
-				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
-					"$(inherited)",
-					"$(SRCROOT)/Carthage/Build/iOS/",
-				);
-				"FRAMEWORK_SEARCH_PATHS[sdk=macosx*]" = (
-					"$(inherited)",
-					"$(SRCROOT)/Carthage/Build/Mac/",
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;

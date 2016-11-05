@@ -48,11 +48,12 @@ public class HTTPManagerRequest: NSObject, NSCopying {
         guard var comps = URLComponents(url: baseURL, resolvingAgainstBaseURL: false) else {
             fatalError("HTTPManager: base URL cannot be parsed by NSURLComponents: \(baseURL.relativeString)")
         }
-        if var queryItems = comps.queryItems {
-            queryItems.append(contentsOf: parameters)
-            comps.queryItems = queryItems
+        if var query = comps.percentEncodedQuery, !query.isEmpty {
+            query += "&"
+            query += FormURLEncoded.string(for: parameters)
+            comps.percentEncodedQuery = query
         } else {
-            comps.queryItems = parameters
+            comps.percentEncodedQuery = FormURLEncoded.string(for: parameters)
         }
         return comps.url(relativeTo: baseURL.baseURL)!
     }
@@ -485,7 +486,7 @@ public class HTTPManagerNetworkRequest: HTTPManagerRequest, HTTPManagerRequestPe
         case .data(let data)?:
             request.httpBody = data
         case .formUrlEncoded(let queryItems)?:
-            request.httpBody = UploadBody.dataRepresentationForQueryItems(queryItems)
+            request.httpBody = FormURLEncoded.data(for: queryItems)
         case .json(let json)?:
             request.httpBody = JSON.encodeAsData(json, pretty: false)
         case let .multipartMixed(boundary, parameters, bodyParts)?:
@@ -1113,6 +1114,7 @@ public final class HTTPManagerUploadFormRequest: HTTPManagerActionRequest {
     ///   - name: The name of the multipart body. This is the name the server expects.
     ///   - mimeType: The MIME content type of the multipart body. Optional.
     ///   - filename: The filename of the attachment. Optional.
+    @objc(addMultipartData:withName:mimeType:filename:)
     public func addMultipart(data: Data, withName name: String, mimeType: String? = nil, filename: String? = nil) {
         multipartBodies.append(.known(.init(.data(data), name: name, mimeType: mimeType, filename: filename)))
     }
@@ -1129,6 +1131,7 @@ public final class HTTPManagerUploadFormRequest: HTTPManagerActionRequest {
     ///
     /// - Parameter text: The text of the multipart body.
     /// - Parameter name: The name of the multipart body. This is the name the server expects.
+    @objc(addMultipartText:withName:)
     public func addMultipart(text: String, withName name: String) {
         multipartBodies.append(.known(.init(.text(text), name: name)))
     }
@@ -1152,6 +1155,7 @@ public final class HTTPManagerUploadFormRequest: HTTPManagerActionRequest {
     ///
     /// - SeeAlso: `addMultipart(data:withName:mimeType:filename:)`,
     ///   `addMultipart(text:withName:)`.
+    @objc(addMultipartBodyWithBlock:)
     public func addMultipartBody(with block: @escaping (HTTPManagerUploadMultipart) -> Void) {
         multipartBodies.append(.pending(.init(block)))
     }
@@ -1218,6 +1222,7 @@ public final class HTTPManagerUploadMultipart: NSObject {
     ///   - name: The name of the multipart body. This is the name the server expects.
     ///   - mimeType: The MIME content type of the multipart body. Optional.
     ///   - filename: The filename of the attachment. Optional.
+    @objc(addMultipartData:withName:mimeType:filename:)
     public func addMultipart(data: Data, withName name: String, mimeType: String? = nil, filename: String? = nil) {
         multipartData.append(.init(.data(data), name: name, mimeType: mimeType, filename: filename))
     }
@@ -1234,6 +1239,7 @@ public final class HTTPManagerUploadMultipart: NSObject {
     ///
     /// - Parameter text: The text of the multipart body.
     /// - Parameter name: The name of the multipart body. This is the name the server expects.
+    @objc(addMultipartText:withName:)
     public func addMultipart(text: String, withName name: String) {
         multipartData.append(.init(.text(text), name: name))
     }

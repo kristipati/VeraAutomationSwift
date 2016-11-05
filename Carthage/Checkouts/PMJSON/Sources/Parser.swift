@@ -20,33 +20,115 @@
 
 /// A streaming JSON parser that consumes a sequence of unicode scalars.
 public struct JSONParser<Seq: Sequence>: Sequence where Seq.Iterator.Element == UnicodeScalar {
-    public init(_ seq: Seq) {
+    public init(_ seq: Seq, options: JSONParserOptions = []) {
         base = seq
+        self.options = options
     }
     
-    public var strict: Bool = false
+    /// Options to apply to the parser.
+    /// See `JSONParserOptions` for details.
+    var options: JSONParserOptions
     
-    public func makeIterator() -> JSONParserGenerator<Seq.Iterator> {
-        var gen = JSONParserGenerator(base.makeIterator())
-        gen.strict = strict
-        return gen
+    @available(*, deprecated, renamed: "options.strict")
+    public var strict: Bool {
+        get { return options.strict }
+        set { options.strict = newValue }
+    }
+    
+    @available(*, deprecated, renamed: "options.streaming")
+    public var streaming: Bool {
+        get { return options.streaming }
+        set { options.streaming = newValue }
+    }
+    
+    public func makeIterator() -> JSONParserIterator<Seq.Iterator> {
+        return JSONParserIterator(base.makeIterator(), options: options)
     }
     
     private let base: Seq
 }
 
-/// The generator for JSONParser.
-public struct JSONParserGenerator<Gen: IteratorProtocol>: JSONEventGenerator where Gen.Element == UnicodeScalar {
-    public init(_ gen: Gen) {
-        base = PeekGenerator(gen)
+
+
+/// Options that can be used to configure a `JSONParser`.
+public struct JSONParserOptions {
+    /// If `true`, the parser strictly conforms to RFC 7159.
+    /// If `false`, the parser accepts the following extensions:
+    /// - Trailing commas.
+    /// - Less restrictive about numbers, such as `-01` or `-.123`.
+    ///
+    /// The default value is `false`.
+    public var strict: Bool = false
+    
+    /// If `true`, the parser will parse a stream of json values with optional whitespace delimiters.
+    /// The default value of `false` makes the parser emit an error if there are any non-whitespace
+    /// characters after the first JSON value.
+    ///
+    /// For example, with the input `"[1] [2,3]"`, if `streaming` is `true` the parser will emit
+    /// events for the second JSON array after the first one, but if `streaming` is `false` it will
+    /// emit an error upon encountering the second `[`.
+    ///
+    /// - Note: If `streaming` is `true` and the input is empty (or contains only whitespace), the
+    ///   parser will return `nil` instead of emitting an `.unexpectedEOF` error.
+    ///
+    /// The default value is `false`.
+    public var streaming: Bool = false
+    
+    /// Returns a new `JSONParserOptions` with default values.
+    public init() {}
+    
+    /// Returns a new `JSONParserOptions`.
+    /// - Parameter strict: Whether the parser should be strict. Defaults to `false`.
+    /// - Parameter streaming: Whether the parser should operate in streaming mode. Defaults to `false`.
+    public init(strict: Bool = false, streaming: Bool = false) {
+        self.strict = strict
+        self.streaming = streaming
+    }
+}
+
+extension JSONParserOptions: ExpressibleByArrayLiteral {
+    public enum Element {
+        case strict
+        case streaming
     }
     
-    public var strict: Bool = false
+    public init(arrayLiteral elements: Element...) {
+        for elt in elements {
+            switch elt {
+            case .strict: strict = true
+            case .streaming: streaming = true
+            }
+        }
+    }
+}
+
+/// The iterator for `JSONParser`.
+public struct JSONParserIterator<Iter: IteratorProtocol>: JSONEventIterator where Iter.Element == UnicodeScalar {
+    public init(_ iter: Iter, options: JSONParserOptions = []) {
+        base = PeekIterator(iter)
+        self.options = options
+    }
+    
+    /// Options to apply to the parser.
+    /// See `JSONParserOptions` for details.
+    public var options: JSONParserOptions
+    
+    @available(*, deprecated, renamed: "options.strict")
+    public var strict: Bool {
+        get { return options.strict }
+        set { options.strict = newValue }
+    }
+    
+    @available(*, deprecated, renamed: "options.strict")
+    public var streaming: Bool {
+        get { return options.streaming }
+        set { options.streaming = newValue }
+    }
     
     public mutating func next() -> JSONEvent? {
         do {
-            // the only states that may loop are ParseArrayComma and ParseObjectComma
-            // which are guaranteed to shift to other states (if they don't return) so the loop is finite
+            // the only states that may loop are parseArrayComma, parseObjectComma, and (if streaming) parseEnd,
+            // which are all guaranteed to shift to other states (if they don't return) so the loop is finite
             while true {
                 switch state {
                 case .parseArrayComma:
@@ -76,7 +158,14 @@ public struct JSONParserGenerator<Gen: IteratorProtocol>: JSONEventGenerator whe
                         throw error(.unexpectedEOF)
                     }
                 case .initial:
-                    guard let c = skipWhitespace() else { throw error(.unexpectedEOF) }
+                    guard let c = skipWhitespace() else {
+                        if options.streaming {
+                            state = .finished
+                            return nil
+                        } else {
+                            throw error(.unexpectedEOF)
+                        }
+                    }
                     let evt = try parseValue(c)
                     switch evt {
                     case .arrayStart, .objectStart:
@@ -89,7 +178,7 @@ public struct JSONParserGenerator<Gen: IteratorProtocol>: JSONEventGenerator whe
                     guard let c = skipWhitespace() else { throw error(.unexpectedEOF) }
                     switch c {
                     case "]":
-                        if !first && strict {
+                        if !first && options.strict {
                             throw error(.trailingComma)
                         }
                         try popStack()
@@ -110,7 +199,7 @@ public struct JSONParserGenerator<Gen: IteratorProtocol>: JSONEventGenerator whe
                     guard let c = skipWhitespace() else { throw error(.unexpectedEOF) }
                     switch c {
                     case "}":
-                        if !first && strict {
+                        if !first && options.strict {
                             throw error(.trailingComma)
                         }
                         try popStack()
@@ -144,11 +233,14 @@ public struct JSONParserGenerator<Gen: IteratorProtocol>: JSONEventGenerator whe
                         return evt
                     }
                 case .parseEnd:
-                    if skipWhitespace() != nil {
+                    if options.streaming {
+                        state = .initial
+                    } else if skipWhitespace() != nil {
                         throw error(.trailingCharacters)
+                    } else {
+                        state = .finished
+                        return nil
                     }
-                    state = .finished
-                    return nil
                 case .finished:
                     return nil
                 }
@@ -204,21 +296,25 @@ public struct JSONParserGenerator<Gen: IteratorProtocol>: JSONEventGenerator whe
                         let codeUnit = try parseFourHex()
                         if UTF16.isLeadSurrogate(codeUnit) {
                             guard try (bumpRequired() == "\\" && bumpRequired() == "u") else {
-                                throw error(.loneLeadingSurrogateInUnicodeEscape)
+                                throw error(.invalidSurrogateEscape)
                             }
                             let trail = try parseFourHex()
                             if UTF16.isTrailSurrogate(trail) {
                                 let lead = UInt32(codeUnit)
                                 let trail = UInt32(trail)
-                                // XXX: Xcode8b3 claims the full expression is too complex, so we have to split it up
-                                let val = ((lead - 0xD800) << 10) + (trail - 0xDC00)
-                                let scalar = UnicodeScalar(val + 0x10000)!
+                                // NB: The following is split up to avoid exponential time complexity in the type checker
+                                let leadComponent: UInt32 = (lead - 0xD800) << 10
+                                let trailComponent: UInt32 = trail - 0xDC00
+                                let scalar = UnicodeScalar(leadComponent + trailComponent + 0x10000)!
                                 scalars.append(scalar)
                             } else {
-                                throw error(.loneLeadingSurrogateInUnicodeEscape)
+                                throw error(.invalidSurrogateEscape)
                             }
+                        } else if let scalar = UnicodeScalar(codeUnit) {
+                            scalars.append(scalar)
                         } else {
-                            scalars.append(UnicodeScalar(codeUnit)!)
+                            // Must be a lone trail surrogate
+                            throw error(.invalidSurrogateEscape)
                         }
                     default:
                         throw error(.invalidEscape)
@@ -241,6 +337,43 @@ public struct JSONParserGenerator<Gen: IteratorProtocol>: JSONEventGenerator whe
             }
             defer { self.tempBuffer = tempBuffer }
             tempBuffer.append(Int8(truncatingBitPattern: c.value))
+            if options.strict {
+                let digit: UnicodeScalar
+                if c == "-" {
+                    guard let c2 = bump(), case "0"..."9" = c2 else { throw error(.invalidNumber) }
+                    digit = c2
+                    tempBuffer.append(Int8(truncatingBitPattern: digit.value))
+                } else {
+                    digit = c
+                }
+                if digit == "0", case ("0"..."9")? = base.peek() {
+                    // In strict mode, you can't have numbers like 01
+                    throw error(.invalidNumber)
+                }
+            }
+            /// Invoke this after parsing the "e" character.
+            @inline(__always) func parseExponent() throws -> Double {
+                let c = try bumpRequired()
+                tempBuffer.append(Int8(truncatingBitPattern: c.value))
+                switch c {
+                case "-", "+":
+                    guard let c = bump(), case "0"..."9" = c else { throw error(.invalidNumber) }
+                    tempBuffer.append(Int8(truncatingBitPattern: c.value))
+                case "0"..."9": break
+                default: throw error(.invalidNumber)
+                }
+                loop: while let c = base.peek() {
+                    switch c {
+                    case "0"..."9":
+                        bump()
+                        tempBuffer.append(Int8(truncatingBitPattern: c.value))
+                    default:
+                        break loop
+                    }
+                }
+                tempBuffer.append(0)
+                return tempBuffer.withUnsafeBufferPointer({strtod($0.baseAddress, nil)})
+            }
             outerLoop: while let c = base.peek() {
                 switch c {
                 case "0"..."9":
@@ -259,25 +392,7 @@ public struct JSONParserGenerator<Gen: IteratorProtocol>: JSONEventGenerator whe
                         case "e", "E":
                             bump()
                             tempBuffer.append(Int8(truncatingBitPattern: c.value))
-                            guard let c = bump() else { throw error(.invalidNumber) }
-                            tempBuffer.append(Int8(truncatingBitPattern: c.value))
-                            switch c {
-                            case "-", "+":
-                                guard let c = bump(), case "0"..."9" = c else { throw error(.invalidNumber) }
-                                tempBuffer.append(Int8(truncatingBitPattern: c.value))
-                            case "0"..."9": break
-                            default: throw error(.invalidNumber)
-                            }
-                            while let c = base.peek() {
-                                switch c {
-                                case "0"..."9":
-                                    bump()
-                                    tempBuffer.append(Int8(truncatingBitPattern: c.value))
-                                default:
-                                    break loop
-                                }
-                            }
-                            break loop
+                            return try .doubleValue(parseExponent())
                         default:
                             break loop
                         }
@@ -287,19 +402,7 @@ public struct JSONParserGenerator<Gen: IteratorProtocol>: JSONEventGenerator whe
                 case "e", "E":
                     bump()
                     tempBuffer.append(Int8(truncatingBitPattern: c.value))
-                    guard let c = bump(), case "0"..."9" = c else { throw error(.invalidNumber) }
-                    tempBuffer.append(Int8(truncatingBitPattern: c.value))
-                    loop: while let c = base.peek() {
-                        switch c {
-                        case "0"..."9":
-                            bump()
-                            tempBuffer.append(Int8(truncatingBitPattern: c.value))
-                        default:
-                            break loop
-                        }
-                    }
-                    tempBuffer.append(0)
-                    return .doubleValue(tempBuffer.withUnsafeBufferPointer({strtod($0.baseAddress, nil)}))
+                    return try .doubleValue(parseExponent())
                 default:
                     break outerLoop
                 }
@@ -399,11 +502,14 @@ public struct JSONParserGenerator<Gen: IteratorProtocol>: JSONEventGenerator whe
     /// The column of the last emitted token.
     public private(set) var column: UInt = 0
     
-    private var base: PeekGenerator<Gen>
+    private var base: PeekIterator<Iter>
     private var state: State = .initial
     private var stack: [Stack] = []
     private var tempBuffer: ContiguousArray<Int8>?
 }
+
+@available(*, renamed: "JSONParserIterator")
+typealias JSONParserGenerator<Gen: IteratorProtocol> = JSONParserIterator<Gen> where Gen.Element == UnicodeScalar
 
 private enum State {
     /// Initial state
@@ -430,7 +536,7 @@ private enum Stack {
 }
 
 /// A streaming JSON parser event.
-public enum JSONEvent {
+public enum JSONEvent: Hashable {
     /// The start of an object.
     /// Inside of an object, each key/value pair is emitted as a
     /// `StringValue` for the key followed by the `JSONEvent` sequence
@@ -454,17 +560,89 @@ public enum JSONEvent {
     case nullValue
     /// A parser error.
     case error(JSONParserError)
+    
+    public var hashValue: Int {
+        switch self {
+        case .objectStart: return 1
+        case .objectEnd: return 2
+        case .arrayStart: return 3
+        case .arrayEnd: return 4
+        case .booleanValue(let b): return b.hashValue << 4 + 5
+        case .int64Value(let i): return i.hashValue << 4 + 6
+        case .doubleValue(let d): return d.hashValue << 4 + 7
+        case .stringValue(let s): return s.hashValue << 4 + 8
+        case .nullValue: return 9
+        case .error(let error): return error.hashValue << 4 + 10
+        }
+    }
+    
+    public static func ==(lhs: JSONEvent, rhs: JSONEvent) -> Bool {
+        switch (lhs, rhs) {
+        case (.objectStart, .objectStart), (.objectEnd, .objectEnd),
+             (.arrayStart, .arrayStart), (.arrayEnd, .arrayEnd), (.nullValue, .nullValue):
+            return true
+        case let (.booleanValue(a), .booleanValue(b)):
+            return a == b
+        case let (.int64Value(a), .int64Value(b)):
+            return a == b
+        case let (.doubleValue(a), .doubleValue(b)):
+            return a == b
+        case let (.stringValue(a), .stringValue(b)):
+            return a == b
+        case let (.error(a), .error(b)):
+            return a == b
+        default:
+            return false
+        }
+    }
 }
 
-/// A generator of `JSONEvent`s that records column/line info.
-public protocol JSONEventGenerator: IteratorProtocol {
+/// An iterator of `JSONEvent`s that records column/line info.
+public protocol JSONEventIterator: IteratorProtocol {
     /// The line of the last emitted token.
     var line: UInt { get }
     /// The column of the last emitted token.
     var column: UInt { get }
 }
 
-public struct JSONParserError: Error, CustomStringConvertible {
+@available(*, renamed: "JSONEventIterator")
+public typealias JSONEventGenerator = JSONEventIterator
+
+public struct JSONParserError: Error, Hashable, CustomStringConvertible {
+    /// A generic syntax error.
+    public static let invalidSyntax: Code = .invalidSyntax
+    /// An invalid number.
+    public static let invalidNumber: Code = .invalidNumber
+    /// An invalid string escape.
+    public static let invalidEscape: Code = .invalidEscape
+    /// A unicode string escape with an invalid code point.
+    public static let invalidUnicodeScalar: Code = .invalidUnicodeScalar
+    /// A unicode string escape representing a leading surrogate that wasn't followed
+    /// by a trailing surrogate, or a trailing surrogate that wasn't preceeded
+    /// by a leading surrogate.
+    public static let invalidSurrogateEscape: Code = .invalidSurrogateEscape
+    /// A control character in a string.
+    public static let controlCharacterInString: Code = .controlCharacterInString
+    /// A comma was found where a colon was expected in an object.
+    public static let expectedColon: Code = .expectedColon
+    /// A comma or colon was found in an object without a key.
+    public static let missingKey: Code = .missingKey
+    /// An object key was found that was not a string.
+    public static let nonStringKey: Code = .nonStringKey
+    /// A comma or object end was encountered where a value was expected.
+    public static let missingValue: Code = .missingValue
+    /// A trailing comma was found in an array or object. Only emitted when the parser is in strict mode.
+    public static let trailingComma: Code = .trailingComma
+    /// Trailing (non-whitespace) characters found after the close
+    /// of the root value.
+    /// - Note: This error cannot be thrown if the parser is in streaming mode.
+    public static let trailingCharacters: Code = .trailingCharacters
+    /// EOF was found before the root value finished parsing.
+    public static let unexpectedEOF: Code = .unexpectedEOF
+    
+    @available(*, unavailable, renamed: "invalidSurrogateEscape")
+    public static let loneLeadingSurrogateInUnicodeEscape: Code = .invalidSurrogateEscape
+    
     public let code: Code
     public let line: UInt
     public let column: UInt
@@ -486,9 +664,10 @@ public struct JSONParserError: Error, CustomStringConvertible {
         case invalidEscape
         /// A unicode string escape with an invalid code point.
         case invalidUnicodeScalar
-        /// A unicode string escape representing a leading surrogate without
-        /// a corresponding trailing surrogate.
-        case loneLeadingSurrogateInUnicodeEscape
+        /// A unicode string escape representing a leading surrogate that wasn't followed
+        /// by a trailing surrogate, or a trailing surrogate that wasn't preceeded
+        /// by a leading surrogate.
+        case invalidSurrogateEscape
         /// A control character in a string.
         case controlCharacterInString
         /// A comma was found where a colon was expected in an object.
@@ -499,21 +678,41 @@ public struct JSONParserError: Error, CustomStringConvertible {
         case nonStringKey
         /// A comma or object end was encountered where a value was expected.
         case missingValue
-        /// A trailing comma was found in an array or object. Only emitted when `strict` mode is enabled.
+        /// A trailing comma was found in an array or object. Only emitted when the parser is in strict mode.
         case trailingComma
         /// Trailing (non-whitespace) characters found after the close
         /// of the root value.
+        /// - Note: This error cannot be thrown if the parser is in streaming mode.
         case trailingCharacters
         /// EOF was found before the root value finished parsing.
         case unexpectedEOF
+        
+        @available(*, unavailable, renamed: "invalidSurrogateEscape")
+        static let loneLeadingSurrogateInUnicodeEscape: Code = .invalidSurrogateEscape
+        
+        public static func ~=(lhs: Code, rhs: Error) -> Bool {
+            if let error = rhs as? JSONParserError {
+                return lhs == error.code
+            } else {
+                return false
+            }
+        }
     }
     
     public var description: String {
         return "JSONParserError(\(code), line: \(line), column: \(column))"
     }
+    
+    public var hashValue: Int {
+        return Int(bitPattern: line << 18) ^ Int(bitPattern: column << 4) ^ code.rawValue
+    }
+    
+    public static func ==(lhs: JSONParserError, rhs: JSONParserError) -> Bool {
+        return (lhs.code, lhs.line, lhs.column) == (rhs.code, rhs.line, rhs.column)
+    }
 }
 
-private struct PeekGenerator<Base: IteratorProtocol> {
+private struct PeekIterator<Base: IteratorProtocol> {
     init(_ base: Base) {
         self.base = base
     }

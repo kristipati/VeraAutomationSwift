@@ -584,7 +584,7 @@
 					};
 					55E3EE4419D76F280068C3A7 = {
 						CreatedOnToolsVersion = 6.1;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0810;
 					};
 					55E3EE4F19D76F280068C3A7 = {
 						CreatedOnToolsVersion = 6.1;
@@ -1127,6 +1127,7 @@
 				PRODUCT_NAME = XCGLogger;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -1146,6 +1147,7 @@
 				PRODUCT_NAME = XCGLogger;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

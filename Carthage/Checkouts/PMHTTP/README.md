@@ -1,6 +1,6 @@
 # PMHTTP
 
-[![Version](https://img.shields.io/badge/version-v1.0.0-blue.svg)](https://github.com/postmates/PMHTTP/releases/latest)
+[![Version](https://img.shields.io/badge/version-v1.0.4-blue.svg)](https://github.com/postmates/PMHTTP/releases/latest)
 ![Platforms](https://img.shields.io/badge/platforms-ios%20%7C%20osx%20%7C%20watchos%20%7C%20tvos-lightgrey.svg)
 ![Languages](https://img.shields.io/badge/languages-swift%20%7C%20objc-orange.svg)
 ![License](https://img.shields.io/badge/license-MIT%2FApache-blue.svg)
@@ -372,7 +372,7 @@ github "postmates/PMHTTP" ~> 1.0
 This release supports Swift 3.0. For Swift 2.3 you can use
 
 ```
-github "postmates/PMHTTP" "v0.9.2"
+github "postmates/PMHTTP" ~> 0.9.3
 ```
 
 ### CocoaPods
@@ -380,6 +380,12 @@ To install using [CocoaPods](https://cocoapods.org), add the following to your P
 
 ```
 pod "PMHTTP", "~> 1.0"
+```
+
+This release supports Swift 3.0. For Swift 2.3 you can use:
+
+```
+pod "PMHTTP", "~> 0.9.3"
 ```
 
 ## License
@@ -396,9 +402,32 @@ Unless you explicitly state otherwise, any contribution intentionally submitted 
 
 ## Version History
 
+#### v1.0.4 (2016-10-20)
+
+* Add more Obj-C request constructors.
+* Fix encoding of `+` characters in query strings and `application/x-www-form-urlencoded` bodies.
+
+#### v1.0.3 (2016-09-23)
+
+* Fix obj-c name of `HTTPManager.parsedDateHeader(from:)`.
+
+#### v1.0.2 (2016-09-22)
+
+* Add fix-its for the Swift 3 API changes.
+
+#### v1.0.1 (2016-09-12)
+
+* Adopt `CustomNSError` and deprecate the `NSError` bridging methods.
+* Add autoreleasepools to dispatch queues where appropriate.
+* Fix CocoaPods support.
+
 #### v1.0.0 (2016-09-09)
 
 * Support Swift 3.0.
+
+#### v0.9.3 (2016-09-09)
+
+* Fix building for tvOS.
 
 #### v0.9.2 (2016-09-09)
 

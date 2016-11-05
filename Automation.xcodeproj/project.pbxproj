@@ -503,7 +503,7 @@
 					D2843B3519E0E798007CC520 = {
 						CreatedOnToolsVersion = 6.0.1;
 						DevelopmentTeam = 87ZMTDNHLV;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0810;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.Keychain = {

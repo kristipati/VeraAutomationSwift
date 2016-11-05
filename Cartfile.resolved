@@ -1,5 +1,4 @@
-github "krzyzanowskim/CryptoSwift" "9d24227c379d655ffb1b9ff74d40760065272cba"
-github "isair/JSONHelper" "2.1.0"
-github "postmates/PMJSON" "v1.0.0"
+github "krzyzanowskim/CryptoSwift" "0.6.5"
+github "postmates/PMJSON" "v1.2.1"
 github "marketplacer/keychain-swift" "6.0.2"
-github "postmates/PMHTTP" "v1.0.0"
+github "postmates/PMHTTP" "v1.0.4"

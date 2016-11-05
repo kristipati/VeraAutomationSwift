@@ -90,7 +90,7 @@ public func <-- <T>(property: inout T?, value: AnyObject?) -> T? {
 // For non-optionals.
 public func <-- <T>(property: inout T, value: AnyObject?) -> T {
   var newValue: T?
-  newValue <-- value
+  _ = newValue <-- value
   if let newValue = newValue { property = newValue }
   return property
 }
@@ -113,7 +113,7 @@ public func <-- (property: inout Date?, valueAndFormat: (AnyObject?, AnyObject?)
 
 public func <-- (property: inout Date, valueAndFormat: (AnyObject?, AnyObject?)) -> Date {
   var date: Date?
-  date <-- valueAndFormat
+  _ = date <-- valueAndFormat
   if let date = date { property = date }
   return property
 }
@@ -131,7 +131,7 @@ public func <-- (array: inout [String]?, value: AnyObject?) -> [String]? {
 
 public func <-- (array: inout [String], value: AnyObject?) -> [String] {
   var newValue: [String]?
-  newValue <-- value
+  _ = newValue <-- value
   if let newValue = newValue { array = newValue }
   return array
 }
@@ -147,7 +147,7 @@ public func <-- (array: inout [Int]?, value: AnyObject?) -> [Int]? {
 
 public func <-- (array: inout [Int], value: AnyObject?) -> [Int] {
   var newValue: [Int]?
-  newValue <-- value
+  _ = newValue <-- value
   if let newValue = newValue { array = newValue }
   return array
 }
@@ -163,7 +163,7 @@ public func <-- (array: inout [Float]?, value: AnyObject?) -> [Float]? {
 
 public func <-- (array: inout [Float], value: AnyObject?) -> [Float] {
   var newValue: [Float]?
-  newValue <-- value
+  _ = newValue <-- value
   if let newValue = newValue { array = newValue }
   return array
 }
@@ -179,7 +179,7 @@ public func <-- (array: inout [Double]?, value: AnyObject?) -> [Double]? {
 
 public func <-- (array: inout [Double], value: AnyObject?) -> [Double] {
   var newValue: [Double]?
-  newValue <-- value
+  _ = newValue <-- value
   if let newValue = newValue { array = newValue }
   return array
 }
@@ -195,7 +195,7 @@ public func <-- (array: inout [Bool]?, value: AnyObject?) -> [Bool]? {
 
 public func <-- (array: inout [Bool], value: AnyObject?) -> [Bool] {
   var newValue: [Bool]?
-  newValue <-- value
+  _ = newValue <-- value
   if let newValue = newValue { array = newValue }
   return array
 }
@@ -216,7 +216,7 @@ public func <-- (array: inout [URL]?, value: AnyObject?) -> [URL]? {
 
 public func <-- (array: inout [URL], value: AnyObject?) -> [URL] {
   var newValue: [URL]?
-  newValue <-- value
+  _ = newValue <-- value
   if let newValue = newValue { array = newValue }
   return array
 }
@@ -241,7 +241,7 @@ public func <-- (array: inout [Date]?, valueAndFormat: (AnyObject?, AnyObject?))
 
 public func <-- (array: inout [Date], valueAndFormat: (AnyObject?, AnyObject?)) -> [Date] {
   var newValue: [Date]?
-  newValue <-- valueAndFormat
+  _ = newValue <-- valueAndFormat
   if let newValue = newValue { array = newValue }
   return array
 }
@@ -251,7 +251,7 @@ public func <-- (array: inout [Date]?, value: AnyObject?) -> [Date]? {
     array = [Date]()
     for timestamp in timestamps {
       var date: Date?
-      date <-- timestamp
+      _ = date <-- timestamp
       if date != nil { array!.append(date!) }
     }
   } else {
@@ -262,7 +262,7 @@ public func <-- (array: inout [Date]?, value: AnyObject?) -> [Date]? {
 
 public func <-- (array: inout [Date], value: AnyObject?) -> [Date] {
   var newValue: [Date]?
-  newValue <-- value
+  _ = newValue <-- value
   if let newValue = newValue { array = newValue }
   return array
 }
@@ -281,7 +281,7 @@ public func <-- (map: inout [String: String]?, value: AnyObject?) -> [String: St
 
 public func <-- (map: inout [String: String], value: AnyObject?) -> [String: String] {
   var newValue: [String: String]?
-  newValue <-- value
+  _ = newValue <-- value
   if let newValue = newValue { map = newValue }
   return map
 }
@@ -297,7 +297,7 @@ public func <-- (map: inout [String: Int]?, value: AnyObject?) -> [String: Int]?
 
 public func <-- (map: inout [String: Int], value: AnyObject?) -> [String: Int] {
   var newValue: [String: Int]?
-  newValue <-- value
+  _ = newValue <-- value
   if let newValue = newValue { map = newValue }
   return map
 }
@@ -313,7 +313,7 @@ public func <-- (map: inout [String: Float]?, value: AnyObject?) -> [String: Flo
 
 public func <-- (map: inout [String: Float], value: AnyObject?) -> [String: Float] {
   var newValue: [String: Float]?
-  newValue <-- value
+  _ = newValue <-- value
   if let newValue = newValue { map = newValue }
   return map
 }
@@ -329,7 +329,7 @@ public func <-- (map: inout [String: Double]?, value: AnyObject?) -> [String: Do
 
 public func <-- (map: inout [String: Double], value: AnyObject?) -> [String: Double] {
   var newValue: [String: Double]?
-  newValue <-- value
+  _ = newValue <-- value
   if let newValue = newValue { map = newValue }
   return map
 }
@@ -345,7 +345,7 @@ public func <-- (map: inout [String: Bool]?, value: AnyObject?) -> [String: Bool
 
 public func <-- (map: inout [String: Bool], value: AnyObject?) -> [String: Bool] {
   var newValue: [String: Bool]?
-  newValue <-- value
+  _ = newValue <-- value
   if let newValue = newValue { map = newValue }
   return map
 }
@@ -366,7 +366,7 @@ public func <-- (map: inout [String: URL]?, value: AnyObject?) -> [String: URL]?
 
 public func <-- (map: inout [String: URL], value: AnyObject?) -> [String: URL] {
   var newValue: [String: URL]?
-  newValue <-- value
+  _ = newValue <-- value
   if let newValue = newValue { map = newValue }
   return map
 }
@@ -391,7 +391,7 @@ public func <-- (map: inout [String: Date]?, valueAndFormat: (AnyObject?, AnyObj
 
 public func <-- (map: inout [String: Date], valueAndFormat: (AnyObject?, AnyObject?)) -> [String: Date] {
   var newValue: [String: Date]?
-  newValue <-- valueAndFormat
+  _ = newValue <-- valueAndFormat
   if let newValue = newValue { map = newValue }
   return map
 }
@@ -401,7 +401,7 @@ public func <-- (map: inout [String: Date]?, value: AnyObject?) -> [String: Date
     map = [String: Date]()
     for (key, timestamp) in timestamps {
       var date: Date?
-      date <-- timestamp
+      _ = date <-- timestamp
       if date != nil { map![key] = date! }
     }
   } else {
@@ -412,7 +412,7 @@ public func <-- (map: inout [String: Date]?, value: AnyObject?) -> [String: Date
 
 public func <-- (map: inout [String: Date], value: AnyObject?) -> [String: Date] {
   var newValue: [String: Date]?
-  newValue <-- value
+  _ = newValue <-- value
   if let newValue = newValue { map = newValue }
   return map
 }
@@ -435,7 +435,7 @@ public func <-- <T: Deserializable>(instance: inout T?, dataObject: AnyObject?) 
 
 public func <-- <T: Deserializable>(instance: inout T, dataObject: AnyObject?) -> T {
   var newInstance: T?
-  newInstance <-- dataObject
+  _ = newInstance <-- dataObject
   if let newInstance = newInstance { instance = newInstance }
   return instance
 }
@@ -456,7 +456,7 @@ public func <-- <T: Deserializable>(array: inout [T]?, dataObject: AnyObject?) -
 
 public func <-- <T: Deserializable>(array: inout [T], dataObject: AnyObject?) -> [T] {
   var newArray: [T]?
-  newArray <-- dataObject
+  _ = newArray <-- dataObject
   if let newArray = newArray { array = newArray }
   return array
 }
@@ -477,7 +477,7 @@ public func <-- <T: Deserializable>(map: inout [String: T]?, dataObject: AnyObje
 
 public func <-- <T: Deserializable>(map: inout [String: T], dataObject: AnyObject?) -> [String: T] {
   var newMap: [String: T]?
-  newMap <-- dataObject
+  _ = newMap <-- dataObject
   if let newMap = newMap { map = newMap }
   return map
 }
@@ -487,7 +487,7 @@ public func <-- <T: Deserializable>(map: inout [String: T], dataObject: AnyObjec
 public func <-- <T: RawRepresentable>(property: inout T?, value: AnyObject?) -> T? {
   var newEnumValue: T?
   var newRawEnumValue: T.RawValue?
-  newRawEnumValue <-- value
+  _ = newRawEnumValue <-- value
   if let unwrappedNewRawEnumValue = newRawEnumValue {
     if let enumValue = T(rawValue: unwrappedNewRawEnumValue) {
       newEnumValue = enumValue
@@ -500,7 +500,7 @@ public func <-- <T: RawRepresentable>(property: inout T?, value: AnyObject?) -> 
 // For non-optionals.
 public func <-- <T: RawRepresentable>(property: inout T, value: AnyObject?) -> T {
   var newValue: T?
-  newValue <-- value
+  _ = newValue <-- value
   if let newValue = newValue { property = newValue }
   return property
 }

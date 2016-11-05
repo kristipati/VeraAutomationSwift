@@ -1,6 +1,6 @@
 # PMJSON
 
-[![Version](https://img.shields.io/badge/version-v1.0.0-blue.svg)](https://github.com/postmates/PMJSON/releases/latest)
+[![Version](https://img.shields.io/badge/version-v1.2.1-blue.svg)](https://github.com/postmates/PMJSON/releases/latest)
 ![Platforms](https://img.shields.io/badge/platforms-ios%20%7C%20osx%20%7C%20watchos%20%7C%20tvos-lightgrey.svg)
 ![Languages](https://img.shields.io/badge/languages-swift-orange.svg)
 ![License](https://img.shields.io/badge/license-MIT%2FApache-blue.svg)
@@ -15,6 +15,62 @@ The entire JSON encoder/decoder can be used without Foundation, by removing the 
 
 ## Usage
 
+Before diving into the details, here's a simple example of writing a decoder for a struct. There are a few different options for how to deal with malformed data (e.g. whether to ignore values of wrong types, and whether to try and coerce non-string values to strings or vice versa), but the following example will be fairly strict and throw an error for incorrectly-typed values:
+
+```swift
+struct Address {
+    var streetLine1: String
+    var streetLine2: String?
+    var city: String
+    var state: String?
+    var postalCode: String
+    var country: String?
+
+    init(json: JSON) throws {
+        streetLine1 = try json.getString("street_line1")
+        streetLine2 = try json.getStringOrNil("street_line2")
+        city = try json.getString("city")
+        state = try json.getStringOrNil("state")
+        postalCode = try json.toString("postal_code") // coerce numbers to strings
+        country = try json.getStringOrNil("country")
+    }
+}
+```
+
+And here's an example of decoding a nested array of values:
+
+```swift
+struct Person {
+    var firstName: String
+    var lastName: String? // some people don't have last names
+    var age: Int
+    var addresses: [Address]
+
+    init(json: JSON) throws {
+        firstName = try json.getString("firstName")
+        lastName = try json.getStringOrNil("lastName")
+        age = try json.getInt("age")
+        addresses = try json.mapArray("addresses", Address.init(json:))
+    }
+}
+```
+
+If you don't want to deal with errors and just want to handle optionals, you can do that too:
+
+```swift
+struct Config {
+    var name: String?
+    var doThatThing: Bool
+    var maxRetries: Int
+    
+    init(json: JSON) {
+        name = json["name"]?.string
+        doThatThing = json["doThatThing"]?.bool ?? false
+        maxRetries = json["maxRetries"]?.int ?? 10
+    }
+}
+```
+
 ### Parsing
 
 The JSON decoder is split into separate parser and decoder stages. The parser consums any sequence of unicode scalars, and produces a sequence of JSON "events" (similar to a SAX XML parser). The decoder accepts a sequence of JSON events and produces a `JSON` value. This architecture is designed such that you can use just the parser alone in order to decode directly to your own data structures and bypass the `JSON` representation entirely if desired. However, most clients are expected to use both components, and this is exposed via a simple method `JSON.decode(_:strict:)`.
@@ -27,7 +83,7 @@ let json = try JSON.decode(jsonString)
 
 Any errors in the JSON parser are represented as `JSONParserError` values and are thrown from the `decode()` method. The error contains the precise line and column of the error, and a code that describes the problem.
 
-A convenience method is also provided for decoding from an `NSData` containing UTF8-encoded data:
+A convenience method is also provided for decoding from an `NSData` containing data encoded as UTF-8, UTF-16, or UTF-32:
 
 ```swift
 let json = try JSON.decode(data)
@@ -50,6 +106,18 @@ And, again, a convenience method is provided for working with `NSData`:
 ```swift
 let data = JSON.encodeAsData(json)
 ```
+
+#### JSON Streams
+
+PMJSON supports parsing JSON streams, which are multiple top-level JSON values with optional whitespace delimiters (such as `{"a": 1}{"a": 2}`). The easiest way to use this is with `JSON.decodeStream(_:)` which returns a lazy sequence of `JSONStreamValue`s, which contain either a `JSON` value or a `JSONParserError` error. You can also use `JSONParser`s and `JSONDecoder`s directly for more fine-grained control over streaming.
+
+#### `JSONParser` and `JSONDecoder`
+
+As mentioned above, the JSON decoder is split into separate parser and decoder stages. `JSONParser` is the parser stage, and it wraps any sequence of `UnicodeScalar`s, and itself is a sequence of `JSONEvent`s. A `JSONEvent` is a single step of JSON parsing, such as `.objectStart` when a `{` is encountered, or `.stringValue(_)` when a `"string"` is encountered. You can use `JSONParser` directly to emit a stream of events if you want to do any kind of lazy processing of JSON (such as if you're dealing with a single massive JSON blob and don't want to decode the whole thing into memory at once).
+
+Similarly, `JSONDecoder` is the decoder stage. It wraps a sequence of `JSONEvent`s, and decodes that sequence into a proper `JSON` value. The wrapped sequence must also conform to a separate protocol `JSONEventIterator` that provides line/column information, which are used when emitting errors. You can use `JSONDecoder` directly if you want to wrap a sequence of events other than `JSONParser`, or if you want a different interface to JSON stream decoding than `JSONStreamDecoder` provides.
+
+Because of this split nature, you can easily provide your own event stream, or your own decoding stage. Or you can do things like wrap `JSONParser` in an adaptor that modfiies the events before passing them to the decoder (which may be more efficient than converting the resulting `JSON` value).
 
 ### Accessors
 
@@ -141,24 +209,30 @@ let package = Package(
 To install using [Carthage][], add the following to your Cartfile:
 
 ```
-github "postmates/PMJSON" ~> 1.0.0
+github "postmates/PMJSON" ~> 1.2
 ```
 
 This release supports Swift 3. If you want Swift 2.3 support, you can use
 
 ```
-github "postmates/PMJSON" "v0.9.4"
+github "postmates/PMJSON" ~> 0.9.4
 ```
 
 ### CocoaPods
 
-**Important**: CocoaPods support for v0.9.4 and v1.0.0 is currently not available until CocoaPods puts out a release candidate of 1.1.0. The following instructions work for Swift 2.2.
-
 To install using [CocoaPods][], add the following to your Podfile:
 
 ```
-pod 'PMJSON', '~> 0.9'
+pod 'PMJSON', '~> 1.2'
 ```
+
+This release supports Swift 3. If you want Swift 2.3 support, you can use
+
+```
+pod 'PMJSON', '~> 0.9.4'
+```
+
+[CocoaPods]: https://cocoapods.org
 
 ## License
 
@@ -174,11 +248,41 @@ Unless you explicitly state otherwise, any contribution intentionally submitted 
 
 ## Version History
 
+#### v1.2.1 (2016-10-27)
+
+* Handle UTF-32 input.
+* Detect UTF-16 and UTF-32 input without a BOM.
+* Fix bug where we weren't passing decoder options through for UTF-16 input.
+
+#### v1.2.0 (2016-10-27)
+
+* Change how options are provided to the encoder/decoder/parser. All options are now provided in the form of a struct that uses array literal syntax (similar to `OptionSet`s). The old methods that take strict/pretty flags are now marked as deprecated.
+* Add a new depth limit option to the decoder, with a default of 10,000.
+* Implement a new test suite based on [JSONTestSuite](https://github.com/nst/JSONTestSuite).
+* Fix a crash if the input stream contained a lone trail surrogate without a lead surrogate.
+* Fix incorrect parsing of numbers of the form `1e-1` or `1e+1`.
+* When the `strict` option is specified, stop accepting numbers of the form `01` or `-01`.
+* Add support for UTF-16 when decoding a `Data` that has a UTF-16 BOM.
+* Skip a UTF-8 BOM if present when decoding a `Data`.
+
+#### v1.1.0 (2016-10-20)
+
+* Add `Hashable` to `JSONEvent` and `JSONParserError`.
+* Make `JSONParserError` conform to `CustomNSError` for better Obj-C errors.
+* Full JSON stream support. `JSONParser` and `JSONDecoder` can now both operate in streaming mode, a new type `JSONStreamDecoder` was added as a lazy sequence of JSON values, and a convenience method `JSON.decodeStream(_:)` was added.
+* Rename `JSONEventGenerator` to `JSONEventIterator` and `JSONParserGenerator` to `JSONParserIterator`. The old names are available (but deprecated) for backwards compatibility.
+* Add support for pattern matching with `JSONParserError`. It should now work just like any other error, allowing you to say e.g. `if case JSONParserError.invalidSyntax = error { … }`.
+
+#### v1.0.1 (2016-09-15)
+
+* Fix CocoaPods.
+
 #### v1.0.0 (2016-09-08)
 
 * Support Swift 3.0.
 * Add setters for basic accessors so you can write code like `json["foo"].object?["key"] = "bar"`.
 * Provide a localized description for errors when bridged to `NSError`.
+* Add support to `JSONParser` for streams of JSON values (e.g. `"[1][2]"`).
 
 #### v0.9.3 (2016-05-23)
 

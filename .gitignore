@@ -17,3 +17,5 @@ DerivedData
 Carthage/Build/Mac
 Carthage/Build/tvOS
 Carthage/Build/watchOS
+Carthage/Build/iOS/*.bcsymbolmap
+Carthage/Build/iOS/*.dSYM
