@@ -1158,7 +1158,7 @@
 				DEVELOPMENT_TEAM = 87ZMTDNHLV;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"${BUILT_PRODUCTS_DIR}",
 				);
 				INFOPLIST_FILE = Automation/Resources/Info.plist;
 				INFOPLIST_PREFIX_HEADER = Automation/Defines.h;
@@ -1170,7 +1170,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "8be97b66-fd92-497c-a4de-ee42f2b1ea94";
 				PROVISIONING_PROFILE_SPECIFIER = "Scott Gruby - Development";
-				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Automation/Automation-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -1187,7 +1186,7 @@
 				DEVELOPMENT_TEAM = 87ZMTDNHLV;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"${BUILT_PRODUCTS_DIR}",
 				);
 				INFOPLIST_FILE = Automation/Resources/Info.plist;
 				INFOPLIST_PREFIX_HEADER = Automation/Defines.h;
@@ -1199,7 +1198,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "82643dc1-4d9b-49ce-9656-9f7e2133c388";
 				PROVISIONING_PROFILE_SPECIFIER = "VeraLite Automation AdHoc";
-				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Automation/Automation-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
