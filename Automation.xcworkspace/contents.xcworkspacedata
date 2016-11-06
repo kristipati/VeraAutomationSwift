@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:Carthage/Checkouts/PMJSON/PMJSON.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/PMHTTP/PMHTTP.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/keychain-swift/KeychainSwift.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/CryptoSwift/CryptoSwift.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Automation.xcodeproj">
+   </FileRef>
+</Workspace>
