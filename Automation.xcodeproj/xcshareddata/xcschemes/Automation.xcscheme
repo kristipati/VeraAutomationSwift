@@ -70,6 +70,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "55E3EE4419D76F280068C3A7"
+               BuildableName = "XCGLogger.framework"
+               BlueprintName = "XCGLogger (iOS)"
+               ReferencedContainer = "container:Carthage/Checkouts/XCGLogger/Sources/XCGLogger.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "D2843B3519E0E798007CC520"
                BuildableName = "Automation.app"
                BlueprintName = "Automation"

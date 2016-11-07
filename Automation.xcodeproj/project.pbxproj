@@ -48,12 +48,12 @@
 		D2A2A6DF1A101AF500BE65EE /* AudioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */; };
 		D2BB40E91BAC7E9C009BB9E3 /* 1Password.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2BB40E81BAC7E9C009BB9E3 /* 1Password.xcassets */; };
 		D2BB40F11BAC7EC5009BB9E3 /* OnePasswordExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BB40F01BAC7EC5009BB9E3 /* OnePasswordExtension.m */; };
-		D2D61AD01D85D63300E62310 /* XCGLogger.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2A87D521D8476D500D2E5FD /* XCGLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2D61AD11D85D63B00E62310 /* JSONHelper.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D285147F1D85BD4900162FDE /* JSONHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2E11B3D1DD0406E00701E72 /* PMHTTP.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2E11B3C1DD0406E00701E72 /* PMHTTP.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2E11B3F1DD0407800701E72 /* CryptoSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2E11B3E1DD0407800701E72 /* CryptoSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2E11B411DD0408100701E72 /* KeychainSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2E11B401DD0408100701E72 /* KeychainSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2E11B431DD0409700701E72 /* PMJSON.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2E11B421DD0409700701E72 /* PMJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D2E11B461DD0432C00701E72 /* XCGLogger.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2E11B451DD0432C00701E72 /* XCGLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2E3597D1A104A0F00F30C32 /* LockCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E3597C1A104A0F00F30C32 /* LockCell.swift */; };
 		D2E3597F1A105E5500F30C32 /* ThermostatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E3597E1A105E5500F30C32 /* ThermostatCell.swift */; };
 		D2ED11371A15BC4D00B8F25B /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2ED11361A15BC4D00B8F25B /* ArrayExtension.swift */; };
@@ -102,69 +102,6 @@
 			remoteGlobalIDString = 5FAD07631A70F2FC00C4D09E;
 			remoteInfo = JSONHelper;
 		};
-		D2A87D511D8476D500D2E5FD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 55E3EE4519D76F280068C3A7;
-			remoteInfo = "XCGLogger (iOS)";
-		};
-		D2A87D531D8476D500D2E5FD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 554DF41719D76FE7005708BE;
-			remoteInfo = "XCGLogger (OS X)";
-		};
-		D2A87D551D8476D500D2E5FD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 70CB94201B99E728007802FF;
-			remoteInfo = "XCGLogger (watchOS)";
-		};
-		D2A87D571D8476D500D2E5FD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 5515A3DF1BA119FA0047BA31;
-			remoteInfo = "XCGLogger (tvOS)";
-		};
-		D2A87D591D8476D500D2E5FD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 55E3EE5019D76F280068C3A7;
-			remoteInfo = "XCGLoggerTests (iOS)";
-		};
-		D2A87D5B1D8476D500D2E5FD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 55BB1F011B79DC7500709779;
-			remoteInfo = "XCGLoggerTests (OS X)";
-		};
-		D2A87D5D1D8476D500D2E5FD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 558EEB851D6BAC61006A9C7A;
-			remoteInfo = "XCGLoggerTests (watchOS)";
-		};
-		D2A87D5F1D8476D500D2E5FD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 558EEB921D6BAC66006A9C7A;
-			remoteInfo = "XCGLoggerTests (tvOS)";
-		};
-		D2A87D611D8479D900D2E5FD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 55E3EE4419D76F280068C3A7;
-			remoteInfo = "XCGLogger (iOS)";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -174,12 +111,12 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D2D61AD01D85D63300E62310 /* XCGLogger.framework in CopyFiles */,
 				D2D61AD11D85D63B00E62310 /* JSONHelper.framework in CopyFiles */,
 				D2E11B3D1DD0406E00701E72 /* PMHTTP.framework in CopyFiles */,
 				D2E11B431DD0409700701E72 /* PMJSON.framework in CopyFiles */,
 				D2E11B3F1DD0407800701E72 /* CryptoSwift.framework in CopyFiles */,
 				D2E11B411DD0408100701E72 /* KeychainSwift.framework in CopyFiles */,
+				D2E11B461DD0432C00701E72 /* XCGLogger.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,7 +168,6 @@
 		D29867E81A15B628000E99E7 /* ReleaseNotes.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReleaseNotes.txt; sourceTree = "<group>"; };
 		D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnDeviceCell.swift; sourceTree = "<group>"; };
 		D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioCell.swift; sourceTree = "<group>"; };
-		D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = XCGLogger.xcodeproj; path = External/XCGLogger/Sources/XCGLogger.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D2A87DCD1D848BA000D2E5FD /* Automation.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Automation.entitlements; sourceTree = "<group>"; };
 		D2BB40E81BAC7E9C009BB9E3 /* 1Password.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = 1Password.xcassets; path = "External/onepassword-app-extension/1Password.xcassets"; sourceTree = SOURCE_ROOT; };
 		D2BB40EE1BAC7EC4009BB9E3 /* Automation-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Automation-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -242,6 +178,7 @@
 		D2E11B3E1DD0407800701E72 /* CryptoSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CryptoSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2E11B401DD0408100701E72 /* KeychainSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = KeychainSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2E11B421DD0409700701E72 /* PMJSON.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PMJSON.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2E11B451DD0432C00701E72 /* XCGLogger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = XCGLogger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2E3597C1A104A0F00F30C32 /* LockCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockCell.swift; sourceTree = "<group>"; };
 		D2E3597E1A105E5500F30C32 /* ThermostatCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThermostatCell.swift; sourceTree = "<group>"; };
 		D2ED11361A15BC4D00B8F25B /* ArrayExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
@@ -335,6 +272,7 @@
 		D2843B2D19E0E798007CC520 = {
 			isa = PBXGroup;
 			children = (
+				D2E11B451DD0432C00701E72 /* XCGLogger.framework */,
 				D2EE377C19EB0BE900630C86 /* CurrentRelease.txt */,
 				D29867E81A15B628000E99E7 /* ReleaseNotes.txt */,
 				D2CEE4C319F8AA4D00D59BAF /* ToDo.txt */,
@@ -419,21 +357,6 @@
 			path = External/Reachability;
 			sourceTree = SOURCE_ROOT;
 		};
-		D2A87D471D8476D500D2E5FD /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D2A87D521D8476D500D2E5FD /* XCGLogger.framework */,
-				D2A87D541D8476D500D2E5FD /* XCGLogger.framework */,
-				D2A87D561D8476D500D2E5FD /* XCGLogger.framework */,
-				D2A87D581D8476D500D2E5FD /* XCGLogger.framework */,
-				D2A87D5A1D8476D500D2E5FD /* XCGLoggerTests (iOS).xctest */,
-				D2A87D5C1D8476D500D2E5FD /* XCGLoggerTests (OS X).xctest */,
-				D2A87D5E1D8476D500D2E5FD /* XCGLoggerTests (watchOS).xctest */,
-				D2A87D601D8476D500D2E5FD /* XCGLoggerTests (tvOS).xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		D2BB40F21BAC7ED8009BB9E3 /* OnePasswordExtension */ = {
 			isa = PBXGroup;
 			children = (
@@ -447,7 +370,6 @@
 			isa = PBXGroup;
 			children = (
 				D28514761D85BD4900162FDE /* JSONHelper.xcodeproj */,
-				D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */,
 				D28514901D85BDCA00162FDE /* Reachability */,
 				D2BB40F21BAC7ED8009BB9E3 /* OnePasswordExtension */,
 				D28002B21A09D240005894C3 /* SFSwiftNotification */,
@@ -483,7 +405,6 @@
 			);
 			dependencies = (
 				D28514891D85BD5400162FDE /* PBXTargetDependency */,
-				D2A87D621D8479D900D2E5FD /* PBXTargetDependency */,
 			);
 			name = Automation;
 			productName = Automation;
@@ -529,10 +450,6 @@
 					ProductGroup = D28514771D85BD4900162FDE /* Products */;
 					ProjectRef = D28514761D85BD4900162FDE /* JSONHelper.xcodeproj */;
 				},
-				{
-					ProductGroup = D2A87D471D8476D500D2E5FD /* Products */;
-					ProjectRef = D2A87D461D8476D500D2E5FD /* XCGLogger.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -575,62 +492,6 @@
 			fileType = wrapper.cfbundle;
 			path = JSONHelperExampleTests.xctest;
 			remoteRef = D28514861D85BD4900162FDE /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D2A87D521D8476D500D2E5FD /* XCGLogger.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = XCGLogger.framework;
-			remoteRef = D2A87D511D8476D500D2E5FD /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D2A87D541D8476D500D2E5FD /* XCGLogger.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = XCGLogger.framework;
-			remoteRef = D2A87D531D8476D500D2E5FD /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D2A87D561D8476D500D2E5FD /* XCGLogger.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = XCGLogger.framework;
-			remoteRef = D2A87D551D8476D500D2E5FD /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D2A87D581D8476D500D2E5FD /* XCGLogger.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = XCGLogger.framework;
-			remoteRef = D2A87D571D8476D500D2E5FD /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D2A87D5A1D8476D500D2E5FD /* XCGLoggerTests (iOS).xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "XCGLoggerTests (iOS).xctest";
-			remoteRef = D2A87D591D8476D500D2E5FD /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D2A87D5C1D8476D500D2E5FD /* XCGLoggerTests (OS X).xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "XCGLoggerTests (OS X).xctest";
-			remoteRef = D2A87D5B1D8476D500D2E5FD /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D2A87D5E1D8476D500D2E5FD /* XCGLoggerTests (watchOS).xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "XCGLoggerTests (watchOS).xctest";
-			remoteRef = D2A87D5D1D8476D500D2E5FD /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D2A87D601D8476D500D2E5FD /* XCGLoggerTests (tvOS).xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "XCGLoggerTests (tvOS).xctest";
-			remoteRef = D2A87D5F1D8476D500D2E5FD /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -722,11 +583,6 @@
 			isa = PBXTargetDependency;
 			name = JSONHelper;
 			targetProxy = D28514881D85BD5400162FDE /* PBXContainerItemProxy */;
-		};
-		D2A87D621D8479D900D2E5FD /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "XCGLogger (iOS)";
-			targetProxy = D2A87D611D8479D900D2E5FD /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
