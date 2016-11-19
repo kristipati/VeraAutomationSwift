@@ -18,10 +18,10 @@ class VeraScene: CustomStringConvertible {
     
     init(json: JSON) {
         id = json["id"]?.int
-        active = json["active"]?.boolean
-        state = json["state"]?.integer
+        active = json["active"]?.veraBoolean
+        state = json["state"]?.veraInteger
         name = json["name"]?.string
-        roomID = json["room"]?.integer
+        roomID = json["room"]?.veraInteger
         comment = json["comment"]?.string
     }
     

@@ -47,7 +47,7 @@ class VeraUnit : CustomStringConvertible {
 //        users = try? json.mapArray("users", String.init(json:))
         activeServer = json["active_server"]?.string
         rooms = try? json.mapArray("rooms", VeraRoom.init(json:))
-        fullload = json["full"]?.boolean
+        fullload = json["full"]?.veraBoolean
         devices = try? json.mapArray("devices", VeraDevice.init(json:))
         scenes = try? json.mapArray("scenes", VeraScene.init(json:))
         loadtime = json["loadtime"]?.int ?? 0
@@ -239,7 +239,7 @@ class VeraUnit : CustomStringConvertible {
         if let newDeviceArray = unit.devices {
             for newDevice in newDeviceArray {
                 if let newDeviceIdentifier = newDevice.id {
-                    if var device = deviceWithIdentifier(newDeviceIdentifier) {
+                    if let device = deviceWithIdentifier(newDeviceIdentifier) {
                         device.status = newDevice.status;
                         device.state = newDevice.state;
                         device.comment = newDevice.comment;

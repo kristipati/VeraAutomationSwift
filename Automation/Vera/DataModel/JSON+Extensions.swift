@@ -10,7 +10,7 @@ import Foundation
 import PMJSON
 
 extension JSON {
-    var integer: Int? {
+    var veraInteger: Int? {
         if let temp = self.int {
             return temp
         } else if let tempString = self.string {
@@ -19,7 +19,7 @@ extension JSON {
         return nil
     }
 
-    var boolean: Bool? {
+    var veraBoolean: Bool? {
         if let temp = self.bool {
             return temp
         } else if let temp = self.int {
@@ -30,7 +30,7 @@ extension JSON {
         return nil
     }
 
-    var doubleDouble: Double? {
+    var veraDouble: Double? {
         if let temp = self.double {
             return temp
         } else if let temp = self.string {

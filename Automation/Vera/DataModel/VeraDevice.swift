@@ -126,22 +126,22 @@ class VeraDevice: CustomStringConvertible {
     
     
     init(json: JSON) {
-        id = json["id"]?.integer
-        parentID = json["parent"]?.integer
-        subcategory = json["subcategory"]?.integer
-        status = json["status"]?.integer
-        state = json["state"]?.integer
+        id = json["id"]?.veraInteger
+        parentID = json["parent"]?.veraInteger
+        subcategory = json["subcategory"]?.veraInteger
+        status = json["status"]?.veraInteger
+        state = json["state"]?.veraInteger
         name = json["name"]?.string
         comment = json["comment"]?.string
-        roomID = json["room"]?.integer
-        armed = json["armed"]?.boolean
-        temperature = json["temperature"]?.doubleDouble
-        humidity = json["humidity"]?.integer
-        batteryLevel = json["batterylevel"]?.integer
+        roomID = json["room"]?.veraInteger
+        armed = json["armed"]?.veraBoolean
+        temperature = json["temperature"]?.veraDouble
+        humidity = json["humidity"]?.veraInteger
+        batteryLevel = json["batterylevel"]?.veraInteger
         pinCodes = json["pincodes"]?.string
-        tripped = json["tripped"]?.boolean
+        tripped = json["tripped"]?.veraBoolean
         lastTripped = json["lasttrip"]?.string
-        level = json["level"]?.integer
+        level = json["level"]?.veraInteger
         ip = json["ip"]?.string
         vendorStatusCode = json["vendorstatuscode"]?.string
         vendorStatusData = json["vendorstatusdata"]?.string
@@ -152,26 +152,26 @@ class VeraDevice: CustomStringConvertible {
         objectStatusMap = json["objectstatusmap"]?.string
         systemVeraRestart = json["systemVeraRestart"]?.string
         systemLuupRestart = json["systemLuupRestart"]?.string
-        heatTemperatureSetPoint = json["heatsp"]?.doubleDouble
-        coolTemperatureSetPoint = json["coolsp"]?.doubleDouble
+        heatTemperatureSetPoint = json["heatsp"]?.veraDouble
+        coolTemperatureSetPoint = json["coolsp"]?.veraDouble
         
-        if let heat = json["heat"]?.doubleDouble {
+        if let heat = json["heat"]?.veraDouble {
             heatTemperatureSetPoint = heat
         }
 
-        if let cool = json["cool"]?.doubleDouble {
+        if let cool = json["cool"]?.veraDouble {
             coolTemperatureSetPoint = cool
         }
         
-        locked = json["locked"]?.boolean
+        locked = json["locked"]?.veraBoolean
         
         conditionSatisfied = json["conditionsatisfied"]?.string
         detailedArmMode = json["detailedarmmode"]?.string
         armMode = json["armmode"]?.string
         hvacState = json["hvacstate"]?.string
-        altID = json["altid"]?.integer
+        altID = json["altid"]?.veraInteger
         
-        if let tempCategory = json["category"]?.integer {
+        if let tempCategory = json["category"]?.veraInteger {
             category = Category(rawValue: tempCategory)
             
             if tempCategory == 0 {
