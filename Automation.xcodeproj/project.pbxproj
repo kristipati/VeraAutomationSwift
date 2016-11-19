@@ -48,7 +48,6 @@
 		D2A2A6DF1A101AF500BE65EE /* AudioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */; };
 		D2BB40E91BAC7E9C009BB9E3 /* 1Password.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2BB40E81BAC7E9C009BB9E3 /* 1Password.xcassets */; };
 		D2BB40F11BAC7EC5009BB9E3 /* OnePasswordExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BB40F01BAC7EC5009BB9E3 /* OnePasswordExtension.m */; };
-		D2D61AD11D85D63B00E62310 /* JSONHelper.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D285147F1D85BD4900162FDE /* JSONHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2E11B3D1DD0406E00701E72 /* PMHTTP.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2E11B3C1DD0406E00701E72 /* PMHTTP.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2E11B3F1DD0407800701E72 /* CryptoSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2E11B3E1DD0407800701E72 /* CryptoSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2E11B411DD0408100701E72 /* KeychainSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2E11B401DD0408100701E72 /* KeychainSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -56,53 +55,9 @@
 		D2E11B461DD0432C00701E72 /* XCGLogger.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2E11B451DD0432C00701E72 /* XCGLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2E3597D1A104A0F00F30C32 /* LockCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E3597C1A104A0F00F30C32 /* LockCell.swift */; };
 		D2E3597F1A105E5500F30C32 /* ThermostatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E3597E1A105E5500F30C32 /* ThermostatCell.swift */; };
+		D2EA9F951DE0ADB900C4E94A /* JSON+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2EA9F941DE0ADB900C4E94A /* JSON+Extensions.swift */; };
 		D2ED11371A15BC4D00B8F25B /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2ED11361A15BC4D00B8F25B /* ArrayExtension.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		D285147E1D85BD4900162FDE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D28514761D85BD4900162FDE /* JSONHelper.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 5FAD07641A70F2FC00C4D09E;
-			remoteInfo = JSONHelper;
-		};
-		D28514801D85BD4900162FDE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D28514761D85BD4900162FDE /* JSONHelper.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D76C520A1ACD46B100B49735;
-			remoteInfo = "JSONHelper-Mac";
-		};
-		D28514821D85BD4900162FDE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D28514761D85BD4900162FDE /* JSONHelper.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 5FAD076F1A70F2FC00C4D09E;
-			remoteInfo = JSONHelperTests;
-		};
-		D28514841D85BD4900162FDE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D28514761D85BD4900162FDE /* JSONHelper.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 5FAD07841A70F31300C4D09E;
-			remoteInfo = JSONHelperExample;
-		};
-		D28514861D85BD4900162FDE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D28514761D85BD4900162FDE /* JSONHelper.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 5FAD07981A70F31300C4D09E;
-			remoteInfo = JSONHelperExampleTests;
-		};
-		D28514881D85BD5400162FDE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D28514761D85BD4900162FDE /* JSONHelper.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 5FAD07631A70F2FC00C4D09E;
-			remoteInfo = JSONHelper;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		D2BB41011BAC90BB009BB9E3 /* CopyFiles */ = {
@@ -111,7 +66,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D2D61AD11D85D63B00E62310 /* JSONHelper.framework in CopyFiles */,
 				D2E11B3D1DD0406E00701E72 /* PMHTTP.framework in CopyFiles */,
 				D2E11B431DD0409700701E72 /* PMJSON.framework in CopyFiles */,
 				D2E11B3F1DD0407800701E72 /* CryptoSwift.framework in CopyFiles */,
@@ -162,7 +116,6 @@
 		D28514531D85BCC400162FDE /* VeraUnit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraUnit.swift; sourceTree = "<group>"; };
 		D28514541D85BCC400162FDE /* VeraUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraUser.swift; sourceTree = "<group>"; };
 		D28514551D85BCC400162FDE /* VeraAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraAPI.swift; sourceTree = "<group>"; };
-		D28514761D85BD4900162FDE /* JSONHelper.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = JSONHelper.xcodeproj; path = External/JSONHelper/JSONHelper.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D28514911D85BDCA00162FDE /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		D28514921D85BDCA00162FDE /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		D29867E81A15B628000E99E7 /* ReleaseNotes.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReleaseNotes.txt; sourceTree = "<group>"; };
@@ -181,6 +134,7 @@
 		D2E11B451DD0432C00701E72 /* XCGLogger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = XCGLogger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2E3597C1A104A0F00F30C32 /* LockCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockCell.swift; sourceTree = "<group>"; };
 		D2E3597E1A105E5500F30C32 /* ThermostatCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThermostatCell.swift; sourceTree = "<group>"; };
+		D2EA9F941DE0ADB900C4E94A /* JSON+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "JSON+Extensions.swift"; sourceTree = "<group>"; };
 		D2ED11361A15BC4D00B8F25B /* ArrayExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
 		D2EE377C19EB0BE900630C86 /* CurrentRelease.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CurrentRelease.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -331,20 +285,9 @@
 				D28514521D85BCC400162FDE /* VeraScene.swift */,
 				D28514531D85BCC400162FDE /* VeraUnit.swift */,
 				D28514541D85BCC400162FDE /* VeraUser.swift */,
+				D2EA9F941DE0ADB900C4E94A /* JSON+Extensions.swift */,
 			);
 			path = DataModel;
-			sourceTree = "<group>";
-		};
-		D28514771D85BD4900162FDE /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D285147F1D85BD4900162FDE /* JSONHelper.framework */,
-				D28514811D85BD4900162FDE /* JSONHelper.framework */,
-				D28514831D85BD4900162FDE /* JSONHelperTests.xctest */,
-				D28514851D85BD4900162FDE /* JSONHelperExample.app */,
-				D28514871D85BD4900162FDE /* JSONHelperExampleTests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		D28514901D85BDCA00162FDE /* Reachability */ = {
@@ -369,7 +312,6 @@
 		D2BB41161BACA936009BB9E3 /* External */ = {
 			isa = PBXGroup;
 			children = (
-				D28514761D85BD4900162FDE /* JSONHelper.xcodeproj */,
 				D28514901D85BDCA00162FDE /* Reachability */,
 				D2BB40F21BAC7ED8009BB9E3 /* OnePasswordExtension */,
 				D28002B21A09D240005894C3 /* SFSwiftNotification */,
@@ -404,7 +346,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				D28514891D85BD5400162FDE /* PBXTargetDependency */,
 			);
 			name = Automation;
 			productName = Automation;
@@ -445,56 +386,12 @@
 			mainGroup = D2843B2D19E0E798007CC520;
 			productRefGroup = D2843B3719E0E798007CC520 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = D28514771D85BD4900162FDE /* Products */;
-					ProjectRef = D28514761D85BD4900162FDE /* JSONHelper.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				D2843B3519E0E798007CC520 /* Automation */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		D285147F1D85BD4900162FDE /* JSONHelper.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = JSONHelper.framework;
-			remoteRef = D285147E1D85BD4900162FDE /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D28514811D85BD4900162FDE /* JSONHelper.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = JSONHelper.framework;
-			remoteRef = D28514801D85BD4900162FDE /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D28514831D85BD4900162FDE /* JSONHelperTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = JSONHelperTests.xctest;
-			remoteRef = D28514821D85BD4900162FDE /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D28514851D85BD4900162FDE /* JSONHelperExample.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = JSONHelperExample.app;
-			remoteRef = D28514841D85BD4900162FDE /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D28514871D85BD4900162FDE /* JSONHelperExampleTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = JSONHelperExampleTests.xctest;
-			remoteRef = D28514861D85BD4900162FDE /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		D2843B3419E0E798007CC520 /* Resources */ = {
@@ -547,6 +444,7 @@
 				D21CB85C19E1FEAF0054A7D4 /* AppDelegate.swift in Sources */,
 				D28514561D85BCC400162FDE /* VeraAuth.swift in Sources */,
 				D285145A1D85BCC400162FDE /* VeraUnit.swift in Sources */,
+				D2EA9F951DE0ADB900C4E94A /* JSON+Extensions.swift in Sources */,
 				D23210821A07230500353F51 /* ClimateViewController.swift in Sources */,
 				D2A2A6DD1A0FFA4800BE65EE /* OnDeviceCell.swift in Sources */,
 				D2ED11371A15BC4D00B8F25B /* ArrayExtension.swift in Sources */,
@@ -577,14 +475,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		D28514891D85BD5400162FDE /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = JSONHelper;
-			targetProxy = D28514881D85BD5400162FDE /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		D21CB84E19E1FEAF0054A7D4 /* LaunchScreen.xib */ = {

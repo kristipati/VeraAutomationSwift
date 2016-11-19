@@ -6,26 +6,26 @@
 //  Copyright (c) 2014 Gruby Solutions. All rights reserved.
 //
 
-import JSONHelper
+import PMJSON
 
-open class VeraScene: Deserializable, CustomStringConvertible {
-    open var id: Int?
+class VeraScene: CustomStringConvertible {
+    var id: Int?
     var active: Bool?
     var state: Int?
-    open var name: String?
-    open var roomID: Int?
+    var name: String?
+    var roomID: Int?
     var comment: String?
     
-    public required init(data: [String: AnyObject]) {
-        _ = id <-- data["id"]
-        _ = active <-- data["active"]
-        _ = name <-- data["name"]
-        _ = state <-- data["state"]
-        _ = roomID <-- data ["room"]
-        _ = comment <-- data ["comment"]
+    init(json: JSON) {
+        id = json["id"]?.int
+        active = json["active"]?.boolean
+        state = json["state"]?.integer
+        name = json["name"]?.string
+        roomID = json["room"]?.integer
+        comment = json["comment"]?.string
     }
     
-    open var description: String {
+    var description: String {
         var desc: String = "Name: "
         if self.name != nil {
             desc += self.name!

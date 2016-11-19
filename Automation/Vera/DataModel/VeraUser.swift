@@ -7,17 +7,16 @@
 //
 
 import Foundation
-import JSONHelper
+import PMJSON
 
-class VeraUser : Deserializable {
+class VeraUser {
     var units:[VeraUnit]?
-    required init(data: [String: AnyObject]) {
-        if (data["units"] != nil) {
-            _ = units <-- data["units"]
-        }
-        else if (data["Devices"] != nil) {
-            _ = units <-- data["Devices"]
+    
+    
+    init(json: JSON) {
+        units = try? json.mapArray("units", VeraUnit.init(json:))
+        if units == nil {
+            units = try? json.mapArray("Devices", VeraUnit.init(json:))
         }
     }
-
 }

@@ -6,22 +6,22 @@
 //  Copyright (c) 2014 Gruby Solutions. All rights reserved.
 //
 
-import JSONHelper
+import PMJSON
 
-public func ==(lhs: VeraRoom, rhs: VeraRoom) -> Bool {
-    return lhs.id == rhs.id && lhs.name == rhs.name
-}
-
-open class VeraRoom: Deserializable, CustomStringConvertible, Hashable {
-    open var name:String?
+struct VeraRoom: CustomStringConvertible, Hashable {
+    var name:String?
     var id:Int?
     
-    public required init(data: [String: AnyObject]) {
-        _ = name <-- data["name"]
-        _ = id <-- data["id"]
+    init(json: JSON) {
+        id = json["id"]?.int
+        name = json["name"]?.string
     }
     
-    open var description: String {
+    static func ==(lhs: VeraRoom, rhs: VeraRoom) -> Bool {
+        return lhs.id == rhs.id && lhs.name == rhs.name
+    }
+
+    var description: String {
         var desc: String = "Name: "
         if self.name != nil {
             desc += self.name!
@@ -34,7 +34,7 @@ open class VeraRoom: Deserializable, CustomStringConvertible, Hashable {
         return desc
     }
     
-    open var hashValue : Int {
+    var hashValue : Int {
         get {
             if self.id == nil {
                 return 0

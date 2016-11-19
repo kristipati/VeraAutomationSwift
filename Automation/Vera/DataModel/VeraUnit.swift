@@ -8,70 +8,65 @@
 //
 
 import Foundation
-import JSONHelper
-
+import PMJSON
 
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l < r
-  case (nil, _?):
-    return true
-  default:
-    return false
-  }
+    switch (lhs, rhs) {
+    case let (l?, r?):
+        return l < r
+    case (nil, _?):
+        return true
+    default:
+        return false
+    }
 }
 
+class VeraUnit : CustomStringConvertible {
 
-open class VeraUnit : Deserializable, CustomStringConvertible {
-
-    open var serialNumber:String?
+    var serialNumber:String?
     var firmwareVersion:String?
     var name:String?
-    open var ipAddress:String?
-    open var externalIPAddress:String?
+    var ipAddress:String?
+    var externalIPAddress:String?
     var users:[String]?
     var activeServer:String?
     var loadtime = 0
     var dataversion = 0
-    open var fullload:Bool?
-    open var rooms:[VeraRoom]?
-    open var devices:[VeraDevice]?
-    open var scenes:[VeraScene]?
-    open var serverDevice:String?
-    open var serverRelay:String?
+    var fullload:Bool?
+    var rooms:[VeraRoom]?
+    var devices:[VeraDevice]?
+    var scenes:[VeraScene]?
+    var serverDevice:String?
+    var serverRelay:String?
     
-    public required init(data: [String: AnyObject]) {
-        _ = serialNumber <-- data["serialNumber"]
-        _ = firmwareVersion <-- data["FirmwareVersion"]
-        _ = name <-- data["name"]
-        _ = ipAddress <-- data["ipAddress"]
-        _ = users <-- data["users"]
-        _ = activeServer <-- data["active_server"]
-        _ = rooms <-- data["rooms"]
-        _ = fullload <-- data["full"]
-        _ = devices <-- data["devices"]
-        _ = scenes <-- data["scenes"]
-        _ = loadtime <-- data["loadtime"]
-        _ = dataversion <-- data["dataversion"]
+    init(json: JSON) {
+        serialNumber = json["serialNumber"]?.string
+        firmwareVersion = json["FirmwareVersion"]?.string
+        name = json["name"]?.string
+        ipAddress = json["ipAddress"]?.string
+//        users = try? json.mapArray("users", String.init(json:))
+        activeServer = json["active_server"]?.string
+        rooms = try? json.mapArray("rooms", VeraRoom.init(json:))
+        fullload = json["full"]?.boolean
+        devices = try? json.mapArray("devices", VeraDevice.init(json:))
+        scenes = try? json.mapArray("scenes", VeraScene.init(json:))
+        loadtime = json["loadtime"]?.int ?? 0
+        dataversion = json["dataversion"]?.int ?? 0
         
         if serialNumber == nil {
-            _ = serialNumber <-- data["PK_Device"]
+            serialNumber = json["PK_Device"]?.string
         }
-        
+
         if ipAddress == nil {
-            _ = ipAddress <-- data["InternalIP"]
+            ipAddress = json["InternalIP"]?.string
         }
 
-        if externalIPAddress == nil {
-            _ = externalIPAddress <-- data["ExternalIP"]
-        }
-
-        _ = serverDevice <-- data["Server_Device"]
-        _ = serverRelay <-- data["Server_Relay"]
-    }
-
-    open var description: String {
+        externalIPAddress = json["ExternalIP"]?.string
+        serverDevice = json["Server_Device"]?.string
+        serverRelay = json["Server_Relay"]?.string
+}
+    
+    var description: String {
         var desc: String = "Name: "
         if name != nil {
             desc += name!
@@ -244,7 +239,7 @@ open class VeraUnit : Deserializable, CustomStringConvertible {
         if let newDeviceArray = unit.devices {
             for newDevice in newDeviceArray {
                 if let newDeviceIdentifier = newDevice.id {
-                    if let device = deviceWithIdentifier(newDeviceIdentifier) {
+                    if var device = deviceWithIdentifier(newDeviceIdentifier) {
                         device.status = newDevice.status;
                         device.state = newDevice.state;
                         device.comment = newDevice.comment;

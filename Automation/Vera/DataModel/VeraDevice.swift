@@ -6,22 +6,22 @@
 //  Copyright (c) 2014 Gruby Solutions. All rights reserved.
 //
 
-import JSONHelper
+import PMJSON
 
-open class VeraDevice: Deserializable, CustomStringConvertible {
-    public enum HVACMode {
+class VeraDevice: CustomStringConvertible {
+    enum HVACMode {
         case off
         case heat
         case cool
         case auto
     }
 
-    public enum FanMode {
+    enum FanMode {
         case on
         case auto
     }
 
-    public enum Category: Int, CustomStringConvertible {
+    enum Category: Int, CustomStringConvertible {
         case interface = 1
         case dimmableLight = 2
         case `switch` = 3
@@ -86,24 +86,24 @@ open class VeraDevice: Deserializable, CustomStringConvertible {
         }
     }
     
-    open var id : Int?
-    open var parentID: Int?
-    open var category: Category?
+    var id : Int?
+    var parentID: Int?
+    var category: Category?
     var subcategory: Int?
-    open var status: Int?
-    open var state: Int?
-    open var name: String?
+    var status: Int?
+    var state: Int?
+    var name: String?
     var comment: String?
-    open var roomID: Int?
+    var roomID: Int?
     var armed: Bool?
-    open var temperature: Double?
-    open var humidity: Int?
-    open var batteryLevel: Int?
+    var temperature: Double?
+    var humidity: Int?
+    var batteryLevel: Int?
     var pinCodes: String?
-    open var locked: Bool?
+    var locked: Bool?
     var tripped: Bool?
     var lastTripped: String?
-    open var level: Int?
+    var level: Int?
     var ip: String?
     var vendorStatusCode: String?
     var vendorStatusData: String?
@@ -114,26 +114,67 @@ open class VeraDevice: Deserializable, CustomStringConvertible {
     var objectStatusMap: String?
     var systemVeraRestart: String?
     var systemLuupRestart: String?
-    open var heatTemperatureSetPoint: Double?
-    open var coolTemperatureSetPoint: Double?
-    open var hvacMode: HVACMode?
-    open var fanMode: FanMode?
+    var heatTemperatureSetPoint: Double?
+    var coolTemperatureSetPoint: Double?
+    var hvacMode: HVACMode?
+    var fanMode: FanMode?
     var conditionSatisfied: String?
     var detailedArmMode: String?
     var armMode: String?
     var hvacState: String?
     var altID: Int?
     
-    public required init(data: [String: AnyObject]) {
-        _ = id <-- data["id"]
-        _ = parentID <-- data["parent"]
-        _ = name <-- data["name"]
-        var tempCategory:Int?
-        _ = tempCategory <-- data["category"]
-        if tempCategory != nil {
-            category = Category(rawValue: tempCategory!)
+    
+    init(json: JSON) {
+        id = json["id"]?.integer
+        parentID = json["parent"]?.integer
+        subcategory = json["subcategory"]?.integer
+        status = json["status"]?.integer
+        state = json["state"]?.integer
+        name = json["name"]?.string
+        comment = json["comment"]?.string
+        roomID = json["room"]?.integer
+        armed = json["armed"]?.boolean
+        temperature = json["temperature"]?.doubleDouble
+        humidity = json["humidity"]?.integer
+        batteryLevel = json["batterylevel"]?.integer
+        pinCodes = json["pincodes"]?.string
+        tripped = json["tripped"]?.boolean
+        lastTripped = json["lasttrip"]?.string
+        level = json["level"]?.integer
+        ip = json["ip"]?.string
+        vendorStatusCode = json["vendorstatuscode"]?.string
+        vendorStatusData = json["vendorstatusdata"]?.string
+        vendorStatus = json["vendorstatus"]?.string
+        memoryUsed = json["memoryUsed"]?.string
+        memoryFree = json["memoryFree"]?.string
+        memoryAvailable = json["memoryAvailable"]?.string
+        objectStatusMap = json["objectstatusmap"]?.string
+        systemVeraRestart = json["systemVeraRestart"]?.string
+        systemLuupRestart = json["systemLuupRestart"]?.string
+        heatTemperatureSetPoint = json["heatsp"]?.doubleDouble
+        coolTemperatureSetPoint = json["coolsp"]?.doubleDouble
+        
+        if let heat = json["heat"]?.doubleDouble {
+            heatTemperatureSetPoint = heat
+        }
+
+        if let cool = json["cool"]?.doubleDouble {
+            coolTemperatureSetPoint = cool
+        }
+        
+        locked = json["locked"]?.boolean
+        
+        conditionSatisfied = json["conditionsatisfied"]?.string
+        detailedArmMode = json["detailedarmmode"]?.string
+        armMode = json["armmode"]?.string
+        hvacState = json["hvacstate"]?.string
+        altID = json["altid"]?.integer
+        
+        if let tempCategory = json["category"]?.integer {
+            category = Category(rawValue: tempCategory)
             
-            if tempCategory! == 0 {
+            if tempCategory == 0 {
                 if let deviceName = name {
                     if deviceName.range(of: "audio", options: .caseInsensitive) != nil {
                         category = .audio
@@ -141,95 +182,33 @@ open class VeraDevice: Deserializable, CustomStringConvertible {
                 }
             }
         }
-        _ = subcategory <-- data["subcategory"]
-        _ = status <-- data["status"]
-        _ = state <-- data["state"]
-        _ = comment <-- data["comment"]
-        _ = roomID <-- data["room"]
-        _ = armed <-- data["armed"]
-        _ = humidity <-- data["humidity"]
-        _ = batteryLevel <-- data["batterylevel"]
-        _ = pinCodes <-- data["pincodes"]
         
-        let temp: String? = data["temperature"] as! String?
-        if temp != nil {
-            temperature = Double(temp!)
-        }
-
-        _ = heatTemperatureSetPoint <-- data["heatsp"]
-        _ = coolTemperatureSetPoint <-- data["coolsp"]
-
-        let heatTemp: String? = data["heat"] as! String?
-        if heatTemp != nil {
-            heatTemperatureSetPoint = Double(heatTemp!)
-        }
-
-        let coolTemp: String? = data["cool"] as! String?
-        if coolTemp != nil {
-            coolTemperatureSetPoint = Double(coolTemp!)
-        }
-
-        
-
-        var tempInt: Int?
-        
-        _ = tempInt <-- data["locked"]
-        if let lockedState = tempInt {
-            if lockedState == 1 {
-                locked = true
-            }
-            else {
-                locked = false
+        if let mode = json["mode"]?.string {
+            switch mode.lowercased() {
+                case "off":
+                    hvacMode = .off
+                case "heaton":
+                    hvacMode = .heat
+                case "coolon":
+                    hvacMode = .cool
+                case "autochangeover":
+                    hvacMode = .auto
+                default:
+                    hvacMode = nil
             }
         }
         
-        _ = tripped <-- data["tripped"]
-        _ = lastTripped <-- data["lasttrip"]
-        _ = level <-- data["level"]
-        _ = ip <-- data["ip"]
-        _ = vendorStatusCode <-- data["vendorstatuscode"]
-        _ = vendorStatusData <-- data["vendorstatusdata"]
-        _ = vendorStatus <-- data["vendorstatus"]
-        _ = memoryUsed <-- data["memoryUsed"]
-        _ = memoryFree <-- data["memoryFree"]
-        _ = memoryAvailable <-- data["memoryAvailable"]
-        _ = objectStatusMap <-- data["objectstatusmap"]
-        _ = systemVeraRestart <-- data["systemVeraRestart"]
-        _ = systemLuupRestart <-- data["systemLuupRestart"]
-        _ = conditionSatisfied <-- data["conditionsatisfied"]
-        _ = detailedArmMode <-- data["detailedarmmode"]
-        _ = armMode <-- data["armmode"]
-        _ = hvacState <-- data["hvacstate"]
-        _ = altID <-- data["altid"]
-        var mode:String?
-        _ = mode <-- data["mode"]
-        if mode != nil {
-            switch mode!.lowercased() {
-            case "off":
-                hvacMode = .off
-            case "heaton":
-                hvacMode = .heat
-            case "coolon":
-                hvacMode = .cool
-            case "autochangeover":
-                hvacMode = .auto
-            default:
-                hvacMode = nil
-            }
-        }
-        
-        _ = mode <-- data["fanmode"]
-        if mode != nil {
-            switch mode!.lowercased() {
-            case "auto":
-                fanMode = .auto
-            default:
-                fanMode = .on
+        if let mode = json["fanmode"]?.string {
+            switch mode.lowercased() {
+                case "auto":
+                    fanMode = .auto
+                default:
+                    fanMode = .on
             }
         }
     }
     
-    open var description: String {
+    var description: String {
         var desc: String = "Name: "
         if self.name != nil {
             desc += self.name!
