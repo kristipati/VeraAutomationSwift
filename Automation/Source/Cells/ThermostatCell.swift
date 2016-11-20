@@ -25,100 +25,92 @@ class ThermostatCell: BaseCell {
 
     override func setup() {
         super.setup()
-        if let device = self.device {
+        if let device = device {
             if let temp = device.temperature {
-                self.currentTemperature.text = "\(temp)"
+                currentTemperature.text = "\(temp)"
             } else {
-                self.currentTemperature.text = nil
+                currentTemperature.text = nil
             }
             
             if let fanMode = device.fanMode {
                 switch fanMode {
                     case .auto:
-                        self.fanSegmentedControl.selectedSegmentIndex = 0
+                        fanSegmentedControl.selectedSegmentIndex = 0
                     
                     case .on:
-                        self.fanSegmentedControl.selectedSegmentIndex = 1
+                        fanSegmentedControl.selectedSegmentIndex = 1
                 }
             }
 
             if let hvacMode = device.hvacMode {
                 switch hvacMode {
                 case .auto:
-                    self.hvacSegmentedControl.selectedSegmentIndex = 1
+                    hvacSegmentedControl.selectedSegmentIndex = 1
                     
                 case .off:
-                    self.hvacSegmentedControl.selectedSegmentIndex = 0
+                    hvacSegmentedControl.selectedSegmentIndex = 0
                 case .cool:
-                    self.hvacSegmentedControl.selectedSegmentIndex = 2
+                    hvacSegmentedControl.selectedSegmentIndex = 2
                 case .heat:
-                    self.hvacSegmentedControl.selectedSegmentIndex = 3
+                    hvacSegmentedControl.selectedSegmentIndex = 3
                 }
             }
             
             if let coolSP = device.coolTemperatureSetPoint {
-                self.coolSetLabel.text = "\(coolSP)"
-                self.coolStepper.value = Double(coolSP)
+                coolSetLabel.text = "\(coolSP)"
+                coolStepper.value = Double(coolSP)
             } else {
-                self.coolSetLabel.text = nil
-                self.coolStepper.value = 75
+                coolSetLabel.text = nil
+                coolStepper.value = 75
             }
 
             if let heatSP = device.heatTemperatureSetPoint {
-                self.heatSetLabel.text = "\(heatSP)"
-                self.heatStepper.value = Double(heatSP)
+                heatSetLabel.text = "\(heatSP)"
+                heatStepper.value = Double(heatSP)
             } else {
-                self.heatSetLabel.text = nil
-                self.heatStepper.value = 75
+                heatSetLabel.text = nil
+                heatStepper.value = 75
             }
         }
     }
 
     @IBAction func hvacStateChanged(_ sender: AnyObject) {
         var hvacMode: VeraDevice.HVACMode = .auto
-        if self.hvacSegmentedControl.selectedSegmentIndex == 0 {
+        if hvacSegmentedControl.selectedSegmentIndex == 0 {
             hvacMode = .off
         }
-        else if self.hvacSegmentedControl.selectedSegmentIndex == 2 {
+        else if hvacSegmentedControl.selectedSegmentIndex == 2 {
             hvacMode = .cool
         }
-        else if self.hvacSegmentedControl.selectedSegmentIndex == 3 {
+        else if hvacSegmentedControl.selectedSegmentIndex == 3 {
             hvacMode = .heat
         }
         
-        if let  device = self.device {
-            if let delegate = self.delegate {
-                delegate.changeHVAC(device, fanMode: nil, hvacMode: hvacMode, coolTemp: nil, heatTemp: nil)
-            }
+        if let  device = device, let delegate = delegate {
+            delegate.changeHVAC(device, fanMode: nil, hvacMode: hvacMode, coolTemp: nil, heatTemp: nil)
         }
     }
     
     @IBAction func fanChanged(_ sender: AnyObject) {
         var fanMode: VeraDevice.FanMode = .auto
-        if self.fanSegmentedControl.selectedSegmentIndex == 1 {
+        if fanSegmentedControl.selectedSegmentIndex == 1 {
             fanMode = .on
         }
 
-        if let  device = self.device {
-            if let delegate = self.delegate {
-                delegate.changeHVAC(device, fanMode: fanMode, hvacMode: nil, coolTemp: nil, heatTemp: nil)
-            }
+        if let  device = device, let delegate = delegate {
+            delegate.changeHVAC(device, fanMode: fanMode, hvacMode: nil, coolTemp: nil, heatTemp: nil)
         }
     }
     
     @IBAction func heatStepperChanged(_ sender: AnyObject) {
-        if let  device = self.device {
-            if let delegate = self.delegate {
-                delegate.changeHVAC(device, fanMode: nil, hvacMode: nil, coolTemp: nil, heatTemp: Int(self.heatStepper.value))
-            }
+        if let  device = device, let delegate = delegate {
+            delegate.changeHVAC(device, fanMode: nil, hvacMode: nil, coolTemp: nil, heatTemp: Int(self.heatStepper.value))
         }
     }
     
     @IBAction func coolStepperChanged(_ sender: AnyObject) {
-        if let  device = self.device {
-            if let delegate = self.delegate {
-                delegate.changeHVAC(device, fanMode: nil, hvacMode: nil, coolTemp: Int(self.coolStepper.value), heatTemp: nil)
-            }
+        if let  device = device, let delegate = delegate {
+            delegate.changeHVAC(device, fanMode: nil, hvacMode: nil, coolTemp: Int(self.coolStepper.value), heatTemp: nil)
         }
     }
 }

@@ -20,7 +20,7 @@ extension Array {
         }
         
         if index != nil {
-            self.remove(at: index!)
+            remove(at: index!)
         }
     }
 }

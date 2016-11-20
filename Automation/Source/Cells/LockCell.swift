@@ -17,35 +17,28 @@ class LockCell: BaseCell {
     
     override func setup() {
         super.setup()
-        if let deviceName = self.device?.name {
-            self.titleLabel.text = deviceName
-        }
+        titleLabel.text = device?.name
         
-//        Swell.info("Lock info \(self.device)")
-        
-        if let locked = self.device?.locked {
+
+        if let locked = device?.locked {
             if locked == true {
-                self.statusLabel.text = NSLocalizedString("LOCKED_LABEL", comment: "")
+                statusLabel.text = NSLocalizedString("LOCKED_LABEL", comment: "")
             } else {
-                self.statusLabel.text = NSLocalizedString("UNLOCKED_LABEL", comment: "")
+                statusLabel.text = NSLocalizedString("UNLOCKED_LABEL", comment: "")
             }
         } else {
-            self.statusLabel.text = nil
+            statusLabel.text = nil
         }
     }
 
     @IBAction func lockAction(_ sender: AnyObject) {
-        if let device = self.device {
-            if let delegate = self.delegate {
-                delegate.setDeviceLocked(device, locked: true)
-            }
+        if let device = device, let delegate = delegate {
+            delegate.setDeviceLocked(device, locked: true)
         }
     }
     @IBAction func unlockAction(_ sender: AnyObject) {
-        if let device = self.device {
-            if let delegate = self.delegate {
-                delegate.setDeviceLocked(device, locked: false)
-            }
+        if let device = device, let delegate = delegate {
+            delegate.setDeviceLocked(device, locked: false)
         }
     }
 }

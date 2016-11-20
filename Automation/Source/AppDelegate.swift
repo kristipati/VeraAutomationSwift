@@ -9,26 +9,6 @@
 import UIKit
 import XCGLogger
 import KeychainSwift
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l < r
-  case (nil, _?):
-    return true
-  default:
-    return false
-  }
-}
-
-fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l > r
-  default:
-    return rhs < lhs
-  }
-}
-
 
 
 let kTabOrderDefault = "Tab Order"
@@ -44,7 +24,6 @@ let sTimeForCheck:TimeInterval = 4.0
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate, UITabBarControllerDelegate {
-
     let log = XCGLogger.default
     var veraAPI = VeraAPI()
     var periodicTimer: Timer?
@@ -63,16 +42,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     func logout() {
             KeychainSwift(keyPrefix: "").clear()
         
-        self.veraAPI.resetAPI()
-        self.presentLogin()
+        veraAPI.resetAPI()
+        presentLogin()
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        self.veraAPI.excludedDevices = UserDefaults.standard.array(forKey: kExcludedDevices) as! [Int]?
-        self.veraAPI.excludedScenes = UserDefaults.standard.array(forKey: kExcludedScenes) as! [Int]?
+        veraAPI.excludedDevices = UserDefaults.standard.array(forKey: kExcludedDevices) as? [Int]
+        veraAPI.excludedScenes = UserDefaults.standard.array(forKey: kExcludedScenes) as? [Int]
         
-        let tabbarController = self.window!.rootViewController as! UITabBarController
+        let tabbarController = window!.rootViewController as! UITabBarController
         tabbarController.delegate = self
         
         log.setup(level: .verbose, showThreadName: true, showLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil, fileLevel: .debug)
@@ -146,10 +125,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                 if let className = orderedVCClass as? String {
                     for index in 0..<viewControllers.count {
                         let vcClass = (viewControllers[index] as UIViewController).getBaseViewControllerName()
-                        if vcClass as String == className {
-                            if currentIndex != index {
-                                swap(&viewControllers[currentIndex], &viewControllers[index])
-                            }
+                        if vcClass == className && currentIndex != index {
+                            swap(&viewControllers[currentIndex], &viewControllers[index])
                         }
                     }
                 }
@@ -160,47 +137,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         tabbarController.viewControllers = viewControllers
         
-        self.initialTabViewControllers = viewControllers // Store a reference for later
+        initialTabViewControllers = viewControllers // Store a reference for later
         
-        self.showHideAudioTab()
+        showHideAudioTab()
 
-        self.periodicTimer = Timer.scheduledTimer(timeInterval: sTimeForCheck, target: self, selector: #selector(AppDelegate.updateVeraInfo), userInfo: nil, repeats: true)
+        periodicTimer = Timer.scheduledTimer(timeInterval: sTimeForCheck, target: self, selector: #selector(AppDelegate.updateVeraInfo), userInfo: nil, repeats: true)
         
         
         NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.orientationChanged(notification:)), name: NSNotification.Name.UIApplicationWillChangeStatusBarOrientation, object: nil)
 
         let delay = 1.0 * Double(NSEC_PER_SEC)
         let time = DispatchTime.now() + Double(Int64(delay)) / Double(NSEC_PER_SEC)
-        DispatchQueue.main.asyncAfter(deadline: time, execute: {
-            self.handleLogin()
-        })
+        DispatchQueue.main.asyncAfter(deadline: time) { [weak self] in
+            self?.handleLogin()
+        }
         
         return true
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
-        if let timer = self.periodicTimer {
-            timer.invalidate()
-            self.periodicTimer = nil
-        }
-    }
-
-    func applicationDidEnterBackground(_ application: UIApplication) {
-    }
-
-    func applicationWillEnterForeground(_ application: UIApplication) {
+        periodicTimer?.invalidate()
+        periodicTimer = nil
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        self.periodicTimer = Timer.scheduledTimer(timeInterval: sTimeForCheck, target: self, selector: #selector(AppDelegate.updateVeraInfo), userInfo: nil, repeats: true)
-        self.lastUnitCheck = nil
+        periodicTimer = Timer.scheduledTimer(timeInterval: sTimeForCheck, target: self, selector: #selector(AppDelegate.updateVeraInfo), userInfo: nil, repeats: true)
+        lastUnitCheck = nil
         updateVeraInfo()
         
         let delay = 1.0 * Double(NSEC_PER_SEC)
         let time = DispatchTime.now() + Double(Int64(delay)) / Double(NSEC_PER_SEC)
-        DispatchQueue.main.asyncAfter(deadline: time, execute: {
-            self.handleLogin()
-        })
+        DispatchQueue.main.asyncAfter(deadline: time) { [weak self] in
+            self?.handleLogin()
+        }
     }
 
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController:UIViewController, onto primaryViewController:UIViewController) -> Bool {
@@ -228,9 +197,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     }
     
     func tabBarController(_ tabBarController: UITabBarController, didEndCustomizing viewControllers: [UIViewController], changed: Bool) {
-        if (changed == true) {
-            self.saveTabOrderWith(viewControllers: viewControllers)
-            self.checkViewControllers()
+        if changed == true {
+            saveTabOrderWith(viewControllers: viewControllers)
+            checkViewControllers()
         }
     }
 
@@ -239,17 +208,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             if let navController = viewController as? UINavigationController {
                navController.popToRootViewController(animated: true)
             }
-        } else if let splitViewController = viewController as? UISplitViewController {
-            if let navController = splitViewController.viewControllers.first as? UINavigationController {
-                navController.popToRootViewController(animated: true)
-            }
+        } else if let splitViewController = viewController as? UISplitViewController, let navController = splitViewController.viewControllers.first as? UINavigationController {
+            navController.popToRootViewController(animated: true)
         }
     }
 
     func saveTabOrderWith (viewControllers: [UIViewController]) {
         var orderViewControllerArray = [String]()
         for viewController in viewControllers {
-            orderViewControllerArray.append(viewController.getBaseViewControllerName() as String)
+            orderViewControllerArray.append(viewController.getBaseViewControllerName())
         }
 
         UserDefaults.standard.set(orderViewControllerArray, forKey: kTabOrderDefault)
@@ -259,7 +226,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     // Make sure that none of the split view controllers roll over to the more part of the tab bar controller
     func checkViewControllers () {
         if UIDevice.current.userInterfaceIdiom == .phone {
-            let tabbarController = self.window!.rootViewController as! UITabBarController
+            let tabbarController = window!.rootViewController as! UITabBarController
             var splitViewControllerArray = [UIViewController]()
             var otherViewControllerArray = [UIViewController]()
             var rearrangeViewControllers = false
@@ -278,15 +245,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
             if rearrangeViewControllers {
                 var newViewControllerArray = [UIViewController]()
-                for vc in splitViewControllerArray {
-                    newViewControllerArray.append(vc)
-                }
-
-                for vc in otherViewControllerArray {
-                    newViewControllerArray.append(vc)
-                }
-
-                self.saveTabOrderWith(viewControllers: newViewControllerArray as [UIViewController])
+                newViewControllerArray += splitViewControllerArray
+                newViewControllerArray += otherViewControllerArray
+                saveTabOrderWith(viewControllers: newViewControllerArray as [UIViewController])
                 tabbarController.viewControllers = newViewControllerArray
             }
 
@@ -296,11 +257,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
     // MARK: Vera API
     func handleLogin () {
-        if self.handlingLogin == true {
+        if handlingLogin == true {
             return
         }
         
-        self.handlingLogin = true
+        handlingLogin = true
 
         var password = KeychainSwift().get(kPassword)
         var username = KeychainSwift().get(kUsername)
@@ -309,17 +270,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             veraAPI.username = username
             veraAPI.password = password
             
-            veraAPI.getUnitsInformationForUser{ (success) -> Void in
-                if success == true {
-                    self.handlingLogin = false
-                    self.updateVeraInfo()
-                }
-                else {
-                    self.presentLogin()
+            veraAPI.getUnitsInformationForUser{ [weak self] (success) -> Void in
+                if let strongSelf = self {
+                    if success == true {
+                        strongSelf.handlingLogin = false
+                        strongSelf.updateVeraInfo()
+                    }
+                    else {
+                        strongSelf.presentLogin()
+                    }
                 }
             }
         } else {
-            self.presentLogin()
+            presentLogin()
         }
         
 
@@ -328,8 +291,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     func presentLogin() {
         let alertController = UIAlertController(title: nil, message: NSLocalizedString("LOGIN_ALERT_TITLE", comment: ""), preferredStyle: .alert)
 
-        let loginAction = UIAlertAction(title: NSLocalizedString("LOGIN_TITLE", comment: ""), style: .default) { (_) in
-            self.handlingLogin = false
+        let loginAction = UIAlertAction(title: NSLocalizedString("LOGIN_TITLE", comment: ""), style: .default) {[weak self] (_) in
+            self?.handlingLogin = false
             let loginTextField = alertController.textFields![0]
             let passwordTextField = alertController.textFields![1]
 
@@ -340,47 +303,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                 KeychainSwift(keyPrefix: "").set(username!, forKey: kUsername)
                 KeychainSwift(keyPrefix: "").set(password!, forKey: kPassword)
                 
-                self.handleLogin()
+                self?.handleLogin()
                 
             } else {
                 let delay = 1.0 * Double(NSEC_PER_SEC)
                 let time = DispatchTime.now() + Double(Int64(delay)) / Double(NSEC_PER_SEC)
-                DispatchQueue.main.asyncAfter(deadline: time, execute: {
-                    self.presentLogin()
-                })
+                DispatchQueue.main.asyncAfter(deadline: time) {
+                    self?.presentLogin()
+                }
             }
             
         }
         loginAction.isEnabled = false
         
-        let cancelAction = UIAlertAction(title: NSLocalizedString("CANCEL_TITLE", comment: ""), style: .cancel) { (_) in
-            self.handlingLogin = false
+        let cancelAction = UIAlertAction(title: NSLocalizedString("CANCEL_TITLE", comment: ""), style: .cancel) {[weak self] (_) in
+            self?.handlingLogin = false
         }
 
         let domainForOnePassword = "getvera.com"
         
-        let onePasswordAction = UIAlertAction(title: NSLocalizedString("ONE_PASSWORD_ACTION", comment: ""), style: .destructive) { (_) in
+        let onePasswordAction = UIAlertAction(title: NSLocalizedString("ONE_PASSWORD_ACTION", comment: ""), style: .destructive) {[weak self] (_) in
+            guard let strongSelf = self else {return}
+            let tabbarController = strongSelf.window!.rootViewController as! UITabBarController
             
-            let tabbarController = self.window!.rootViewController as! UITabBarController
-            
-            OnePasswordExtension.shared().findLogin(forURLString: domainForOnePassword, for: self.window!.rootViewController!,
+            OnePasswordExtension.shared().findLogin(forURLString: domainForOnePassword, for: strongSelf.window!.rootViewController!,
                 sender: tabbarController.tabBar) { (credentials, error) -> Void in
-                    self.handlingLogin = false
-                    if credentials != nil && credentials?.count > 0 {
-                        let creds = credentials as? [String:String]
-                        let username = creds![AppExtensionUsernameKey] as String?
-                        let password = creds![AppExtensionPasswordKey] as String?
+                    strongSelf.handlingLogin = false
+                    if let creds = credentials as? [String:String] {
+                        let username = creds[AppExtensionUsernameKey] as String?
+                        let password = creds[AppExtensionPasswordKey] as String?
                         KeychainSwift(keyPrefix: "").clear()
                         KeychainSwift(keyPrefix: "").set(username!, forKey: kUsername)
                         KeychainSwift(keyPrefix: "").set(password!, forKey: kPassword)
-                        self.handleLogin()
+                        strongSelf.handleLogin()
                     }
                     else {
                         let delay = 1.0 * Double(NSEC_PER_SEC)
                         let time = DispatchTime.now() + Double(Int64(delay)) / Double(NSEC_PER_SEC)
-                        DispatchQueue.main.asyncAfter(deadline: time, execute: {
-                            self.presentLogin()
-                        })
+                        DispatchQueue.main.asyncAfter(deadline: time) {
+                            strongSelf.presentLogin()
+                        }
                     }
             }
 
@@ -410,36 +372,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         if KeychainSwift(keyPrefix: "").get(kUsername) != nil && KeychainSwift(keyPrefix: "").get(kPassword) != nil {
             loginAction.isEnabled = true
         }
-        let tabbarController = self.window!.rootViewController as! UITabBarController
+        let tabbarController = window!.rootViewController as! UITabBarController
         tabbarController.present(alertController, animated: true, completion: nil)
 
     }
     
     func updateVeraInfo() {
         // We must have a username and password
-        if self.queryingVera == true || self.veraAPI.username == nil || self.veraAPI.password == nil || (self.lastUnitCheck != nil && Date().timeIntervalSince(self.lastUnitCheck!) < sTimeForCheck) {
-            if self.veraAPI.username == nil && self.veraAPI.password == nil {
-                self.handleLogin()
+        if queryingVera == true || veraAPI.username == nil || veraAPI.password == nil || (lastUnitCheck != nil && Date().timeIntervalSince(lastUnitCheck!) < sTimeForCheck) {
+            if veraAPI.username == nil && veraAPI.password == nil {
+                handleLogin()
             }
             return
         }
         
-        self.queryingVera = true
-        self.veraAPI.getUnitInformation{ (success, fullload) -> Void in
-            self.queryingVera = false
-            self.lastUnitCheck = Date()
+        queryingVera = true
+        veraAPI.getUnitInformation{ [weak self] (success, fullload) in
+            guard let strongSelf = self else {return}
+            strongSelf.queryingVera = false
+            strongSelf.lastUnitCheck = Date()
             if success == true {
-                let tabbarController = self.window!.rootViewController as! UITabBarController
+                let tabbarController = strongSelf.window!.rootViewController as! UITabBarController
                 if let presentedController = tabbarController.presentedViewController {
-                    presentedController.dismiss(animated: true, completion: { () -> Void in
-                        
-                    })
+                    presentedController.dismiss(animated: true) {}
                 }
                 NotificationCenter.default.post(name: Notification.Name(rawValue: VeraUnitInfoUpdated), object: nil, userInfo: [VeraUnitInfoFullLoad:fullload])
             } else {
-                self.log.info("Did not get unit info");
-                if self.handlingLogin == false {
-                    self.handleLogin()
+                strongSelf.log.info("Did not get unit info");
+                if strongSelf.handlingLogin == false {
+                    strongSelf.handleLogin()
                 }
             }
         }
@@ -447,7 +408,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     func showHideAudioTab() {
         let show = UserDefaults.standard.bool(forKey: kShowAudioTabDefault)
-        let tabbarController = self.window!.rootViewController as! UITabBarController
+        let tabbarController = window!.rootViewController as! UITabBarController
         var newViewControllerArray = tabbarController.viewControllers
         if newViewControllerArray != nil {
             var indexToRemove:Int?
@@ -464,7 +425,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                 tabbarController.viewControllers = newViewControllerArray
             }
             else if indexToRemove == nil && show == true {
-                for viewController in self.initialTabViewControllers {
+                for viewController in initialTabViewControllers {
                     if viewController.getBaseViewController().isKind(of: AudioListViewController.self) {
                         newViewControllerArray?.append(viewController)
                         tabbarController.viewControllers = newViewControllerArray
@@ -475,7 +436,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             }
         }
 
-        self.checkViewControllers()
+        checkViewControllers()
     }
     
     func setExcludedDeviceArray(array: [Int]) {
@@ -487,13 +448,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         UserDefaults.standard.synchronize()
         
-        if self.veraAPI.excludedDevices == nil || (self.veraAPI.excludedDevices != nil && array != self.veraAPI.excludedDevices!) {
+        if veraAPI.excludedDevices == nil || (veraAPI.excludedDevices != nil && array != veraAPI.excludedDevices!) {
             
-            self.veraAPI.excludedDevices = array
+            veraAPI.excludedDevices = array
             
             var fullload = false
             
-            if let _ = self.veraAPI.getVeraUnit() {
+            if let _ = veraAPI.getVeraUnit() {
                 fullload = true
             }
             
@@ -510,12 +471,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         UserDefaults.standard.synchronize()
 
-        if self.veraAPI.excludedScenes == nil || (self.veraAPI.excludedScenes != nil && array != self.veraAPI.excludedScenes!) {
+        if veraAPI.excludedScenes == nil || (veraAPI.excludedScenes != nil && array != veraAPI.excludedScenes!) {
             
-            self.veraAPI.excludedScenes = array
+            veraAPI.excludedScenes = array
 
             var fullload = false
-            if let _ = self.veraAPI.getVeraUnit() {
+            if let _ = veraAPI.getVeraUnit() {
                 fullload = true
             }
 
@@ -524,56 +485,52 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     }
     
     func orientationChanged(notification: Notification) {
-        if (self.notifyView != nil) {
-            self.notifyView!.hide()
+        if notifyView != nil {
+            notifyView!.hide()
         }
     }
     
     func showMessageWithTitle(title: String) {
-        let tabbarController = self.window!.rootViewController as! UITabBarController
+        let tabbarController = window!.rootViewController as! UITabBarController
         _ = CGRect(x: 0, y: 0, width: tabbarController.view.frame.maxX, height: 64)
-        if self.notifyView != nil {
-            self.notifyView!.hide()
+        if notifyView != nil {
+            notifyView!.hide()
         }
-        self.notifyView = SFSwiftNotification(viewController: tabbarController,
+        notifyView = SFSwiftNotification(viewController: tabbarController,
             title: nil,
             animationType: AnimationType.animationTypeCollision,
             direction: Direction.topToBottom,
             delegate: nil)
-        self.notifyView!.backgroundColor = UIColor(red: 10.0/255.0, green: 243.0/255.0, blue: 237.0/255.0, alpha: 1.0)
-        self.notifyView!.label.textColor = UIColor.black
+        notifyView!.backgroundColor = UIColor(red: 10.0/255.0, green: 243.0/255.0, blue: 237.0/255.0, alpha: 1.0)
+        notifyView!.label.textColor = UIColor.black
 
-        self.notifyView!.label.text = title as String
-        self.notifyView!.animate(0)
+        notifyView!.label.text = title as String
+        notifyView!.animate(0)
     }
 
 }
 
 extension UIViewController {
-    func getBaseViewController()->UIViewController {
+    func getBaseViewController() -> UIViewController {
         var viewController = self
-        if let navController = viewController as? UINavigationController {
-            if navController.topViewController != nil {
-                viewController = navController.topViewController!
-            }
+        if let navController = viewController as? UINavigationController, navController.topViewController != nil {
+            viewController = navController.topViewController!
         }
         
         if let splitViewController = viewController as? UISplitViewController {
             viewController = splitViewController.viewControllers.first!
         }
         
-        if let navController = viewController as? UINavigationController {
-            if navController.topViewController != nil {
-                viewController = navController.topViewController!
-            }
+        if let navController = viewController as? UINavigationController, navController.topViewController != nil {
+            viewController = navController.topViewController!
         }
         
         return viewController
     }
     
-    func getBaseViewControllerName()->NSString {
-        let baseViewController = self.getBaseViewController()
-        return NSStringFromClass(type(of: baseViewController)) as NSString
+    func getBaseViewControllerName() -> String {
+        let baseViewController = getBaseViewController()
+        return String(describing: type(of: baseViewController))
     }
 }
 

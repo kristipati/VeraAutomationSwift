@@ -8,18 +8,6 @@
 
 import UIKit
 
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l < r
-  case (nil, _?):
-    return true
-  default:
-    return false
-  }
-}
-
-
 protocol SwitchProtocol {
     func changeDeviceLevel(_ device: VeraDevice, level: Int)
 }
@@ -31,9 +19,9 @@ class SwitchesViewController: UICollectionViewController, SwitchProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if self.room != nil {
-            self.devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room: self.room!, categories: .switch, .dimmableLight)
-            self.title = self.room?.name
+        if let room = room {
+            devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room: room, categories: .switch, .dimmableLight)
+            title = room.name
         }
 
         NotificationCenter.default.addObserver(self, selector: #selector(SwitchesViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
@@ -49,29 +37,25 @@ class SwitchesViewController: UICollectionViewController, SwitchProtocol {
         }
 
         if fullload == true {
-            self.room = nil
-            self.devices = nil
-            self.title = nil
-            self.navigationItem.leftBarButtonItem = nil
+            room = nil
+            devices = nil
+            title = nil
+            navigationItem.leftBarButtonItem = nil
         }
-        self.collectionView!.reloadData()
+        collectionView!.reloadData()
     }
 
     // MARK: UICollectionViewDataSource
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if self.devices != nil {
-            return self.devices!.count
-        }
-
-        return 0
+        return devices?.count ?? 0
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DeviceCell", for: indexPath) as! DeviceCell
     
-        if (indexPath as NSIndexPath).row < self.devices?.count {
-            let device = self.devices![(indexPath as NSIndexPath).row]
+        if let devices = devices, indexPath.row < devices.count {
+            let device = devices[indexPath.row]
             cell.device = device
             cell.delegate = self
             cell.setup()
@@ -83,8 +67,8 @@ class SwitchesViewController: UICollectionViewController, SwitchProtocol {
     // MARK: UICollectionViewDelegate
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if (indexPath as NSIndexPath).row < self.devices?.count {
-            let device = self.devices![(indexPath as NSIndexPath).row]
+        if let devices = devices, indexPath.row < devices.count {
+            let device = devices[indexPath.row]
             var newStatus = 0
             if let status = device.status {
                 if status == 0 {

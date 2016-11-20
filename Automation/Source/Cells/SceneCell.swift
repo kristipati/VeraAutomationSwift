@@ -16,9 +16,7 @@ class SceneCell: BaseCell {
     
     override func setup() {
         super.setup()
-        if self.scene != nil {
-            self.titleLabel.text = self.scene?.name
-        }
+        titleLabel.text = scene?.name
     }
 
 }

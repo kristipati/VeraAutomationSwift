@@ -15,8 +15,6 @@ class OnDeviceCell: BaseCell {
 
     override func setup() {
         super.setup()
-        if self.device != nil {
-            self.titleLabel.text = self.device?.name
-        }
+        titleLabel.text = device?.name
     }
 }

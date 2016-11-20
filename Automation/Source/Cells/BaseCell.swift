@@ -11,12 +11,12 @@ import UIKit
 class BaseCell: UICollectionViewCell {
     var layerAdded = false
     func setup() {
-        if self.layerAdded == false {
-            self.layerAdded = true
-            self.layer.cornerRadius = 5.0
-            let bgLayer = self.blueGradientLayer()
-            bgLayer.frame = self.bounds
-            self.layer.insertSublayer(bgLayer, at: 0)
+        if layerAdded == false {
+            layerAdded = true
+            layer.cornerRadius = 5.0
+            let bgLayer = blueGradientLayer()
+            bgLayer.frame = bounds
+            layer.insertSublayer(bgLayer, at: 0)
         }
     }
     

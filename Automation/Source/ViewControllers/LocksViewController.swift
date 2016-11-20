@@ -8,18 +8,6 @@
 
 import UIKit
 
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l < r
-  case (nil, _?):
-    return true
-  default:
-    return false
-  }
-}
-
-
 protocol LockProtocol {
     func setDeviceLocked(_ device:VeraDevice, locked: Bool)
 }
@@ -32,46 +20,42 @@ class LocksViewController: UICollectionViewController, LockProtocol {
 
         NotificationCenter.default.addObserver(self, selector: #selector(LocksViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
         
-        self.loadLockDevices()
+        loadLockDevices()
     }
     
     func unitInfoUpdated(_ notification: Notification) {
-        self.loadLockDevices()
+        loadLockDevices()
     }
     
     func loadLockDevices () {
-        var devices = [VeraDevice]()
+        var newDevices = [VeraDevice]()
         if let roomsWithLocks = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.lock) {
             for room in roomsWithLocks {
                 if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room: room, showExcluded: false, categories: VeraDevice.Category.lock) {
                         for device in roomDevices {
-                            devices.append(device)
+                            newDevices.append(device)
                         }
                 }
             }
         }
         
-        self.devices = devices
+        devices = newDevices
         
-        self.collectionView!.reloadData()
+        collectionView!.reloadData()
     }
 
 
     // MARK: UICollectionViewDataSource
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if self.devices != nil {
-            return self.devices!.count
-        }
-        
-        return 0
+        return devices?.count ?? 0
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LockCell", for: indexPath) as! LockCell
         
-        if (indexPath as NSIndexPath).row < self.devices?.count {
-            let device = self.devices![(indexPath as NSIndexPath).row]
+        if let devices = devices, indexPath.row < devices.count {
+            let device = devices[indexPath.row]
             cell.device = device
             cell.delegate = self
             cell.setup()

@@ -42,10 +42,10 @@ class VeraAPI {
         config.timeoutIntervalForResource = 30
         HTTP.sessionConfiguration = config
         
-        self.reachability = Reachability.forLocalWiFi()
-        self.reachability?.startNotifier()
+        reachability = Reachability.forLocalWiFi()
+        reachability?.startNotifier()
         NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged(notification:)), name: NSNotification.Name.reachabilityChanged, object: nil)
-        self.getExternalIPAddress()
+        getExternalIPAddress()
     }
     
     @objc func reachabilityChanged(notification: Notification) {
@@ -63,25 +63,25 @@ class VeraAPI {
     }
     
     func getExternalIPAddress () {
-        if self.lastExternalIPAddressCheck != nil && self.currentExternalIPAddress != nil && Date().timeIntervalSince(self.lastExternalIPAddressCheck!) < 300 {
+        if lastExternalIPAddressCheck != nil && currentExternalIPAddress != nil && Date().timeIntervalSince(lastExternalIPAddressCheck!) < 300 {
             return
         }
         
         let requestString = "https://ip.gruby.com"
-        HTTP.request(GET: requestString).parse(with: stringParseHandler).performRequest(withCompletionQueue: .main) { (task, result) in
-            self.log.debug("Got a result")
+        HTTP.request(GET: requestString).parse(with: stringParseHandler).performRequest(withCompletionQueue: .main) { [weak self] (task, result) in
+            self?.log.debug("Got a result")
             switch result {
             case let .success(response, data):
-                self.log.debug("Success: \(response) data: \(data)")
+                self?.log.debug("Success: \(response) data: \(data)")
                 if data != nil {
-                    self.currentExternalIPAddress = data?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                    self.log.info("External IP address: \(self.currentExternalIPAddress)")
-                    self.lastExternalIPAddressCheck = Date()
+                    self?.currentExternalIPAddress = data?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                    self?.log.info("External IP address: \(self?.currentExternalIPAddress)")
+                    self?.lastExternalIPAddressCheck = Date()
                 }
                 break
                 
             case let .error(response, error):
-                self.log.debug("Error: \(error) - \(response)")
+                self?.log.debug("Error: \(error) - \(response)")
                 break
                 
             case .canceled:
@@ -91,14 +91,14 @@ class VeraAPI {
     }
     
     func resetAPI () {
-        self.username = nil
-        self.password = nil
-        self.auth = nil
-        self.sessionToken = nil
-        self.lastExternalIPAddressCheck = nil
+        username = nil
+        password = nil
+        auth = nil
+        sessionToken = nil
+        lastExternalIPAddressCheck = nil
     }
     
-    func sessionTokenHeaders()->Dictionary<String, String>? {
+    func sessionTokenHeaders() -> Dictionary<String, String>? {
         if let token = self.sessionToken {
             return ["MMSSession":token]
         }
@@ -106,16 +106,11 @@ class VeraAPI {
         return nil
     }
     
-    func authTokenHeaders()->Dictionary<String, String>? {
+    func authTokenHeaders() -> Dictionary<String, String>? {
         var dict: [String:String] = [:]
-        if let localAuth = self.auth {
-            if let localAuthToken = localAuth.authToken {
-                dict["MMSAuth"] = localAuthToken
-            }
-            
-            if let localAuthSigToken = localAuth.authSigToken {
-                dict["MMSAuthSig"] = localAuthSigToken
-            }
+        if let localAuth = self.auth, let localAuthToken = localAuth.authToken, let localAuthSigToken = localAuth.authSigToken {
+            dict["MMSAuth"] = localAuthToken
+            dict["MMSAuthSig"] = localAuthSigToken
         }
         
         if dict.isEmpty {
@@ -136,34 +131,31 @@ class VeraAPI {
             }
         }
         
-        req?.parse(with: stringParseHandler).performRequest(withCompletionQueue: .main, completion: { (task, result) in
-                self.log.debug("Got a result")
+        req?.parse(with: stringParseHandler).performRequest(withCompletionQueue: .main) { [weak self] (task, result) in
+            guard let strongSelf = self else {return}
+                strongSelf.log.debug("Got a result")
                 switch result {
                 case let .success(response, data):
-                    self.log.debug("Success: \(response) data: \(data)")
-                    if let statusCode = (response as? HTTPURLResponse)?.statusCode {
-                        if statusCode / 200 == 1 {
-                            completionHandler(data)
-                            return
-                        }
+                    strongSelf.log.debug("Success: \(response) data: \(data)")
+                    if let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode / 200 == 1 {
+                        completionHandler(data)
+                        return
                     }
                     
                     completionHandler(nil)
-                    break
                     
                 case let .error(response, error):
-                    self.log.debug("Error: \(error) - \(response)")
-                    break
+                    strongSelf.log.debug("Error: \(error) - \(response)")
                     
                 case .canceled:
                     break
                 }
-            })
+            }
     }
     
     
     fileprivate func getAuthenticationToken(completionhandler: @escaping (_ auth: VeraAuth?)->Void) {
-        let stringToHash = self.username!.lowercased() + self.password! + self.passwordSeed
+        let stringToHash = username!.lowercased() + password! + passwordSeed
         let hashedString = stringToHash.sha1()
         let requestString = "https://us-autha11.mios.com/autha/auth/username/\(self.username!.lowercased())?SHA1Password=\(hashedString)&PK_Oem=1"
         
@@ -356,9 +348,9 @@ class VeraAPI {
     }
     
     func requestPrefix(localPrefix: Bool) -> String? {
-        if (self.sessionToken != nil) {
+        if self.sessionToken != nil {
             if let unit = self.getVeraUnit() {
-                if (localPrefix == true) {
+                if localPrefix == true {
                     if self.reachability != nil {
                         if (self.reachability!.currentReachabilityStatus().rawValue != ReachableViaWiFi.rawValue) {
                             return nil
@@ -374,7 +366,7 @@ class VeraAPI {
                     }
                 }
                 
-                if (localPrefix == true && unit.ipAddress != nil && unit.ipAddress!.isEmpty == false) {
+                if localPrefix == true && unit.ipAddress != nil && unit.ipAddress!.isEmpty == false {
                     return "http://\(unit.ipAddress!)/port_3480/data_request?id="
                 } else if unit.serverRelay != nil {
                     return "https://\(unit.serverRelay!)/relay/relay/relay/device/\(unit.serialNumber!)/port_3480/data_request?id="
@@ -421,7 +413,7 @@ class VeraAPI {
     func getUnitInformation(completionHandler:@escaping (_ success:Bool, _ fullload: Bool) -> Void) {
         self.getExternalIPAddress()
         self.getUnitInformation(useLocalServer: true, completionHandler: { (success, fullload) -> Void in
-            if (success == false) {
+            if success == false {
                 self.getUnitInformation(useLocalServer: false, completionHandler: { (success, fullload) -> Void in
                     completionHandler(success, fullload)
                 })

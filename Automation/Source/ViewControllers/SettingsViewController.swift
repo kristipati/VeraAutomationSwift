@@ -14,7 +14,7 @@ class SettingsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+        tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
     }
 
     // MARK: - Table view data source
@@ -36,15 +36,15 @@ class SettingsViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if (indexPath as NSIndexPath).section == 1 {
+        if indexPath.section == 1 {
             AppDelegate.appDelegate().logout()
         }
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch (indexPath as NSIndexPath).section {
+        switch indexPath.section {
             case 0:
-                switch (indexPath as NSIndexPath).row {
+                switch indexPath.row {
                 case 0:
                     let cell = tableView.dequeueReusableCell(withIdentifier: "ExcludedDevicesCellIdentifier", for: indexPath) 
                     cell.textLabel!.text = NSLocalizedString("EXCLUDED_DEVICES_TITLE", comment: "")
@@ -64,9 +64,9 @@ class SettingsViewController: UITableViewController {
                 case 2:
                     let cell = tableView.dequeueReusableCell(withIdentifier: "ToggleCellIdentifier", for: indexPath) 
                     cell.accessoryType = .none
-                    cell.accessoryView = self.audioSwitch
-                    self.audioSwitch.isOn = UserDefaults.standard.bool(forKey: kShowAudioTabDefault)
-                    self.audioSwitch.addTarget(self, action: #selector(SettingsViewController.audioTabChanged), for: .valueChanged)
+                    cell.accessoryView = audioSwitch
+                    audioSwitch.isOn = UserDefaults.standard.bool(forKey: kShowAudioTabDefault)
+                    audioSwitch.addTarget(self, action: #selector(SettingsViewController.audioTabChanged), for: .valueChanged)
                     cell.textLabel!.text = NSLocalizedString("SHOW_AUDIO_TAB", comment: "")
                     cell.selectionStyle = .none
                     return cell
@@ -76,7 +76,7 @@ class SettingsViewController: UITableViewController {
             }
             
         case 1:
-            switch ((indexPath as NSIndexPath).row) {
+            switch indexPath.row {
             case 0:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "LogoutCellIdentifier", for: indexPath) 
                 cell.textLabel!.text = NSLocalizedString("LOGOUT_LABEL", comment: "")
@@ -95,7 +95,7 @@ class SettingsViewController: UITableViewController {
     }
     
     func audioTabChanged() {
-        UserDefaults.standard.set(self.audioSwitch.isOn, forKey: kShowAudioTabDefault)
+        UserDefaults.standard.set(audioSwitch.isOn, forKey: kShowAudioTabDefault)
         UserDefaults.standard.synchronize()
         AppDelegate.appDelegate().showHideAudioTab()
     }

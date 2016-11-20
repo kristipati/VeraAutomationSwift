@@ -135,7 +135,7 @@ class VeraUnit : CustomStringConvertible {
         }
         
         if sceneArray.isEmpty == false {
-            return sceneArray.sorted(by: {$0.name<$1.name})
+            return sceneArray.sorted{$0.name < $1.name}
         }
 
         return nil
@@ -165,7 +165,7 @@ class VeraUnit : CustomStringConvertible {
         }
         
         if deviceArray.isEmpty == false {
-            return deviceArray.sorted(by: {$0.name<$1.name})
+            return deviceArray.sorted{$0.name < $1.name}
         }
         return nil
     }
@@ -181,7 +181,7 @@ class VeraUnit : CustomStringConvertible {
         }
         
         if roomSet.isEmpty == false {
-            return roomSet.sorted(by: {$0.name<$1.name})
+            return roomSet.sorted{$0.name < $1.name}
         }
         
         return nil
@@ -198,7 +198,7 @@ class VeraUnit : CustomStringConvertible {
         }
         
         if roomSet.isEmpty == false {
-            return roomSet.sorted(by: {$0.name<$1.name})
+            return roomSet.sorted{$0.name < $1.name}
         }
         
         return nil

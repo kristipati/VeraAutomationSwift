@@ -16,22 +16,22 @@ class ScenesListViewController: UITableViewController {
     override func awakeFromNib() {
         super.awakeFromNib()
         if UIDevice.current.userInterfaceIdiom == .pad {
-            self.clearsSelectionOnViewWillAppear = true
-            self.preferredContentSize = CGSize(width: 320.0, height: 600.0)
+            clearsSelectionOnViewWillAppear = true
+            preferredContentSize = CGSize(width: 320.0, height: 600.0)
         }
 
-        self.tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+        tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = self.splitViewController?.tabBarItem.title
-        self.tableView.estimatedRowHeight = 44
-        self.tableView.rowHeight = UITableViewAutomaticDimension;
+        title = splitViewController?.tabBarItem.title
+        tableView.estimatedRowHeight = 44
+        tableView.rowHeight = UITableViewAutomaticDimension;
 
         NotificationCenter.default.addObserver(self, selector: #selector(ScenesListViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
-        self.loadRooms(true)
-        self.tableView.reloadData()
+        loadRooms(true)
+        tableView.reloadData()
     }
 
     func unitInfoUpdated(_ notification: Notification) {
@@ -41,16 +41,16 @@ class ScenesListViewController: UITableViewController {
                 fullload = tempFullLoad
             }
         }
-        self.loadRooms(fullload)
+        loadRooms(fullload)
     }
     
     func loadRooms(_ fullload: Bool) {
         if fullload == true {
-            _ = self.navigationController?.popToRootViewController(animated: false)
-            if let indexPath = self.tableView.indexPathForSelectedRow {
-                self.tableView.deselectRow(at: indexPath, animated: false)
+            _ = navigationController?.popToRootViewController(animated: false)
+            if let indexPath = tableView.indexPathForSelectedRow {
+                tableView.deselectRow(at: indexPath, animated: false)
             }
-            self.tableView.reloadData()
+            tableView.reloadData()
         }
     }
 
@@ -58,14 +58,13 @@ class ScenesListViewController: UITableViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetail" {
-            if let indexPath = self.tableView.indexPathForSelectedRow {
+            if let indexPath = tableView.indexPathForSelectedRow {
                 let controller = (segue.destination as! UINavigationController).topViewController as! ScenesViewController
                 if let roomsWithScenes = AppDelegate.appDelegate().veraAPI.roomsWithScenes() {
-                    let room = roomsWithScenes[(indexPath as NSIndexPath).row]
-                    controller.room = room
+                    controller.room = roomsWithScenes[indexPath.row]
                 }
 
-                controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem
+                controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
         }
@@ -84,8 +83,7 @@ class ScenesListViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) 
         
         if let roomsWithScenes = AppDelegate.appDelegate().veraAPI.roomsWithScenes() {
-            let room = roomsWithScenes[(indexPath as NSIndexPath).row]
-            cell.textLabel!.text = room.name
+            cell.textLabel!.text = roomsWithScenes[indexPath.row].name
         }
         
         cell.accessoryType = .disclosureIndicator

@@ -8,17 +8,6 @@
 
 import UIKit
 
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l < r
-  case (nil, _?):
-    return true
-  default:
-    return false
-  }
-}
-
 
 protocol AudioProtocol {
     func setDevicePower(_ device:VeraDevice, turnOn: Bool)
@@ -34,9 +23,9 @@ class AudioViewController: UICollectionViewController, AudioProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if self.room != nil {
-            self.devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room: self.room!, showExcluded: false, categories: .audio)
-            self.title = self.room?.name
+        if let room = room {
+            devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room: room, showExcluded: false, categories: .audio)
+            title = room.name
         }
 
         NotificationCenter.default.addObserver(self, selector: #selector(AudioViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
@@ -44,40 +33,35 @@ class AudioViewController: UICollectionViewController, AudioProtocol {
     
     func unitInfoUpdated(_ notification: Notification) {
         var fullload = false
-        if let info = (notification as NSNotification).userInfo as? Dictionary<String, AnyObject> {
-            if let tempFullLoad = info[VeraUnitInfoFullLoad] as? Bool {
-                fullload = tempFullLoad
-            }
+        if let info = (notification as NSNotification).userInfo as? Dictionary<String, AnyObject>, let tempFullLoad = info[VeraUnitInfoFullLoad] as? Bool  {
+            fullload = tempFullLoad
         }
         
         if fullload == true {
-            self.room = nil
-            self.devices = nil
-            self.title = nil
-            self.navigationItem.leftBarButtonItem = nil
+            room = nil
+            devices = nil
+            title = nil
+            navigationItem.leftBarButtonItem = nil
         }
-        self.collectionView!.reloadData()
+        
+        collectionView!.reloadData()
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let devices = self.devices {
-            return devices.count
-        }
-        
-        return 0
+        return devices?.count ?? 0
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AudioDeviceCell", for: indexPath) as! AudioCell
         
-        if (indexPath as NSIndexPath).row < self.devices?.count {
-            let device = self.devices![(indexPath as NSIndexPath).row]
+        if let devices = devices, indexPath.row < devices.count {
+            let device = devices[indexPath.row]
             cell.device = device
             cell.delegate = self
             cell.setup()
         }
         
-        return cell as UICollectionViewCell
+        return cell
     }
 
     func setDevicePower(_ device:VeraDevice, turnOn: Bool) {

@@ -8,18 +8,6 @@
 
 import UIKit
 
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l < r
-  case (nil, _?):
-    return true
-  default:
-    return false
-  }
-}
-
-
 class ScenesViewController: UICollectionViewController {
     var room: VeraRoom?
     var scenes: [VeraScene]?
@@ -27,9 +15,9 @@ class ScenesViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if self.room != nil {
-            self.scenes = AppDelegate.appDelegate().veraAPI.scenesForRoom(room: self.room!)
-            self.title = self.room?.name
+        if let room = room {
+            scenes = AppDelegate.appDelegate().veraAPI.scenesForRoom(room: room)
+            title = room.name
         }
 
         NotificationCenter.default.addObserver(self, selector: #selector(ScenesViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
@@ -44,30 +32,25 @@ class ScenesViewController: UICollectionViewController {
         }
 
         if fullload == true {
-            self.room = nil
-            self.scenes = nil
-            self.title = nil
-            self.navigationItem.leftBarButtonItem = nil
+            room = nil
+            scenes = nil
+            title = nil
+            navigationItem.leftBarButtonItem = nil
         }
-        self.collectionView!.reloadData()
+        collectionView!.reloadData()
     }
 
     // MARK: UICollectionViewDataSource
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        //#warning Incomplete method implementation -- Return the number of items in the section
-        if let scenes = self.scenes {
-            return scenes.count
-        }
-        
-        return 0
+        return scenes?.count ?? 0
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SceneCell", for: indexPath) as! SceneCell
     
-        if (indexPath as NSIndexPath).row < self.scenes?.count {
-            let scene = self.scenes![(indexPath as NSIndexPath).row]
+        if let scenes = scenes, indexPath.row < scenes.count {
+            let scene = scenes[indexPath.row]
             cell.scene = scene
             cell.setup()
         }
@@ -77,8 +60,8 @@ class ScenesViewController: UICollectionViewController {
 
     // MARK: UICollectionViewDelegate
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if (indexPath as NSIndexPath).row < self.scenes?.count {
-            let scene = self.scenes![(indexPath as NSIndexPath).row]
+        if let scenes = scenes, indexPath.row < scenes.count {
+            let scene = scenes[indexPath.row]
             
             AppDelegate.appDelegate().veraAPI.runSceneWithNotification(scene)
         }

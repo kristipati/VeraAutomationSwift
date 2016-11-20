@@ -8,18 +8,6 @@
 
 import UIKit
 
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l < r
-  case (nil, _?):
-    return true
-  default:
-    return false
-  }
-}
-
-
 class OnViewController: UICollectionViewController {
     var devices: [VeraDevice]?
     
@@ -28,22 +16,22 @@ class OnViewController: UICollectionViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(OnViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
         
-        self.loadOnDevices()
+        loadOnDevices()
     }
 
     func unitInfoUpdated(_ notification: Notification) {
-        self.loadOnDevices()
+        loadOnDevices()
     }
     
     func loadOnDevices () {
-        var devices = [VeraDevice]()
+        var newDevices = [VeraDevice]()
         if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.switch, VeraDevice.Category.dimmableLight) {
             for room in roomsWithSwitches {
                 if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room: room, showExcluded: false, categories: VeraDevice.Category.switch, VeraDevice.Category.dimmableLight) {
                     for device in roomDevices {
                         if let status = device.status {
                             if status == 1 {
-                                devices.append(device)
+                                newDevices.append(device)
                             }
                         }
                     }
@@ -51,24 +39,20 @@ class OnViewController: UICollectionViewController {
             }
         }
         
-        self.devices = devices
+        devices = newDevices
         
-        self.collectionView!.reloadData()
+        collectionView!.reloadData()
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if self.devices != nil {
-            return self.devices!.count
-        }
-        
-        return 0
+        return devices?.count ?? 0
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "OnCellIdentifier", for: indexPath) as! OnDeviceCell
         
-        if (indexPath as NSIndexPath).row < self.devices?.count {
-            let device = self.devices![(indexPath as NSIndexPath).row]
+        if let devices = devices, indexPath.row < devices.count {
+            let device = devices[indexPath.row]
             cell.device = device
             cell.setup()
         }
@@ -77,8 +61,8 @@ class OnViewController: UICollectionViewController {
     }
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if (indexPath as NSIndexPath).row < self.devices?.count {
-            let device = self.devices![(indexPath as NSIndexPath).row]
+        if let devices = devices, indexPath.row < devices.count {
+            let device = devices[indexPath.row]
             
             AppDelegate.appDelegate().veraAPI.setDeviceStatusWithNotification(device, newDeviceStatus: 0, newDeviceLevel: nil)
         }
