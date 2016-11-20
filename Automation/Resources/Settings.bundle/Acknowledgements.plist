@@ -94,48 +94,6 @@
                         <key>Type</key>
                         <string>PSGroupSpecifier</string>
                         <key>FooterText</key>
-                        <string>JSONHelper</string>
-                </dict>
-                <dict>
-                        <key>Type</key>
-                        <string>PSGroupSpecifier</string>
-                        <key>FooterText</key>
-                        <string>JSONHelper2</string>
-                </dict>
-                <dict>
-                        <key>Type</key>
-                        <string>PSGroupSpecifier</string>
-                        <key>FooterText</key>
-                        <string>JSONHelper3</string>
-                </dict>
-                <dict>
-                        <key>Type</key>
-                        <string>PSGroupSpecifier</string>
-                        <key>FooterText</key>
-                        <string>JSONHelper4</string>
-                </dict>
-                <dict>
-                        <key>Type</key>
-                        <string>PSGroupSpecifier</string>
-                        <key>FooterText</key>
-                        <string>JSONHelper5</string>
-                </dict>
-                <dict>
-                        <key>Type</key>
-                        <string>PSGroupSpecifier</string>
-                        <key>FooterText</key>
-                        <string>JSONHelper6</string>
-                </dict>
-                <dict>
-                        <key>Type</key>
-                        <string>PSGroupSpecifier</string>
-                        <key>FooterText</key>
-                        <string>JSONHelper7</string>
-                </dict>
-                <dict>
-                        <key>Type</key>
-                        <string>PSGroupSpecifier</string>
-                        <key>FooterText</key>
                         <string>KeychainSwift</string>
                 </dict>
                 <dict>
