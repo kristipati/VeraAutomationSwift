@@ -47,14 +47,16 @@ class ScenesViewController: UICollectionViewController {
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        // swiftlint:disable force_cast
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SceneCell", for: indexPath) as! SceneCell
-    
+        // swiftlint:enable force_cast
+
         if let scenes = scenes, indexPath.row < scenes.count {
             let scene = scenes[indexPath.row]
             cell.scene = scene
             cell.setup()
         }
-        
+
         return cell as UICollectionViewCell
     }
 
@@ -62,7 +64,7 @@ class ScenesViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let scenes = scenes, indexPath.row < scenes.count {
             let scene = scenes[indexPath.row]
-            
+
             AppDelegate.appDelegate().veraAPI.runSceneWithNotification(scene)
         }
     }

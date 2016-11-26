@@ -14,11 +14,10 @@ class LockCell: BaseCell {
     @IBOutlet weak var statusLabel: UILabel!
     var device: VeraDevice?
     var delegate: LockProtocol?
-    
+
     override func setup() {
         super.setup()
         titleLabel.text = device?.name
-        
 
         if let locked = device?.locked {
             if locked == true {

@@ -12,7 +12,6 @@ class ScenesListViewController: UITableViewController {
 
     var objects = NSMutableArray()
 
-
     override func awakeFromNib() {
         super.awakeFromNib()
         if UIDevice.current.userInterfaceIdiom == .pad {
@@ -27,7 +26,7 @@ class ScenesListViewController: UITableViewController {
         super.viewDidLoad()
         title = splitViewController?.tabBarItem.title
         tableView.estimatedRowHeight = 44
-        tableView.rowHeight = UITableViewAutomaticDimension;
+        tableView.rowHeight = UITableViewAutomaticDimension
 
         NotificationCenter.default.addObserver(self, selector: #selector(ScenesListViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
         loadRooms(true)
@@ -43,7 +42,7 @@ class ScenesListViewController: UITableViewController {
         }
         loadRooms(fullload)
     }
-    
+
     func loadRooms(_ fullload: Bool) {
         if fullload == true {
             _ = navigationController?.popToRootViewController(animated: false)
@@ -59,7 +58,9 @@ class ScenesListViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetail" {
             if let indexPath = tableView.indexPathForSelectedRow {
+                // swiftlint:disable force_cast
                 let controller = (segue.destination as! UINavigationController).topViewController as! ScenesViewController
+                // swiftlint:enable force_cast
                 if let roomsWithScenes = AppDelegate.appDelegate().veraAPI.roomsWithScenes() {
                     controller.room = roomsWithScenes[indexPath.row]
                 }
@@ -75,21 +76,19 @@ class ScenesListViewController: UITableViewController {
         if let roomsWithScenes = AppDelegate.appDelegate().veraAPI.roomsWithScenes() {
             return roomsWithScenes.count
         }
-        
+
         return 0
     }
-    
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) 
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+
         if let roomsWithScenes = AppDelegate.appDelegate().veraAPI.roomsWithScenes() {
             cell.textLabel!.text = roomsWithScenes[indexPath.row].name
         }
-        
+
         cell.accessoryType = .disclosureIndicator
-        
+
         return cell
     }
-
 }
-

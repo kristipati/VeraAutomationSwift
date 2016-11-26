@@ -8,13 +8,11 @@
 
 import UIKit
 
-
 protocol AudioProtocol {
-    func setDevicePower(_ device:VeraDevice, turnOn: Bool)
-    func changeDeviceVolume(_ device:VeraDevice, increase: Bool)
-    func setDeviceServer(_ device:VeraDevice, server: Int)
+    func setDevicePower(_ device: VeraDevice, turnOn: Bool)
+    func changeDeviceVolume(_ device: VeraDevice, increase: Bool)
+    func setDeviceServer(_ device: VeraDevice, server: Int)
 }
-
 
 class AudioViewController: UICollectionViewController, AudioProtocol {
     var room: VeraRoom?
@@ -30,20 +28,20 @@ class AudioViewController: UICollectionViewController, AudioProtocol {
 
         NotificationCenter.default.addObserver(self, selector: #selector(AudioViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
     }
-    
+
     func unitInfoUpdated(_ notification: Notification) {
         var fullload = false
-        if let info = (notification as NSNotification).userInfo as? Dictionary<String, AnyObject>, let tempFullLoad = info[VeraUnitInfoFullLoad] as? Bool  {
+        if let info = (notification as NSNotification).userInfo as? Dictionary<String, AnyObject>, let tempFullLoad = info[VeraUnitInfoFullLoad] as? Bool {
             fullload = tempFullLoad
         }
-        
+
         if fullload == true {
             room = nil
             devices = nil
             title = nil
             navigationItem.leftBarButtonItem = nil
         }
-        
+
         collectionView!.reloadData()
     }
 
@@ -52,27 +50,29 @@ class AudioViewController: UICollectionViewController, AudioProtocol {
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        // swiftlint:disable force_cast
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AudioDeviceCell", for: indexPath) as! AudioCell
-        
+        // swiftlint:enable force_cast
+
         if let devices = devices, indexPath.row < devices.count {
             let device = devices[indexPath.row]
             cell.device = device
             cell.delegate = self
             cell.setup()
         }
-        
+
         return cell
     }
 
-    func setDevicePower(_ device:VeraDevice, turnOn: Bool) {
+    func setDevicePower(_ device: VeraDevice, turnOn: Bool) {
         AppDelegate.appDelegate().veraAPI.setAudioPowerWithNotification(device, on:turnOn)
     }
-    
-    func changeDeviceVolume(_ device:VeraDevice, increase: Bool) {
+
+    func changeDeviceVolume(_ device: VeraDevice, increase: Bool) {
         AppDelegate.appDelegate().veraAPI.changeAudioVolumeWithNotification(device, increase:increase)
     }
-    
-    func setDeviceServer(_ device:VeraDevice, server: Int) {
+
+    func setDeviceServer(_ device: VeraDevice, server: Int) {
         AppDelegate.appDelegate().veraAPI.setAudioInputWithNotification(device, input:server)
     }
 }

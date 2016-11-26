@@ -15,7 +15,7 @@ protocol SwitchProtocol {
 class SwitchesViewController: UICollectionViewController, SwitchProtocol {
     var room: VeraRoom?
     var devices: [VeraDevice]?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -26,7 +26,6 @@ class SwitchesViewController: UICollectionViewController, SwitchProtocol {
 
         NotificationCenter.default.addObserver(self, selector: #selector(SwitchesViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
     }
-
 
     func unitInfoUpdated(_ notification: Notification) {
         var fullload = false
@@ -52,15 +51,17 @@ class SwitchesViewController: UICollectionViewController, SwitchProtocol {
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        // swiftlint:disable force_cast
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DeviceCell", for: indexPath) as! DeviceCell
-    
+        // swiftlint:enable force_cast
+
         if let devices = devices, indexPath.row < devices.count {
             let device = devices[indexPath.row]
             cell.device = device
             cell.delegate = self
             cell.setup()
         }
-    
+
         return cell as UICollectionViewCell
     }
 
@@ -75,11 +76,11 @@ class SwitchesViewController: UICollectionViewController, SwitchProtocol {
                     newStatus = 1
                 }
             }
-            
+
             AppDelegate.appDelegate().veraAPI.setDeviceStatusWithNotification(device, newDeviceStatus: newStatus, newDeviceLevel: nil)
         }
     }
-    
+
     func changeDeviceLevel(_ device: VeraDevice, level: Int) {
         AppDelegate.appDelegate().veraAPI.setDeviceStatusWithNotification(device, newDeviceStatus: nil, newDeviceLevel: level)
     }

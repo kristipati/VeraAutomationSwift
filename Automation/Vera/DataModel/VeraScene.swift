@@ -9,13 +9,15 @@
 import PMJSON
 
 class VeraScene: CustomStringConvertible {
+    // swiftlint:disable variable_name
     var id: Int?
+    // swiftlint:enable variable_name
     var active: Bool?
     var state: Int?
     var name: String?
     var roomID: Int?
     var comment: String?
-    
+
     init(json: JSON) {
         id = json["id"]?.int
         active = json["active"]?.veraBoolean
@@ -24,17 +26,17 @@ class VeraScene: CustomStringConvertible {
         roomID = json["room"]?.veraInteger
         comment = json["comment"]?.string
     }
-    
+
     var description: String {
         var desc: String = "Name: "
         if self.name != nil {
             desc += self.name!
         }
-        
+
         if self.id != nil {
             desc += " (\(self.id!))"
         }
-        
+
         return desc
     }
 }

@@ -12,7 +12,6 @@ class AudioListViewController: UITableViewController {
 
     var objects = NSMutableArray()
 
-
     override func awakeFromNib() {
         super.awakeFromNib()
         if UIDevice.current.userInterfaceIdiom == .pad {
@@ -27,7 +26,7 @@ class AudioListViewController: UITableViewController {
         super.viewDidLoad()
 
         tableView.estimatedRowHeight = 44
-        tableView.rowHeight = UITableViewAutomaticDimension;
+        tableView.rowHeight = UITableViewAutomaticDimension
 
         NotificationCenter.default.addObserver(self, selector: #selector(AudioListViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
         loadRooms(true)
@@ -38,13 +37,15 @@ class AudioListViewController: UITableViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetail" {
+            // swiftlint:disable force_cast
             let controller = (segue.destination as! UINavigationController).topViewController as! AudioViewController
+            // swiftlint:enable force_cast
             if let indexPath = tableView.indexPathForSelectedRow {
                 if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.audio) {
                     let room = roomsWithSwitches[indexPath.row]
                     controller.room = room
                 }
-                
+
                 controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
@@ -58,7 +59,7 @@ class AudioListViewController: UITableViewController {
         }
         loadRooms(fullload)
     }
-    
+
     func loadRooms(_ fullload: Bool) {
         if fullload == true {
             _ = navigationController?.popToRootViewController(animated: false)
@@ -73,18 +74,17 @@ class AudioListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.audio)?.count ?? 0
     }
-    
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) 
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+
         if let roomsWithAudio = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.audio) {
             let room = roomsWithAudio[indexPath.row]
             cell.textLabel!.text = room.name
         }
-        
+
         cell.accessoryType = .disclosureIndicator
-        
+
         return cell
     }
 }
-

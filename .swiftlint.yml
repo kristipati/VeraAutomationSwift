@@ -1,0 +1,21 @@
+excluded:
+    - Carthage
+    - External
+
+line_length: 200
+
+type_body_length:
+    - 500 # warning
+    - 700 # error
+    
+cyclomatic_complexity:
+    - 20 # warning
+    - 30 # error
+    
+function_body_length:
+    - 100 # warning
+    - 200 # error
+    
+file_length:
+    - 800 # warning
+    - 1000 # error

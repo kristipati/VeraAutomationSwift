@@ -14,19 +14,19 @@ protocol ThermostatProtocol {
 
 class ClimateViewController: UICollectionViewController, ThermostatProtocol {
     var devices: [VeraDevice]?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         NotificationCenter.default.addObserver(self, selector: #selector(ClimateViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
-        
+
         loadThermostats()
     }
-    
+
     func unitInfoUpdated(_ notification: Notification) {
         loadThermostats()
     }
-    
+
     func loadThermostats () {
         var thermoDevices = [VeraDevice]()
         if let roomsWithThermostats = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.thermostat) {
@@ -38,32 +38,34 @@ class ClimateViewController: UICollectionViewController, ThermostatProtocol {
                 }
             }
         }
-        
+
         devices = thermoDevices
-        
+
         collectionView!.reloadData()
     }
-    
+
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return devices?.count ?? 0
     }
-    
+
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        // swiftlint:disable force_cast
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ClimateCell", for: indexPath) as! ThermostatCell
-        
+        // swiftlint:enable force_cast
+
         if let devices = devices, indexPath.row < devices.count {
             let device = devices[indexPath.row]
             cell.device = device
             cell.delegate = self
             cell.setup()
         }
-        
+
         return cell
     }
-    
+
     func changeHVAC(_ device: VeraDevice, fanMode: VeraDevice.FanMode?, hvacMode: VeraDevice.HVACMode?, coolTemp: Int?, heatTemp: Int?) {
         AppDelegate.appDelegate().veraAPI.changeHVACWithNotification(device, fanMode: fanMode, hvacMode: hvacMode, coolTemp: coolTemp, heatTemp: heatTemp)
-        
+
     }
 
 }

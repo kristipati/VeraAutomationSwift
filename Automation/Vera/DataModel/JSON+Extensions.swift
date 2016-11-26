@@ -36,7 +36,7 @@ extension JSON {
         } else if let temp = self.string {
             return Double(temp)
         }
-        
+
         return nil
     }
 

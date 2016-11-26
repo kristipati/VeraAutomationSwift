@@ -10,9 +10,8 @@ import Foundation
 import PMJSON
 
 class VeraUser {
-    var units:[VeraUnit]?
-    
-    
+    var units: [VeraUnit]?
+
     init(json: JSON) {
         units = try? json.mapArray("units", VeraUnit.init(json:))
         if units == nil {

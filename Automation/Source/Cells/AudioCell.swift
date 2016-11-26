@@ -18,15 +18,15 @@ class AudioCell: BaseCell {
     @IBOutlet weak var server1Button: UIButton!
     @IBOutlet weak var server2Button: UIButton!
     @IBOutlet weak var server3Button: UIButton!
-    
+
     @IBOutlet weak var titleLabel: UILabel!
-    
+
     @IBAction func turnOff(_ sender: AnyObject) {
         if let device = device {
             delegate?.setDevicePower(device, turnOn: false)
         }
     }
-    
+
     @IBAction func turnOn(_ sender: AnyObject) {
         if let device = self.device {
             delegate?.setDevicePower(device, turnOn: true)
@@ -62,7 +62,7 @@ class AudioCell: BaseCell {
             delegate?.setDeviceServer(device, server: 3)
         }
     }
-    
+
     override func setup() {
         super.setup()
         if let device = device {

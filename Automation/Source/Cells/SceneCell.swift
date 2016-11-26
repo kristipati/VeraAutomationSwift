@@ -13,7 +13,7 @@ class SceneCell: BaseCell {
     var scene: VeraScene?
 
     @IBOutlet weak var titleLabel: UILabel!
-    
+
     override func setup() {
         super.setup()
         titleLabel.text = scene?.name

@@ -9,7 +9,7 @@
 import UIKit
 
 protocol LockProtocol {
-    func setDeviceLocked(_ device:VeraDevice, locked: Bool)
+    func setDeviceLocked(_ device: VeraDevice, locked: Bool)
 }
 
 class LocksViewController: UICollectionViewController, LockProtocol {
@@ -19,14 +19,14 @@ class LocksViewController: UICollectionViewController, LockProtocol {
         super.viewDidLoad()
 
         NotificationCenter.default.addObserver(self, selector: #selector(LocksViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
-        
+
         loadLockDevices()
     }
-    
+
     func unitInfoUpdated(_ notification: Notification) {
         loadLockDevices()
     }
-    
+
     func loadLockDevices () {
         var newDevices = [VeraDevice]()
         if let roomsWithLocks = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.lock) {
@@ -38,35 +38,34 @@ class LocksViewController: UICollectionViewController, LockProtocol {
                 }
             }
         }
-        
+
         devices = newDevices
-        
+
         collectionView!.reloadData()
     }
-
 
     // MARK: UICollectionViewDataSource
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return devices?.count ?? 0
     }
-    
+
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        // swiftlint:disable force_cast
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LockCell", for: indexPath) as! LockCell
-        
+        // swiftlint:enable force_cast
+
         if let devices = devices, indexPath.row < devices.count {
             let device = devices[indexPath.row]
             cell.device = device
             cell.delegate = self
             cell.setup()
         }
-        
+
         return cell as UICollectionViewCell
     }
-    
-    func setDeviceLocked(_ device:VeraDevice, locked: Bool) {
+
+    func setDeviceLocked(_ device: VeraDevice, locked: Bool) {
         AppDelegate.appDelegate().veraAPI.setLockStateWithNotification(device, locked:locked)
     }
-
-
 }

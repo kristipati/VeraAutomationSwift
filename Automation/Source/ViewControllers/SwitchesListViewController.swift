@@ -16,7 +16,7 @@ class SwitchesListViewController: UITableViewController {
             clearsSelectionOnViewWillAppear = true
             preferredContentSize = CGSize(width: 320.0, height: 600.0)
         }
-        
+
         tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
     }
 
@@ -24,12 +24,12 @@ class SwitchesListViewController: UITableViewController {
         super.viewDidLoad()
 
         tableView.estimatedRowHeight = 44
-        tableView.rowHeight = UITableViewAutomaticDimension;
+        tableView.rowHeight = UITableViewAutomaticDimension
 
         NotificationCenter.default.addObserver(self, selector: #selector(SwitchesListViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
         loadRooms(true)
     }
-    
+
     func unitInfoUpdated(_ notification: Notification) {
         var fullload = false
         if let info = (notification as NSNotification).userInfo as? Dictionary<String, AnyObject> {
@@ -49,12 +49,14 @@ class SwitchesListViewController: UITableViewController {
             tableView.reloadData()
         }
     }
-    
+
     // MARK: - Segues
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetail" {
+            // swiftlint:disable force_cast
             let controller = (segue.destination as! UINavigationController).topViewController as! SwitchesViewController
+            // swiftlint:enable force_cast
             if let indexPath = tableView.indexPathForSelectedRow {
                 if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.switch, VeraDevice.Category.dimmableLight) {
                     let room = roomsWithSwitches[indexPath.row]
@@ -73,7 +75,7 @@ class SwitchesListViewController: UITableViewController {
         if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.switch, VeraDevice.Category.dimmableLight) {
                 return roomsWithSwitches.count
             }
-        
+
         return 0
     }
 
@@ -84,10 +86,9 @@ class SwitchesListViewController: UITableViewController {
             let room = roomsWithSwitches[indexPath.row]
             cell.textLabel!.text = room.name
         }
-        
+
         cell.accessoryType = .disclosureIndicator
 
         return cell
     }
 }
-

@@ -35,58 +35,59 @@ class VeraDevice: CustomStringConvertible {
         case alarmPanel = 22
         case alarmPartition = 23
         case audio = 200
-        
+
         public var description: String {
             var desc: String = ""
-            
+
             switch self {
             case .interface:
                 desc = "Interface"
-                
+
             case .dimmableLight:
                 desc = "Dimmable Light"
-                
+
             case .switch:
                 desc = "Switch"
-                
+
             case .sensor:
                 desc = "Sensor"
-                
+
             case .thermostat:
                 desc = "Thermostat"
-                
+
             case .lock:
                 desc = "Lock"
-                
+
             case .genericIO:
                 desc = "Generic I/O"
-                
+
             case .sceneController:
                 desc = "Scene Controller"
-                
+
             case .humiditySensor:
                 desc = "Humidity Sensor"
-                
+
             case .temperatureSensor:
                 desc = "Temperature Sensor"
-                
+
             case .alarmPanel:
                 desc = "Alarm Panel"
-                
+
             case .alarmPartition:
                 desc = "Alarm Parition"
-                
+
             case .audio:
                 desc = "Audio"
-                
+
             }
-            
-            
+
             return desc
         }
     }
-    
-    var id : Int?
+
+    // swiftlint:disable variable_name
+    var id: Int?
+    // swiftlint:enable variable_name
     var parentID: Int?
     var category: Category?
     var subcategory: Int?
@@ -104,7 +105,9 @@ class VeraDevice: CustomStringConvertible {
     var tripped: Bool?
     var lastTripped: String?
     var level: Int?
+    // swiftlint:disable variable_name
     var ip: String?
+    // swiftlint:enable variable_name
     var vendorStatusCode: String?
     var vendorStatusData: String?
     var vendorStatus: String?
@@ -123,8 +126,7 @@ class VeraDevice: CustomStringConvertible {
     var armMode: String?
     var hvacState: String?
     var altID: Int?
-    
-    
+
     init(json: JSON) {
         id = json["id"]?.veraInteger
         parentID = json["parent"]?.veraInteger
@@ -154,7 +156,7 @@ class VeraDevice: CustomStringConvertible {
         systemLuupRestart = json["systemLuupRestart"]?.string
         heatTemperatureSetPoint = json["heatsp"]?.veraDouble
         coolTemperatureSetPoint = json["coolsp"]?.veraDouble
-        
+
         if let heat = json["heat"]?.veraDouble {
             heatTemperatureSetPoint = heat
         }
@@ -162,18 +164,18 @@ class VeraDevice: CustomStringConvertible {
         if let cool = json["cool"]?.veraDouble {
             coolTemperatureSetPoint = cool
         }
-        
+
         locked = json["locked"]?.veraBoolean
-        
+
         conditionSatisfied = json["conditionsatisfied"]?.string
         detailedArmMode = json["detailedarmmode"]?.string
         armMode = json["armmode"]?.string
         hvacState = json["hvacstate"]?.string
         altID = json["altid"]?.veraInteger
-        
+
         if let tempCategory = json["category"]?.veraInteger {
             category = Category(rawValue: tempCategory)
-            
+
             if tempCategory == 0 {
                 if let deviceName = name {
                     if deviceName.range(of: "audio", options: .caseInsensitive) != nil {
@@ -182,7 +184,7 @@ class VeraDevice: CustomStringConvertible {
                 }
             }
         }
-        
+
         if let mode = json["mode"]?.string {
             switch mode.lowercased() {
                 case "off":
@@ -197,7 +199,7 @@ class VeraDevice: CustomStringConvertible {
                     hvacMode = nil
             }
         }
-        
+
         if let mode = json["fanmode"]?.string {
             switch mode.lowercased() {
                 case "auto":
@@ -207,24 +209,24 @@ class VeraDevice: CustomStringConvertible {
             }
         }
     }
-    
+
     var description: String {
         var desc: String = "Name: "
         if self.name != nil {
             desc += self.name!
         }
-        
+
         if self.id != nil {
             desc += " (\(self.id!))"
         }
-        
+
         var categoryLabel = " - "
         if self.category != nil {
             categoryLabel += "\(self.category!)"
         }
-        
+
         desc += "\(categoryLabel)"
-        
+
         if let status = self.status {
             if status == 0 {
                 desc += " - Off"
@@ -244,11 +246,11 @@ class VeraDevice: CustomStringConvertible {
         if let tempState = self.state {
             desc += " - State: \(tempState)"
         }
-        
+
         if let level = self.level {
             desc += " level: \(level)"
         }
-        
+
         return desc
     }
 }

@@ -18,7 +18,7 @@ extension Array {
                 }
             }
         }
-        
+
         if index != nil {
             remove(at: index!)
         }

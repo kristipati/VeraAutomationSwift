@@ -13,16 +13,16 @@ class DeviceCell: BaseCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var slider: UISlider!
-    
+
     var device: VeraDevice?
     var delegate: SwitchProtocol?
-    
+
     @IBAction func sliderTouchUpAction(_ sender: UISlider) {
         if let delegate = delegate, let device = device {
             delegate.changeDeviceLevel(device, level: Int(sender.value))
         }
     }
-    
+
     override func setup() {
         super.setup()
         if let device = device {
@@ -34,7 +34,7 @@ class DeviceCell: BaseCell {
                     statusLabel.text = NSLocalizedString("ON_LABEL", comment: "")
                 }
             }
-            
+
             if let cat = device.category {
                 switch cat {
                 case .dimmableLight:

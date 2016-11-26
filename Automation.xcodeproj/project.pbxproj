@@ -92,22 +92,22 @@
 		D21CB87719E20BEB0054A7D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Climate.storyboard; sourceTree = "<group>"; };
 		D21CB87A19E20BF60054A7D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Settings.storyboard; sourceTree = "<group>"; };
 		D21CB88119E20CDB0054A7D4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		D23210751A07230500353F51 /* AudioListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioListViewController.swift; sourceTree = "<group>"; };
-		D23210761A07230500353F51 /* AudioViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioViewController.swift; sourceTree = "<group>"; };
-		D23210771A07230500353F51 /* ClimateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClimateViewController.swift; sourceTree = "<group>"; };
-		D23210781A07230500353F51 /* ExcludedItemsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExcludedItemsViewController.swift; sourceTree = "<group>"; };
-		D23210791A07230500353F51 /* LocksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocksViewController.swift; sourceTree = "<group>"; };
-		D232107A1A07230500353F51 /* OnViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnViewController.swift; sourceTree = "<group>"; };
-		D232107B1A07230500353F51 /* ScenesListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScenesListViewController.swift; sourceTree = "<group>"; };
-		D232107C1A07230500353F51 /* ScenesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScenesViewController.swift; sourceTree = "<group>"; };
-		D232107D1A07230500353F51 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		D232107E1A07230500353F51 /* SwitchesListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchesListViewController.swift; sourceTree = "<group>"; };
-		D232107F1A07230500353F51 /* SwitchesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchesViewController.swift; sourceTree = "<group>"; };
+		D23210751A07230500353F51 /* AudioListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AudioListViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		D23210761A07230500353F51 /* AudioViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AudioViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		D23210771A07230500353F51 /* ClimateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ClimateViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		D23210781A07230500353F51 /* ExcludedItemsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ExcludedItemsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		D23210791A07230500353F51 /* LocksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = LocksViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		D232107A1A07230500353F51 /* OnViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = OnViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		D232107B1A07230500353F51 /* ScenesListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ScenesListViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		D232107C1A07230500353F51 /* ScenesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ScenesViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		D232107D1A07230500353F51 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SettingsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		D232107E1A07230500353F51 /* SwitchesListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SwitchesListViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		D232107F1A07230500353F51 /* SwitchesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SwitchesViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		D232108C1A07232600353F51 /* DeviceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceCell.swift; sourceTree = "<group>"; };
 		D27772181A0DCAF400F33568 /* SceneCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneCell.swift; sourceTree = "<group>"; };
 		D27B15AC1A0730B5003790CE /* BaseCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCell.swift; sourceTree = "<group>"; };
 		D28002AE1A09B5C6005894C3 /* VeraUIExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraUIExtension.swift; sourceTree = "<group>"; };
-		D28002B01A09D23A005894C3 /* SFSwiftNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SFSwiftNotification.swift; path = External/SFSwiftNotification/Classes/SFSwiftNotification.swift; sourceTree = SOURCE_ROOT; };
+		D28002B01A09D23A005894C3 /* SFSwiftNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = SFSwiftNotification.swift; path = External/SFSwiftNotification/Classes/SFSwiftNotification.swift; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		D2843B3619E0E798007CC520 /* Automation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Automation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D285144F1D85BCC400162FDE /* VeraAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraAuth.swift; sourceTree = "<group>"; };
 		D28514501D85BCC400162FDE /* VeraDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraDevice.swift; sourceTree = "<group>"; };
@@ -115,9 +115,9 @@
 		D28514521D85BCC400162FDE /* VeraScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraScene.swift; sourceTree = "<group>"; };
 		D28514531D85BCC400162FDE /* VeraUnit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraUnit.swift; sourceTree = "<group>"; };
 		D28514541D85BCC400162FDE /* VeraUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraUser.swift; sourceTree = "<group>"; };
-		D28514551D85BCC400162FDE /* VeraAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraAPI.swift; sourceTree = "<group>"; };
+		D28514551D85BCC400162FDE /* VeraAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = VeraAPI.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		D28514911D85BDCA00162FDE /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
-		D28514921D85BDCA00162FDE /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		D28514921D85BDCA00162FDE /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = Reachability.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		D29867E81A15B628000E99E7 /* ReleaseNotes.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReleaseNotes.txt; sourceTree = "<group>"; };
 		D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnDeviceCell.swift; sourceTree = "<group>"; };
 		D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioCell.swift; sourceTree = "<group>"; };
@@ -134,7 +134,7 @@
 		D2E11B451DD0432C00701E72 /* XCGLogger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = XCGLogger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2E3597C1A104A0F00F30C32 /* LockCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockCell.swift; sourceTree = "<group>"; };
 		D2E3597E1A105E5500F30C32 /* ThermostatCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThermostatCell.swift; sourceTree = "<group>"; };
-		D2EA9F941DE0ADB900C4E94A /* JSON+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "JSON+Extensions.swift"; sourceTree = "<group>"; };
+		D2EA9F941DE0ADB900C4E94A /* JSON+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "JSON+Extensions.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		D2ED11361A15BC4D00B8F25B /* ArrayExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
 		D2EE377C19EB0BE900630C86 /* CurrentRelease.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CurrentRelease.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -226,7 +226,6 @@
 		D2843B2D19E0E798007CC520 = {
 			isa = PBXGroup;
 			children = (
-				D2E11B451DD0432C00701E72 /* XCGLogger.framework */,
 				D2EE377C19EB0BE900630C86 /* CurrentRelease.txt */,
 				D29867E81A15B628000E99E7 /* ReleaseNotes.txt */,
 				D2CEE4C319F8AA4D00D59BAF /* ToDo.txt */,
@@ -322,6 +321,7 @@
 		D2E11B441DD0423100701E72 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D2E11B451DD0432C00701E72 /* XCGLogger.framework */,
 				D2E11B421DD0409700701E72 /* PMJSON.framework */,
 				D2E11B401DD0408100701E72 /* KeychainSwift.framework */,
 				D2E11B3E1DD0407800701E72 /* CryptoSwift.framework */,
@@ -338,6 +338,7 @@
 			buildConfigurationList = D2843B5719E0E798007CC520 /* Build configuration list for PBXNativeTarget "Automation" */;
 			buildPhases = (
 				D2843B3219E0E798007CC520 /* Sources */,
+				D234D4741DE920BD00EFC511 /* Swift Lint */,
 				D2843B3319E0E798007CC520 /* Frameworks */,
 				D2843B3419E0E798007CC520 /* Resources */,
 				D21CB86019E1FF660054A7D4 /* Setup Version */,
@@ -431,6 +432,20 @@
 			shellPath = /bin/sh;
 			shellScript = ./Scripts/setup_version.sh;
 			showEnvVarsInLog = 0;
+		};
+		D234D4741DE920BD00EFC511 /* Swift Lint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Swift Lint";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 

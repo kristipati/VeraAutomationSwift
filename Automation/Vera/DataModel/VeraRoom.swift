@@ -9,15 +9,17 @@
 import PMJSON
 
 struct VeraRoom: CustomStringConvertible, Hashable {
-    var name:String?
-    var id:Int?
-    
+    var name: String?
+    // swiftlint:disable variable_name
+    var id: Int?
+    // swiftlint:enable variable_name
+
     init(json: JSON) {
         id = json["id"]?.int
         name = json["name"]?.string
     }
-    
-    static func ==(lhs: VeraRoom, rhs: VeraRoom) -> Bool {
+
+    static func == (lhs: VeraRoom, rhs: VeraRoom) -> Bool {
         return lhs.id == rhs.id && lhs.name == rhs.name
     }
 
@@ -26,15 +28,15 @@ struct VeraRoom: CustomStringConvertible, Hashable {
         if self.name != nil {
             desc += self.name!
         }
-        
+
         if self.id != nil {
             desc += " (\(self.id!))"
         }
-        
+
         return desc
     }
-    
-    var hashValue : Int {
+
+    var hashValue: Int {
         get {
             if self.id == nil {
                 return 0

@@ -10,7 +10,7 @@ import UIKit
 
 class SettingsViewController: UITableViewController {
     var audioSwitch = UISwitch()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -21,10 +21,10 @@ class SettingsViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Return the number of rows in the section.
-        if (section == 0) {
-            return 3;
-        } else if (section == 1) {
-            return 1;
+        if section == 0 {
+            return 3
+        } else if section == 1 {
+            return 1
         }
         return 0
     }
@@ -33,7 +33,7 @@ class SettingsViewController: UITableViewController {
         // Return the number of rows in the section.
         return 2
     }
-    
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 1 {
@@ -46,23 +46,23 @@ class SettingsViewController: UITableViewController {
             case 0:
                 switch indexPath.row {
                 case 0:
-                    let cell = tableView.dequeueReusableCell(withIdentifier: "ExcludedDevicesCellIdentifier", for: indexPath) 
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "ExcludedDevicesCellIdentifier", for: indexPath)
                     cell.textLabel!.text = NSLocalizedString("EXCLUDED_DEVICES_TITLE", comment: "")
                     cell.accessoryView = nil
                     cell.accessoryType = .disclosureIndicator
                     cell.selectionStyle = .default
                     return cell
-                    
+
                 case 1:
-                    let cell = tableView.dequeueReusableCell(withIdentifier: "ExcludedScenesCellIdentifier", for: indexPath) 
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "ExcludedScenesCellIdentifier", for: indexPath)
                     cell.textLabel!.text = NSLocalizedString("EXCLUDED_SCENES_TITLE", comment: "")
                     cell.accessoryView = nil
                     cell.accessoryType = .disclosureIndicator
                     cell.selectionStyle = .default
                     return cell
-                    
+
                 case 2:
-                    let cell = tableView.dequeueReusableCell(withIdentifier: "ToggleCellIdentifier", for: indexPath) 
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "ToggleCellIdentifier", for: indexPath)
                     cell.accessoryType = .none
                     cell.accessoryView = audioSwitch
                     audioSwitch.isOn = UserDefaults.standard.bool(forKey: kShowAudioTabDefault)
@@ -70,21 +70,21 @@ class SettingsViewController: UITableViewController {
                     cell.textLabel!.text = NSLocalizedString("SHOW_AUDIO_TAB", comment: "")
                     cell.selectionStyle = .none
                     return cell
-                    
+
                 default:
                     return UITableViewCell()
             }
-            
+
         case 1:
             switch indexPath.row {
             case 0:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "LogoutCellIdentifier", for: indexPath) 
+                let cell = tableView.dequeueReusableCell(withIdentifier: "LogoutCellIdentifier", for: indexPath)
                 cell.textLabel!.text = NSLocalizedString("LOGOUT_LABEL", comment: "")
                 cell.accessoryView = nil
                 cell.accessoryType = .none
                 cell.selectionStyle = .none
                 return cell
-                
+
             default:
                 return UITableViewCell()
 
@@ -93,7 +93,7 @@ class SettingsViewController: UITableViewController {
             return UITableViewCell()
         }
     }
-    
+
     func audioTabChanged() {
         UserDefaults.standard.set(audioSwitch.isOn, forKey: kShowAudioTabDefault)
         UserDefaults.standard.synchronize()
@@ -119,7 +119,7 @@ class SettingsViewController: UITableViewController {
                         destVC.title = ""
                 }
             }
-            
+
         }
     }
 
