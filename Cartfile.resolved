@@ -1,5 +1,5 @@
 github "krzyzanowskim/CryptoSwift" "0.6.7"
-github "postmates/PMJSON" "v1.2.1"
+github "postmates/PMJSON" "v2.0.0"
 github "DaveWoodCom/XCGLogger" "Version_4.0.0"
 github "marketplacer/keychain-swift" "6.0.2"
-github "postmates/PMHTTP" "v1.0.4"
+github "postmates/PMHTTP" "v2.0.1"

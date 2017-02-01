@@ -16,11 +16,13 @@
 		9E1B24501BC73D7600E5BC19 /* JSONDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1B244F1BC73D7600E5BC19 /* JSONDecoderTests.swift */; };
 		9E1B24591BC73DA000E5BC19 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1B24581BC73DA000E5BC19 /* JSON.swift */; };
 		9E1B246B1BC7463D00E5BC19 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1B246A1BC7463D00E5BC19 /* Parser.swift */; };
+		9E4997F01DC96E110049EECD /* JSONEncoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4997EF1DC96E110049EECD /* JSONEncoderTests.swift */; };
 		9E5983DC1C60282F008495F6 /* Encoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5983DB1C60282F008495F6 /* Encoder.swift */; };
 		9E8793781BC7547800BC6A15 /* Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E8793771BC7547800BC6A15 /* Decoder.swift */; };
 		9E87937C1BC8341500BC6A15 /* ObjectiveC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E87937B1BC8341500BC6A15 /* ObjectiveC.swift */; };
 		9E87937E1BC835F500BC6A15 /* Accessors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E87937D1BC835F500BC6A15 /* Accessors.swift */; };
 		9EC4CD961DB83DE8003A4268 /* JSONParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC4CD951DB83DE8003A4268 /* JSONParserTests.swift */; };
+		9EC52A6A1DCBC2E900658723 /* JSONAccessorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC52A691DCBC2E800658723 /* JSONAccessorTests.swift */; };
 		9ECD04F51DC15C9800DBE7CA /* JSONTestSuite in Resources */ = {isa = PBXBuildFile; fileRef = 9ECD04F41DC15C9800DBE7CA /* JSONTestSuite */; };
 		9ECD04F71DC15CAD00DBE7CA /* JSONTestSuite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECD04F61DC15CAD00DBE7CA /* JSONTestSuite.swift */; };
 /* End PBXBuildFile section */
@@ -49,6 +51,7 @@
 		9E1B24511BC73D7600E5BC19 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9E1B24581BC73DA000E5BC19 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		9E1B246A1BC7463D00E5BC19 /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
+		9E4997EF1DC96E110049EECD /* JSONEncoderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONEncoderTests.swift; sourceTree = "<group>"; };
 		9E49DEF21C1F9E2F004FDCAD /* LICENSE-MIT */ = {isa = PBXFileReference; lastKnownFileType = text; path = "LICENSE-MIT"; sourceTree = "<group>"; };
 		9E49DEF31C1F9E2F004FDCAD /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9E5983DB1C60282F008495F6 /* Encoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Encoder.swift; sourceTree = "<group>"; };
@@ -57,6 +60,7 @@
 		9E87937B1BC8341500BC6A15 /* ObjectiveC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectiveC.swift; sourceTree = "<group>"; };
 		9E87937D1BC835F500BC6A15 /* Accessors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Accessors.swift; sourceTree = "<group>"; };
 		9EC4CD951DB83DE8003A4268 /* JSONParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONParserTests.swift; sourceTree = "<group>"; };
+		9EC52A691DCBC2E800658723 /* JSONAccessorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONAccessorTests.swift; sourceTree = "<group>"; };
 		9ECD04F41DC15C9800DBE7CA /* JSONTestSuite */ = {isa = PBXFileReference; lastKnownFileType = folder; path = JSONTestSuite; sourceTree = "<group>"; };
 		9ECD04F61DC15CAD00DBE7CA /* JSONTestSuite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONTestSuite.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -124,7 +128,9 @@
 			isa = PBXGroup;
 			children = (
 				9E1B244F1BC73D7600E5BC19 /* JSONDecoderTests.swift */,
+				9EC52A691DCBC2E800658723 /* JSONAccessorTests.swift */,
 				9EC4CD951DB83DE8003A4268 /* JSONParserTests.swift */,
+				9E4997EF1DC96E110049EECD /* JSONEncoderTests.swift */,
 				9ECD04F61DC15CAD00DBE7CA /* JSONTestSuite.swift */,
 				9E0317C61D664D7D00096D9E /* README.txt */,
 				9E0317C41D664B9000096D9E /* sample.json */,
@@ -192,7 +198,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = Postmates;
 				TargetAttributes = {
 					9E1B24401BC73D7600E5BC19 = {
@@ -265,6 +271,8 @@
 			files = (
 				9EC4CD961DB83DE8003A4268 /* JSONParserTests.swift in Sources */,
 				9ECD04F71DC15CAD00DBE7CA /* JSONTestSuite.swift in Sources */,
+				9E4997F01DC96E110049EECD /* JSONEncoderTests.swift in Sources */,
+				9EC52A6A1DCBC2E900658723 /* JSONAccessorTests.swift in Sources */,
 				9E1B24501BC73D7600E5BC19 /* JSONDecoderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -287,7 +295,9 @@
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -314,7 +324,9 @@
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

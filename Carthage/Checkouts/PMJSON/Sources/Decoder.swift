@@ -95,15 +95,26 @@ public struct JSONOptions {
     /// The default value is `10_000`.
     public var depthLimit: Int? = 10_000
     
+    /// If `true`, the parser will parse floating-point values as `Decimal`
+    /// instead of as `Double` values.
+    ///
+    /// The default value is `false`.
+    ///
+    /// - Note: This option is ignored on platforms without `Decimal`.
+    public var useDecimals: Bool = false
+    
     /// Returns a new `JSONOptions` with default values.
     public init() {}
     
     /// Returns a new `JSONOptions`.
     /// - Parameter strict: Whether the parser should be strict. Defaults to `false`.
     /// - Parameter depthLimit: A maximum depth limit to use. Default is `10_000`.
-    public init(strict: Bool = false, depthLimit: Int? = 10_000) {
+    /// - Parameter useDecimals: Whether the parser should parse floating-point values as `Decimal`.
+    /// - Note: The `useDecimals` option is ignored on platform without `Decimal`.
+    public init(strict: Bool = false, depthLimit: Int? = 10_000, useDecimals: Bool = false) {
         self.strict = strict
         self.depthLimit = depthLimit
+        self.useDecimals = useDecimals
     }
     
     public var decoderOptions: JSONDecoderOptions {
@@ -115,7 +126,7 @@ public struct JSONOptions {
     }
     
     public var parserOptions: JSONParserOptions {
-        return JSONParserOptions(strict: strict)
+        return JSONParserOptions(strict: strict, useDecimals: useDecimals)
     }
 }
 
@@ -129,6 +140,11 @@ extension JSONOptions: ExpressibleByArrayLiteral {
         /// Specifying `nil` removes the default depth limit of `10_000`.
         /// - SeeAlso: `JSONOptions.depthLimit`.
         case depthLimit(Int?)
+        /// Causes the parser to parse floating-point values as `Decimal`
+        /// instead of as `Double` values.
+        /// - Note: This option is ignored on platforms without `Decimal`.
+        /// - SeeAlso: `JSONOptions.useDecimals`.
+        case useDecimals
     }
     
     public init(arrayLiteral elements: Element...) {
@@ -137,6 +153,8 @@ extension JSONOptions: ExpressibleByArrayLiteral {
             case .strict: strict = true
             case .depthLimit(let limit):
                 depthLimit = limit
+            case .useDecimals:
+                useDecimals = true
             }
         }
     }
@@ -243,6 +261,7 @@ public struct JSONDecoder<Seq: Sequence> where Seq.Iterator: JSONEventIterator, 
         case .booleanValue(let b)?: return .bool(b)
         case .int64Value(let i)?: return .int64(i)
         case .doubleValue(let d)?: return .double(d)
+        case .decimalValue(let d)?: return .decimal(d)
         case .stringValue(let s)?: return .string(s)
         case .nullValue?: return .null
         case .error(let err)?: throw err

@@ -242,7 +242,7 @@ final class PMHTTPRetryTests: PMHTTPTestCase {
     }
     
     func testRetryJSONParseError() {
-        // JSON .UnexpectedEOF errors are treated the same as networking errors.
+        // JSON .unexpectedEOF errors are treated the same as networking errors.
         // GET requests will retry them.
         do {
             expectationForHTTPRequest(httpServer, path: "/foo") { request, completionHandler in
@@ -270,7 +270,7 @@ final class PMHTTPRetryTests: PMHTTPTestCase {
             req.retryBehavior = .retryNetworkFailure(withStrategy: .retryOnce)
             expectationForRequestFailure(req) { task, response, error in
                 if let error = error as? JSONParserError {
-                    XCTAssert(error.code == .unexpectedEOF, "JSON parser error; expected .UnexpectedEOF, found \(error.code)")
+                    XCTAssert(error.code == .unexpectedEOF, "JSON parser error; expected .unexpectedEOF, found \(error.code)")
                 } else {
                     XCTFail("unexpected error \(error)")
                 }
@@ -405,7 +405,7 @@ private class KVOLog<T: AnyObject>: NSObject {
         _observing = false
     }
     
-    private override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         // FIXME: Use ObjectIdentifier.address or whatever it's called once it's available
         guard context == Unmanaged.passUnretained(_context).toOpaque() else {
             return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)

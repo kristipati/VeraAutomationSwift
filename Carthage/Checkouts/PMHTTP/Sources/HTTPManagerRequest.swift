@@ -46,7 +46,7 @@ public class HTTPManagerRequest: NSObject, NSCopying {
             return baseURL
         }
         guard var comps = URLComponents(url: baseURL, resolvingAgainstBaseURL: false) else {
-            fatalError("HTTPManager: base URL cannot be parsed by NSURLComponents: \(baseURL.relativeString)")
+            fatalError("HTTPManager: base URL cannot be parsed by URLComponents: \(baseURL.relativeString)")
         }
         if var query = comps.percentEncodedQuery, !query.isEmpty {
             query += "&"
@@ -115,7 +115,7 @@ public class HTTPManagerRequest: NSObject, NSCopying {
     public var timeoutInterval: TimeInterval?
     
     /// The cache policy to use for the request. If `nil`, the default cache policy
-    /// is used. Default is `nil` for GET/HEAD requests and `.ReloadIgnoringLocalCacheData`
+    /// is used. Default is `nil` for GET/HEAD requests and `.reloadIgnoringLocalCacheData`
     /// for POST/PUT/PATCH/DELETE requests.
     public fileprivate(set) var cachePolicy: NSURLRequest.CachePolicy?
     
@@ -125,16 +125,16 @@ public class HTTPManagerRequest: NSObject, NSCopying {
     ///
     /// This property only establishes an upper bound on the cache storage allowed. If the
     /// URL session proposes to store the cached response in-memory only and the default policy
-    /// is set to `.Allowed`, the response will still be stored in-memory only, and if the URL
+    /// is set to `.allowed`, the response will still be stored in-memory only, and if the URL
     /// session proposes to not cache the response at all, the response will not be cached.
     ///
-    /// The default value is `.Allowed` for most requests, and `.NotAllowed` for parse requests
+    /// The default value is `.allowed` for most requests, and `.notAllowed` for parse requests
     /// created from `parseAsJSON()` or `parseAsJSON(with:)`.
     public var defaultResponseCacheStoragePolicy: URLCache.StoragePolicy = .allowed
     
     /// `true` iff redirects should be followed when processing the response.
     /// If `false`, network requests return a successful result containing the redirection
-    /// response, and parse requests return an error with `HTTPManagerError.UnexpectedRedirect()`.
+    /// response, and parse requests return an error with `HTTPManagerError.unexpectedRedirect`.
     /// Default is `true`.
     public var shouldFollowRedirects: Bool = true
     
@@ -173,7 +173,7 @@ public class HTTPManagerRequest: NSObject, NSCopying {
     /// ignored. `Content-Type` and `Content-Length` are always ignored.
     public var headerFields: HTTPHeaders = [:]
     
-    // possibly expose some NSURLRequest properties here, if they're useful
+    // possibly expose some URLRequest properties here, if they're useful
     
     // See Mocking.swift for details.
     internal var mock: HTTPMockInstance?
@@ -477,7 +477,7 @@ public class HTTPManagerNetworkRequest: HTTPManagerRequest, HTTPManagerRequestPe
         set { super.parameters = newValue }
     }
     
-    /// Creates and returns an `NSURLRequest` object from the properties of `self`.
+    /// Creates and returns a `URLRequest` object from the properties of `self`.
     /// For upload requests, the request will include the `HTTPBody` or `HTTPBodyStream`
     /// as appropriate.
     public var preparedURLRequest: URLRequest {
@@ -488,7 +488,7 @@ public class HTTPManagerNetworkRequest: HTTPManagerRequest, HTTPManagerRequestPe
         case .formUrlEncoded(let queryItems)?:
             request.httpBody = FormURLEncoded.data(for: queryItems)
         case .json(let json)?:
-            request.httpBody = JSON.encodeAsData(json, pretty: false)
+            request.httpBody = JSON.encodeAsData(json)
         case let .multipartMixed(boundary, parameters, bodyParts)?:
             // We have at least one Pending value, we need to wait for them to evaluate (otherwise we can't
             // accurately implement the `canRead` stream callback).
@@ -505,7 +505,7 @@ public class HTTPManagerNetworkRequest: HTTPManagerRequest, HTTPManagerRequestPe
     /// Returns a new request that parses the data with the specified handler.
     /// - Note: If the server responds with 204 No Content, the parse handler is
     ///   invoked with an empty data. The handler may choose to throw
-    ///   `HTTPManagerError.UnexpectedNoContent` if it does not handle this case.
+    ///   `HTTPManagerError.unexpectedNoContent` if it does not handle this case.
     /// - Parameter handler: The handler to call as part of the request
     ///   processing. This handler is not guaranteed to be called on any
     ///   particular thread. The handler returns the new value for the request.
@@ -519,13 +519,13 @@ public class HTTPManagerNetworkRequest: HTTPManagerRequest, HTTPManagerRequestPe
     ///   If the parse handler has side effects and can throw, you should either
     ///   ensure that it's safe to run the parse handler again or set `isIdempotent`
     ///   to `false`.
-    public func parse<T>(with handler: @escaping (_ response: URLResponse, _ data: Data) throws -> T) -> HTTPManagerParseRequest<T> {
+    public func parse<T>(using handler: @escaping (_ response: URLResponse, _ data: Data) throws -> T) -> HTTPManagerParseRequest<T> {
         return HTTPManagerParseRequest(request: self, uploadBody: uploadBody, parseHandler: handler)
     }
     
     /// Creates a suspended `HTTPManagerTask` for the request with the given completion handler.
     ///
-    /// This method is intended for cases where you need access to the `NSURLSessionTask` prior to
+    /// This method is intended for cases where you need access to the `URLSessionTask` prior to
     /// the task executing, e.g. if you need to record the task identifier somewhere before the
     /// completion block fires.
     /// - Parameter queue: (Optional) The queue to call the handler on. The default value
@@ -583,7 +583,7 @@ public class HTTPManagerNetworkRequest: HTTPManagerRequest, HTTPManagerRequestPe
                 let json: JSON?
                 switch response.mimeType.map(MediaType.init) {
                 case _ where task.assumeErrorsAreJSON: fallthrough
-                case MediaType("application/json")?: json = try? JSON.decode(data)
+                case MediaType("application/json")?, MediaType("text/json")?: json = try? JSON.decode(data)
                 default: json = nil
                 }
                 if statusCode == 401 { // Unauthorized
@@ -629,7 +629,7 @@ public protocol HTTPManagerRequestPerformable {
     
     /// Creates a suspended `HTTPManagerTask` for the request with the given completion handler.
     ///
-    /// This method is intended for cases where you need access to the `NSURLSessionTask` prior to
+    /// This method is intended for cases where you need access to the `URLSessionTask` prior to
     /// the task executing, e.g. if you need to record the task identifier somewhere before the
     /// completion block fires.
     /// - Parameter queue: The queue to call the handler on. `nil` means the handler will
@@ -669,21 +669,23 @@ public class HTTPManagerDataRequest: HTTPManagerNetworkRequest {
     
     /// Returns a new request that parses the data as JSON.
     /// - Note: If the server responds with 204 No Content, the parse is skipped
-    ///   and `HTTPManagerError.UnexpectedNoContent` is returned as the parse result.
+    ///   and `HTTPManagerError.unexpectedNoContent` is returned as the parse result.
+    /// - Parameter options: Options to use for JSON parsing. Defaults to `[]`.
     /// - Returns: An `HTTPManagerParseRequest`.
-    public func parseAsJSON() -> HTTPManagerParseRequest<JSON> {
-        return HTTPManagerParseRequest(request: self, uploadBody: uploadBody, expectedContentType: "application/json", defaultResponseCacheStoragePolicy: .notAllowed, parseHandler: { response, data in
+    public func parseAsJSON(options: JSONOptions = []) -> HTTPManagerParseRequest<JSON> {
+        return HTTPManagerParseRequest(request: self, uploadBody: uploadBody, expectedContentTypes: ["application/json"], defaultResponseCacheStoragePolicy: .notAllowed, parseHandler: { response, data in
             if let response = response as? HTTPURLResponse, response.statusCode == 204 {
                 throw HTTPManagerError.unexpectedNoContent(response: response)
             }
-            return try JSON.decode(data)
+            return try JSON.decode(data, options: options)
         })
     }
     
     /// Returns a new request that parses the data as JSON and passes it through
     /// the specified handler.
     /// - Note: If the server responds with 204 No Content, the parse is skipped
-    ///   and `HTTPManagerError.UnexpectedNoContent` is returned as the parse result.
+    ///   and `HTTPManagerError.unexpectedNoContent` is returned as the parse result.
+    /// - Parameter options: Options to use for JSON parsing. Defaults to `[]`.
     /// - Parameter handler: The handler to call as part of the request
     ///   processing. This handler is not guaranteed to be called on any
     ///   particular thread. The handler returns the new value for the request.
@@ -697,12 +699,12 @@ public class HTTPManagerDataRequest: HTTPManagerNetworkRequest {
     ///   If the parse handler has side effects and can throw, you should either
     ///   ensure that it's safe to run the parse handler again or set `isIdempotent`
     ///   to `false`.
-    public func parseAsJSON<T>(with handler: @escaping (_ response: URLResponse, _ json: JSON) throws -> T) -> HTTPManagerParseRequest<T> {
-        return HTTPManagerParseRequest(request: self, uploadBody: uploadBody, expectedContentType: "application/json", defaultResponseCacheStoragePolicy: .notAllowed, parseHandler: { response, data in
+    public func parseAsJSON<T>(options: JSONOptions = [], using handler: @escaping (_ response: URLResponse, _ json: JSON) throws -> T) -> HTTPManagerParseRequest<T> {
+        return HTTPManagerParseRequest(request: self, uploadBody: uploadBody, expectedContentTypes: ["application/json"], defaultResponseCacheStoragePolicy: .notAllowed, parseHandler: { response, data in
             if let response = response as? HTTPURLResponse, response.statusCode == 204 {
                 throw HTTPManagerError.unexpectedNoContent(response: response)
             }
-            return try handler(response, JSON.decode(data))
+            return try handler(response, JSON.decode(data, options: options))
         })
     }
     
@@ -740,8 +742,8 @@ public final class HTTPManagerParseRequest<T>: HTTPManagerRequest, HTTPManagerRe
         return _contentType
     }
     
-    /// The expected MIME type of the response. Defaults to `["application/json"]` for
-    /// JSON parse requests, or `[]` for requests created with `parse(with:)`.
+    /// The expected MIME type of the response. Defaults to `["application/json"]`
+    /// for JSON parse requests, or `[]` for requests created with `parse(with:)`.
     ///
     /// This property is used to generate the `Accept` header, if not otherwise specified by
     /// the request. If multiple values are provided, they're treated as a priority list
@@ -751,12 +753,12 @@ public final class HTTPManagerParseRequest<T>: HTTPManagerRequest, HTTPManagerRe
     /// response is a 204 No Content, the MIME type is not checked. For all other 2xx
     /// responses, if at least one expected content type is provided, the MIME type
     /// must match one of them. If it doesn't match any, the parse handler will be
-    /// skipped and `HTTPManagerError.UnexpectedContentType` will be returned as the result.
+    /// skipped and `HTTPManagerError.unexpectedContentType` will be returned as the result.
     ///
     /// - Note: The MIME type is only tested if the response includes a `Content-Type` header.
     ///   If the `Content-Type` header is missing, the response will always be assumed to be
     ///   valid. The value is tested against both the `Content-Type` header and, if it differs,
-    ///   the `NSURLResponse` property `MIMEType`. This is to account for cases where the
+    ///   the `URLResponse` property `mimeType`. This is to account for cases where the
     ///   protocol implementation detects a different content type than the server declared.
     ///
     /// Each media type in the list may include parameters. These parameters will be included
@@ -777,7 +779,7 @@ public final class HTTPManagerParseRequest<T>: HTTPManagerRequest, HTTPManagerRe
     
     /// Creates a suspended `HTTPManagerTask` for the request with the given completion handler.
     ///
-    /// This method is intended for cases where you need access to the `NSURLSessionTask` prior to
+    /// This method is intended for cases where you need access to the `URLSessionTask` prior to
     /// the task executing, e.g. if you need to record the task identifier somewhere before the
     /// completion block fires.
     /// - Parameter queue: (Optional) The queue to call the handler on. The default value
@@ -855,7 +857,7 @@ public final class HTTPManagerParseRequest<T>: HTTPManagerRequest, HTTPManagerRe
                     let json: JSON?
                     switch response.mimeType.map(MediaType.init) {
                     case _ where task.assumeErrorsAreJSON: fallthrough
-                    case MediaType("application/json")?: json = try? JSON.decode(data)
+                    case MediaType("application/json")?, MediaType("text/json")?: json = try? JSON.decode(data)
                     default: json = nil
                     }
                     if statusCode == 401 { // Unauthorized
@@ -865,16 +867,21 @@ public final class HTTPManagerParseRequest<T>: HTTPManagerRequest, HTTPManagerRe
                     }
                 } else if statusCode != 204 && !expectedContentTypes.isEmpty, let contentType = (response.allHeaderFields["Content-Type"] as? String).map(MediaType.init), !contentType.typeSubtype.isEmpty {
                     // Not a 204 No Content, check the MIME type against the list
-                    // As per the doc comment on expectedContentTypes, we check both the response MIMEType and, if it's different, the Content-Type header.
+                    // As per the doc comment on expectedContentTypes, we check both the response mimeType and, if it's different, the Content-Type header.
                     var mimeType = response.mimeType.map(MediaType.init)
                     if mimeType?.rawValue == contentType.rawValue {
                         mimeType = nil
                     }
+                    let contentTypeAlias = contentTypeAliases[contentType.typeSubtype].map(MediaType.init)
+                    let mimeTypeAlias = mimeType.flatMap({ contentTypeAliases[$0.typeSubtype].map(MediaType.init) })
                     let valid = expectedContentTypes.contains(where: {
                         // ignore the parameters from expectedContentTypes
                         let pattern = MediaType(MediaType($0).typeSubtype)
                         if let mimeType = mimeType, pattern ~= mimeType { return true }
-                        return pattern ~= contentType
+                        if pattern ~= contentType { return true }
+                        if let contentTypeAliases = contentTypeAlias, pattern ~= contentTypeAliases { return true }
+                        if let mimeTypeAlias = mimeTypeAlias, pattern ~= mimeTypeAlias { return true }
+                        return false
                     })
                     if !valid {
                         throw HTTPManagerError.unexpectedContentType(contentType: (mimeType ?? contentType).rawValue, response: response, body: data)
@@ -905,12 +912,12 @@ public final class HTTPManagerParseRequest<T>: HTTPManagerRequest, HTTPManagerRe
     // This is a closure instead of just `T?` to avoid bloating the request object if `T` is large.
     internal var dataMock: (() -> T)?
     
-    internal init(request: HTTPManagerRequest, uploadBody: UploadBody?, expectedContentType: String? = nil, defaultResponseCacheStoragePolicy: URLCache.StoragePolicy? = nil, parseHandler: @escaping (URLResponse, Data) throws -> T) {
+    internal init(request: HTTPManagerRequest, uploadBody: UploadBody?, expectedContentTypes: [String] = [], defaultResponseCacheStoragePolicy: URLCache.StoragePolicy? = nil, parseHandler: @escaping (URLResponse, Data) throws -> T) {
         self.parseHandler = parseHandler
         prepareRequestHandler = request.prepareURLRequest()
         _contentType = request.contentType
         self.uploadBody = uploadBody
-        self.expectedContentTypes = expectedContentType.map({ [$0] }) ?? []
+        self.expectedContentTypes = expectedContentTypes
         super.init(apiManager: request.apiManager, URL: request.url, method: request.requestMethod, parameters: request.parameters)
         isIdempotent = request.isIdempotent
         credential = request.credential
@@ -952,6 +959,8 @@ public final class HTTPManagerParseRequest<T>: HTTPManagerRequest, HTTPManagerRe
     }
 }
 
+private let contentTypeAliases: [String: String] = ["text/json": "application/json"]
+
 private func acceptHeaderValueForContentTypes(_ contentTypes: [String]) -> String {
     guard var value = contentTypes.first else { return "" }
     var priority = 9
@@ -974,7 +983,7 @@ private func acceptHeaderValueForContentTypes(_ contentTypes: [String]) -> Strin
 /// An HTTP POST/PUT/PATCH/DELETE request that does not yet have a parse handler.
 ///
 /// Similar to an `HTTPManagerDataRequest` except that it handles 204 No Content
-/// instead of throwing `HTTPManagerError.UnexpectedNoContent`.
+/// instead of throwing `HTTPManagerError.unexpectedNoContent`.
 public class HTTPManagerActionRequest: HTTPManagerNetworkRequest {
     /// The results of JSON parsing for use in `parseAsJSON(with:)`.
     public enum JSONResult {
@@ -999,7 +1008,7 @@ public class HTTPManagerActionRequest: HTTPManagerNetworkRequest {
             }
         }
         
-        /// Returns the parsed JSON response, or throws `HTTPManagerError.UnexpectedNoContent`
+        /// Returns the parsed JSON response, or throws `HTTPManagerError.unexpectedNoContent`
         /// if the server returned 204 No Content.
         public func getJSON() throws -> JSON {
             switch self {
@@ -1012,20 +1021,22 @@ public class HTTPManagerActionRequest: HTTPManagerNetworkRequest {
     /// Returns a new request that parses the data as JSON.
     /// - Note: The parse result is `nil` if and only if the server responded with
     ///   204 No Content.
+    /// - Parameter options: Options to use for JSON parsing. Defaults to `[]`.
     /// - Returns: An `HTTPManagerParseRequest`.
-    public func parseAsJSON() -> HTTPManagerParseRequest<JSON?> {
-        return HTTPManagerParseRequest(request: self, uploadBody: uploadBody, expectedContentType: "application/json", defaultResponseCacheStoragePolicy: .notAllowed, parseHandler: { response, data in
+    public func parseAsJSON(options: JSONOptions = []) -> HTTPManagerParseRequest<JSON?> {
+        return HTTPManagerParseRequest(request: self, uploadBody: uploadBody, expectedContentTypes: ["application/json"], defaultResponseCacheStoragePolicy: .notAllowed, parseHandler: { response, data in
             if (response as? HTTPURLResponse)?.statusCode == 204 {
                 // No Content
                 return nil
             } else {
-                return try JSON.decode(data)
+                return try JSON.decode(data, options: options)
             }
         })
     }
     
     /// Returns a new request that parses the data as JSON and passes it through
     /// the specified handler.
+    /// - Parameter options: Options to use for JSON parsing. Defaults to `[]`.
     /// - Parameter handler: The handler to call as part of the request
     ///   processing. This handler is not guaranteed to be called on any
     ///   particular thread. The handler returns the new value for the request.
@@ -1039,13 +1050,13 @@ public class HTTPManagerActionRequest: HTTPManagerNetworkRequest {
     ///   If the parse handler has side effects and can throw, you should either
     ///   ensure that it's safe to run the parse handler again or set `isIdempotent`
     ///   to `false`.
-    public func parseAsJSON<T>(with handler: @escaping (JSONResult) throws -> T) -> HTTPManagerParseRequest<T> {
-        return HTTPManagerParseRequest(request: self, uploadBody: uploadBody, expectedContentType: "application/json", defaultResponseCacheStoragePolicy: .notAllowed, parseHandler: { response, data in
+    public func parseAsJSON<T>(options: JSONOptions = [], using handler: @escaping (JSONResult) throws -> T) -> HTTPManagerParseRequest<T> {
+        return HTTPManagerParseRequest(request: self, uploadBody: uploadBody, expectedContentTypes: ["application/json"], defaultResponseCacheStoragePolicy: .notAllowed, parseHandler: { response, data in
             if let response = response as? HTTPURLResponse, response.statusCode == 204 {
                 // No Content
                 return try handler(.noContent(response))
             } else {
-                return try handler(.success(response, JSON.decode(data)))
+                return try handler(.success(response, JSON.decode(data, options: options)))
             }
         })
     }
@@ -1156,8 +1167,33 @@ public final class HTTPManagerUploadFormRequest: HTTPManagerActionRequest {
     /// - SeeAlso: `addMultipart(data:withName:mimeType:filename:)`,
     ///   `addMultipart(text:withName:)`.
     @objc(addMultipartBodyWithBlock:)
-    public func addMultipartBody(with block: @escaping (HTTPManagerUploadMultipart) -> Void) {
+    public func addMultipartBody(using block: @escaping (HTTPManagerUploadMultipart) -> Void) {
         multipartBodies.append(.pending(.init(block)))
+    }
+    
+    /// Adds a block that's invoked asynchronously to provide multipart bodies for this request.
+    ///
+    /// The block is invoked on an arbitrary thread when task requests a new body stream.
+    /// Any multipart bodies added by the block will be inserted into the request body.
+    ///
+    /// The associated block will only ever be invoked once even if the request is used to create
+    /// multiple tasks.
+    ///
+    /// - Note: Using this method means that the `Content-Length` cannot be calculated for this
+    ///   request. When calling APIs that need a defined `Content-Length` you must provide all
+    ///   of the upload data up-front.
+    ///
+    /// - Parameter block: The block that provides the multipart bodies. This block is
+    ///   invoked on an arbitrary background thread. The `HTTPManagerUploadMultipart`
+    ///   parameter can be used to add multipart bodies to the request. This object is
+    ///   only valid for the duration of the block's execution.
+    /// - Returns: `self`.
+    ///
+    /// - SeeAlso: `addMultipart(data:withName:mimeType:filename:)`,
+    ///   `addMultipart(text:withName:)`.
+    @nonobjc public func withMultipartBody(using block: @escaping (HTTPManagerUploadMultipart) -> Void) -> HTTPManagerUploadFormRequest {
+        addMultipartBody(using: block)
+        return self
     }
     
     /// Executes a block with `self` as the argument, and then returns `self` again.

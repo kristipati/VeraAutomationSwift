@@ -12,6 +12,11 @@
 //  except according to those terms.
 //
 
+#if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+    import struct Foundation.Decimal
+    import class Foundation.NSDecimalNumber
+#endif
+
 // MARK: JSONError
 
 /// Errors thrown by the JSON `get*` or `to*` accessor families.
@@ -33,12 +38,29 @@ public enum JSONError: Error, CustomStringConvertible {
     /// - Parameter value: The actual value at that path.
     /// - Parameter expected: The type that the value doesn't fit in, e.g. `Int.self`.
     case outOfRangeDouble(path: String?, value: Double, expected: Any.Type)
+    #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+    /// Thrown when a decimal value is coerced to a smaller type (e.g. `Decimal` to `Int`)
+    /// and the value doesn't fit in the smaller type.
+    /// - Parameter path: The path of the value that cuased the error.
+    /// - Parameter value: The actual value at that path.
+    /// - Parameter expected: The type that the value doesn't fit in, e.g. `Int.self`.
+    case outOfRangeDecimal(path: String?, value: Decimal, expected: Any.Type)
+    #else
+    /// Thrown when a decimal value is coerced to a smaller type (e.g. `Decimal` to `Int`)
+    /// and the value doesn't fit in the smaller type.
+    /// - Note: This error is never actually thrown for platforms that do not support `Decimal`.
+    /// - Parameter path: The path of the value that cuased the error.
+    /// - Parameter value: The actual value at that path.
+    /// - Parameter expected: The type that the value doesn't fit in, e.g. `Int.self`.
+    case outOfRangeDecimal(path: String?, value: DecimalPlaceholder, expected: Any.Type)
+    #endif
     
     public var description: String {
         switch self {
         case let .missingOrInvalidType(path, expected, actual): return "\(path.map({"\($0): "}) ?? "")expected \(expected), found \(actual?.description ?? "missing value")"
         case let .outOfRangeInt64(path, value, expected): return "\(path.map({"\($0): "}) ?? "")value \(value) cannot be coerced to type \(expected)"
         case let .outOfRangeDouble(path, value, expected): return "\(path.map({"\($0): "}) ?? "")value \(value) cannot be coerced to type \(expected)"
+        case let .outOfRangeDecimal(path, value, expected): return "\(path.map({"\($0): "}) ?? "")value \(value) cannot be coerced to type \(expected)"
         }
     }
     
@@ -58,6 +80,8 @@ public enum JSONError: Error, CustomStringConvertible {
             return .outOfRangeInt64(path: prefixPath(path, with: prefix), value: value, expected: expected)
         case let .outOfRangeDouble(path, value, expected):
             return .outOfRangeDouble(path: prefixPath(path, with: prefix), value: value, expected: expected)
+        case let .outOfRangeDecimal(path, value, expected):
+            return .outOfRangeDecimal(path: prefixPath(path, with: prefix), value: value, expected: expected)
         }
     }
     
@@ -80,6 +104,9 @@ public enum JSONError: Error, CustomStringConvertible {
         case number = "number"
         case object = "object"
         case array = "array"
+        #if !os(iOS) && !os(OSX) && !os(watchOS) && !os(tvOS)
+        case decimalPlaceholder = "decimalPlaceholder"
+        #endif
         
         internal static func forValue(_ value: JSON) -> JSONType {
             switch value {
@@ -87,6 +114,12 @@ public enum JSONError: Error, CustomStringConvertible {
             case .bool: return .bool
             case .string: return .string
             case .int64, .double: return .number
+            case .decimal:
+                #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+                    return .number
+                #else
+                    return .decimalPlaceholder
+                #endif
             case .object: return .object
             case .array: return .array
             }
@@ -249,8 +282,15 @@ public extension JSON {
         case .bool(let b): return String(b)
         case .int64(let i): return String(i)
         case .double(let d): return String(d)
-        default: throw JSONError.missingOrInvalidType(path: nil, expected: expected, actual: .forValue(self))
+        case .decimal(let d):
+            #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+                return String(describing: d)
+            #else
+                break
+            #endif
+        default: break
         }
+        throw JSONError.missingOrInvalidType(path: nil, expected: expected, actual: .forValue(self))
     }
     
     /// Returns the receiver coerced to a 64-bit integral value.
@@ -285,6 +325,11 @@ public extension JSON {
         case .double(let d):
             guard let val = convertDoubleToInt64(d) else {
                 throw JSONError.outOfRangeDouble(path: nil, value: d, expected: Int64.self)
+            }
+            return val
+        case .decimal(let d):
+            guard let val = convertDecimalToInt64(d) else {
+                throw JSONError.outOfRangeDecimal(path: nil, value: d, expected: Int64.self)
             }
             return val
         case .string(let s):
@@ -355,10 +400,18 @@ public extension JSON {
         switch self {
         case .int64(let i): return Double(i)
         case .double(let d): return d
+        case .decimal(let d):
+            #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+                // NB: Decimal does not have any appropriate accessor
+                return NSDecimalNumber(decimal: d).doubleValue
+            #else
+                break
+            #endif
         case .string(let s): return Double(s)
         case .null: return nil
-        default: throw JSONError.missingOrInvalidType(path: nil, expected: expected, actual: .forValue(self))
+        default: break
         }
+        throw JSONError.missingOrInvalidType(path: nil, expected: expected, actual: .forValue(self))
     }
 }
 
@@ -1278,6 +1331,21 @@ public extension JSON {
             return try scoped(i, { try transform(elt) })
         })
     }
+    
+    /// Calls `body` on each element of `array` in order.
+    ///
+    /// If `body` throws a `JSONError`, the error will be modified to include the index
+    /// of the element that caused the error.
+    ///
+    /// - Parameter array: The `JSONArray` to map over.
+    /// - Parameter body: A block that is called once for each element of `array`, along with the element's index.
+    /// - Throws: Rethrows any error thrown by `body`.
+    /// - Complexity: O(*N*).
+    static func forEach(_ array: JSONArray, _ body: (_ element: JSON, _ index: Int) throws -> Void) rethrows {
+        for (i, elt) in array.enumerated() {
+            try scoped(i, { try body(elt, i) })
+        }
+    }
 }
 
 public extension JSON {
@@ -1478,6 +1546,74 @@ public extension JSON {
     func flatMapArrayOrNil<S: Sequence>(_ index: Int, _ transform: (JSON) throws -> S) throws -> [S.Iterator.Element]? {
         return try getArrayOrNil(index, { try JSON.flatMap($0, transform) })
     }
+    
+    /// Subscripts the receiver with `key`, converts the value to an array, and calls `body` on
+    /// each element of the array in order.
+    ///
+    /// - Note: This method is equivalent to `getArray(key, { try JSON.forEach($0, body) })`.
+    ///
+    /// - Parameter key: The key to subscript the receiver with.
+    /// - Parameter body: A block that is called once for each element of the resulting array,
+    ///   along with the element's index.
+    /// - Throws: `JSONError` if the receiver is not an object, `key` does not exist, or the value
+    ///   is not an array. Also rethrows any error thrown by `transform`.
+    /// - Complexity: O(*N*).
+    func forEachArray(_ key: String, _ body: (_ element: JSON, _ index: Int) throws -> Void) throws {
+        try getArray(key, { try JSON.forEach($0, body) })
+    }
+    
+    /// Subscripts the receiver with `index`, converts the value to an array, and calls `body` on
+    /// each element of the array in order.
+    ///
+    /// - Note: This method is equivalent to `getArray(index, { try JSON.forEach($0, body) })`.
+    ///
+    /// - Parameter key: The key to subscript the receiver with.
+    /// - Parameter body: A block that is called once for each element of the resulting array,
+    ///   along with the element's index.
+    /// - Throws: `JSONError` if the receiver is not an array, `index` is out of bounds, or the
+    ///   value is not an array. Also rethrows any error thrown by `body`.
+    /// - Complexity: O(*N*).
+    func forEachArray(_ index: Int, _ body: (_ element: JSON, _ index: Int) throws -> Void) throws {
+        try getArray(index, { try JSON.forEach($0, body) })
+    }
+    
+    /// Subscripts the receiver with `key`, converts the value to an array, and calls `body` on
+    /// each element of the array in order.
+    ///
+    /// Returns `false` if the `key` doesn't exist or the value is `null`.
+    ///
+    /// - Note: This method is equivalent to `getArrayOrNil(key, { try JSON.forEach($0, body) }) != nil`.
+    ///
+    /// - Parameter key: The key to subscript the receiver with.
+    /// - Parameter body: A block that is called once for each element of the resulting array,
+    ///   along with the element's index.
+    /// - Returns: `true` if the `key` exists and the value was an array, or `false` if the key
+    ///   doesn't exist or the value is `null`.
+    /// - Throws: `JSONError` if the receiver is not an object or the value is not an array or
+    ///   `null`. Also rethrows any error thrown by `body`.
+    /// - Complexity: O(*N*).
+    @discardableResult
+    func forEachArrayOrNil(_ key: String, _ body: (_ element: JSON, _ index: Int) throws -> Void) throws -> Bool {
+        return try getArrayOrNil(key, { try JSON.forEach($0, body) }) != nil
+    }
+    
+    /// Subscripts the receiver with `index`, converts the value to an array, and calls `body` on
+    /// each element of the array in order.
+    ///
+    /// - Note: This method is equivalent to `getArrayOrNil(index, { try JSON.forEach($0, body) }) != nil`.
+    ///
+    /// - Parameter index: The index to subscript the receiver with.
+    /// - Parameter body: A block that is called once for each element of the resulting array,
+    ///   along with the element's index.
+    /// - Returns: `true` if the `key` exists and the value was an array, or `false` if the key
+    ///   doesn't exist or the value is `null`.
+    /// - Throws: `JSONError` if the receiver is not an array or the value is not an array or
+    ///   `null`. Also rethrows any error thrown by `body`.
+    /// - Complexity: O(*N*).
+    @discardableResult
+    func forEachArrayOrNil(_ index: Int, _ body: (_ element: JSON, _ index: Int) throws -> Void) throws -> Bool {
+        return try getArrayOrNil(index, { try JSON.forEach($0, body) }) != nil
+    }
 }
 
 public extension JSONObject {
@@ -1578,6 +1714,41 @@ public extension JSONObject {
     /// - Complexity: O(*M* + *N*) where *M* is the length of `array` and *N* is the length of the result.
     func flatMapArrayOrNil<S: Sequence>(_ key: String, _ transform: (JSON) throws -> S) throws -> [S.Iterator.Element]? {
         return try getArrayOrNil(key, { try JSON.flatMap($0, transform) })
+    }
+    
+    /// Subscripts the receiver with `key`, converts the value to an array, and calls `body` on
+    /// each element of the array in order.
+    ///
+    /// - Note: This method is equivalent to `getArray(key, { try JSON.forEach($0, body) })`.
+    ///
+    /// - Parameter key: The key to subscript the receiver with.
+    /// - Parameter body: A block that is called once for each element of the resulting array,
+    ///   along with the element's index.
+    /// - Throws: `JSONError` if the receiver is not an object, `key` does not exist, or the value
+    ///   is not an array. Also rethrows any error thrown by `transform`.
+    /// - Complexity: O(*N*).
+    func forEachArray(_ key: String, _ body: (_ element: JSON, _ index: Int) throws -> Void) throws {
+        try getArray(key, { try JSON.forEach($0, body) })
+    }
+    
+    /// Subscripts the receiver with `key`, converts the value to an array, and calls `body` on
+    /// each element of the array in order.
+    ///
+    /// Returns `false` if the `key` doesn't exist or the value is `null`.
+    ///
+    /// - Note: This method is equivalent to `getArrayOrNil(key, { try JSON.forEach($0, body) }) != nil`.
+    ///
+    /// - Parameter key: The key to subscript the receiver with.
+    /// - Parameter body: A block that is called once for each element of the resulting array,
+    ///   along with the element's index.
+    /// - Returns: `true` if the `key` exists and the value was an array, or `false` if the key
+    ///   doesn't exist or the value is `null`.
+    /// - Throws: `JSONError` if the receiver is not an object or the value is not an array or
+    ///   `null`. Also rethrows any error thrown by `body`.
+    /// - Complexity: O(*N*).
+    @discardableResult
+    func forEachArrayOrNil(_ key: String, _ body: (_ element: JSON, _ index: Int) throws -> Void) throws -> Bool {
+        return try getArrayOrNil(key, { try JSON.forEach($0, body) }) != nil
     }
 }
 

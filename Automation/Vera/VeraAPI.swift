@@ -69,7 +69,7 @@ class VeraAPI {
         }
 
         let requestString = "https://ip.gruby.com"
-        HTTP.request(GET: requestString).parse(with: stringParseHandler).performRequest(withCompletionQueue: .main) { [weak self] (task, result) in
+        HTTP.request(GET: requestString).parse(using: stringParseHandler).performRequest(withCompletionQueue: .main) { [weak self] (task, result) in
             self?.log.debug("Got a result")
             switch result {
             case let .success(response, data):
@@ -132,7 +132,7 @@ class VeraAPI {
             }
         }
 
-        req?.parse(with: stringParseHandler).performRequest(withCompletionQueue: .main) { [weak self] (task, result) in
+        req?.parse(using: stringParseHandler).performRequest(withCompletionQueue: .main) { [weak self] (task, result) in
             guard let strongSelf = self else {return}
                 strongSelf.log.debug("Got a result")
                 switch result {
@@ -709,7 +709,7 @@ class VeraAPI {
             }
         }
 
-        req?.parse(with: stringParseHandler).performRequest(withCompletionQueue: .main) { (task, result) in
+        req?.parse(using: stringParseHandler).performRequest(withCompletionQueue: .main) { (task, result) in
             self.log.debug("Got a result")
             switch result {
             case let .success(response, responseString):

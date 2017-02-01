@@ -1,6 +1,6 @@
 # PMHTTP
 
-[![Version](https://img.shields.io/badge/version-v1.0.4-blue.svg)](https://github.com/postmates/PMHTTP/releases/latest)
+[![Version](https://img.shields.io/badge/version-v2.0.1-blue.svg)](https://github.com/postmates/PMHTTP/releases/latest)
 ![Platforms](https://img.shields.io/badge/platforms-ios%20%7C%20osx%20%7C%20watchos%20%7C%20tvos-lightgrey.svg)
 ![Languages](https://img.shields.io/badge/languages-swift%20%7C%20objc-orange.svg)
 ![License](https://img.shields.io/badge/license-MIT%2FApache-blue.svg)
@@ -9,20 +9,20 @@
 
 [Carthage]: https://github.com/carthage/carthage
 
-PMHTTP is an HTTP framework built around `NSURLSession` and designed for Swift while retaining Obj-C compatibility.
+PMHTTP is an HTTP framework built around `URLSession` and designed for Swift while retaining Obj-C compatibility.
 
-We think `NSURLSession` is great. But it was designed for Obj-C and it doesn't handle anything beyond the networking
+We think `URLSession` is great. But it was designed for Obj-C and it doesn't handle anything beyond the networking
 aspect of a request. This means no handling of JSON, and it doesn't even provide `multipart/form-data` uploads. PMHTTP
-leaves the networking to `NSURLSession` and provides everything else. Features include:
+leaves the networking to `URLSession` and provides everything else. Features include:
 
 * Requests can define parse handlers that execute asynchronously separately from the completion block, and
   requests can be canceled while parsing and the completion block sees the correct result.
 * First-class JSON support using [PMJSON][].
-* Structured results and high-quality errors; no more treating `NSURLErrorCancelled` as a network error.
+* Structured results and high-quality errors; no more treating `URLError.cancelled` as a network error.
 * Strongly-typed results.
 * Thread safety.
 * [Intelligent cache handling](#cache-handling).
-* Requests can be defined once (including a parse handler) and executed many times, just like `NSURLRequest`.
+* Requests can be defined once (including a parse handler) and executed many times, just like `URLRequest`.
 * Configurable automatic retrying of failed requests when safe.
 * A configurable base URL, allowing for switching between staging and production with no change to the code
   constructing the requests.
@@ -68,11 +68,11 @@ let task = HTTP.request(GET: "search", parameters: ["query": "cute cats"])
     .parseAsJSON()
     .performRequest(withCompletionQueue: .main) { task, result in
         switch result {
-        case let .Success(response, json):
+        case let .success(response, json):
             // Do something with the parsed JSON.
-        case let .Error(response, error):
+        case let .error(response, error):
             // Handle the error. This includes both network errors and JSON parse errors.
-        case .Canceled:
+        case .canceled:
             // The task was canceled. Ignore or handle as appropriate.
         }
 }
@@ -90,12 +90,12 @@ let task = HTTP.request(POST: "submit_cat", parameters: ["name": "Fluffles", "co
     })
     .performRequest(withCompletionQueue: .main) { task, result in
         switch result {
-        case let .Success(response, value):
+        case let .success(response, value):
             // value is a SubmitCatResponse
-        case let .Error(response, error):
+        case let .error(response, error):
             // Handle the error. This could be a network error, a JSON parse error, or
             // any error thrown by SubmitCatResponse.init(json:)
-        case .Canceled:
+        case .canceled:
             // The task was canceled.
         }    
 }
@@ -130,13 +130,13 @@ the `HTTP` global variable is accessed. This might look like:
 extension AppDelegate: HTTPManagerConfigurable {
     public func configure(httpManager: HTTPManager) {
         httpManager.environment = HTTPManager.Environment(string: /* ... */)
-        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
+        let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 10
         // PMHTTP defines a default User-Agent but we can supply our own
         config.HTTPAdditionalHeaders = ["User-Agent": myUserAgent]
         httpManager.sessionConfiguration = config
         if let (username, apiKey) = getAPICredentials() {
-            httpManager.defaultCredential = NSURLCredential(user: username, password: apiKey, persistence: .ForSession)
+            httpManager.defaultCredential = URLCredential(user: username, password: apiKey, persistence: .forSession)
         }
         httpManager.defaultRetryBehavior = HTTPManagerRetryBehavior.retryNetworkFailureOrServiceUnavailable(withStrategy: .retryTwiceWithDefaultDelay)
     }
@@ -180,7 +180,7 @@ configuration the application provides (including environment and default creden
 #### Environments
 
 `HTTPManager` has a property `environment` of type `HTTPManager.Environment`. An environment is a
-simple wrapper around an `NSURL` and represents the base URL that requests should use if the request
+simple wrapper around a `URL` and represents the base URL that requests should use if the request
 is not made with an absolute URL. You may wish to create your own extension that looks something
 like:
 
@@ -200,7 +200,7 @@ default, though a credential can always be added to any request.
 #### Requests
 
 Requests in PMHTTP are objects. In a pure-Swift world they'd be structs/protocols, but they're
-objects in order to be compatible with Obj-C. Unlike `NSURLRequest`, PMHTTP requests are inherently
+objects in order to be compatible with Obj-C. Unlike `URLRequest`, PMHTTP requests are inherently
 mutable (so they're like `NSMutableURLRequest`). They're also the only public component of PMHTTP
 that is not thread-safe, though it is safe to access a request concurrently as long as no thread is
 mutating the request (which is to say, reading values from the request does not perform any internal
@@ -263,19 +263,19 @@ specific queue can be provided where the completion block should run, such as th
 #### Network Tasks
 
 Executing a request returns a value of type `HTTPManagerTask`. This class is the PMHTTP equivalent
-of `NSURLSessionTask` and is completely thread-safe. It provides properties for inspecting the
-current state of the request, including for accessing the underlying `NSURLSessionTask`, and it
-provides a `cancel()` method for canceling the request. Unlike `-[NSURLSessionTask cancel]`,
+of `URLSessionTask` and is completely thread-safe. It provides properties for inspecting the
+current state of the request, including for accessing the underlying `URLSessionTask`, and it
+provides a `cancel()` method for canceling the request. Unlike `URLSessionTask.cancel()`,
 `HTTPManagerTask.cancel()` can be used to cancel a request while the parse handler is executing, not
 just canceling the networking portion. PMHTTP guarantees that if you execute
 `HTTPManagerTask.cancel()` from the same queue that the completion block is targeting, prior to the
-completion block itself executing, the completion block will always be given a result of `.Canceled`
+completion block itself executing, the completion block will always be given a result of `.canceled`
 even if it had already finished parsing before `cancel()` was invoked. This means that if you target
 the main queue for your completion block, you can be confident that a canceled task will never
 behave as though it succeeded or failed.
 
-Like `NSURLSessionTask`, `HTTPManagerTask` supports key-value observing (although, like
-`NSURLSessionTask`, the KVO messages will occur on some background queue).
+Like `URLSessionTask`, `HTTPManagerTask` supports key-value observing (although, like
+`URLSessionTask`, the KVO messages will occur on some background queue).
 
 In the absence of automatic retrying, the `networkTask` property value will never change during the
 lifetime of the task. If automatic retrying has been configured, `networkTask` will change if the
@@ -312,7 +312,7 @@ default, retrying is disabled.
 
 PMHTTP implements intelligent cache handling for JSON responses. The HTTP standard allows user
 agents to cache responses at their discretion when the response does not include caching headers.
-However, this behavior is inappropriate for most REST API requests, and `NSURLSession` does not
+However, this behavior is inappropriate for most REST API requests, and `URLSession` does not
 document its caching strategy for such responses. To handle this case, PMHTTP inspects JSON
 responses for appropriate caching headers and explicitly prevents responses from being cached
 if they do not include the appropriate cache directives. By default this behavior is only applied
@@ -325,7 +325,7 @@ interfere with caching image requests.
 
 PMHTTP has built-in support for mocking network requests. This is done without swizzling (so it's
 safe to mock requests even in App Store builds), and it's done in a fashion that still creates a
-valid `NSURLSessionTask` (so any code that inspects `HTTPManagerTask.networkTask` will function as
+valid `URLSessionTask` (so any code that inspects `HTTPManagerTask.networkTask` will function as
 expected). Mocks can be registered on the `HTTPManager` as a whole, and individual requests can be
 independently mocked (so you can control whether a request is mocked based on more than just the URL
 in question).
@@ -366,7 +366,7 @@ After installation with any mechanism, you can use this by adding `import PMHTTP
 To install using [Carthage][], add the following to your Cartfile:
 
 ```
-github "postmates/PMHTTP" ~> 1.0
+github "postmates/PMHTTP" ~> 2.0
 ```
 
 This release supports Swift 3.0. For Swift 2.3 you can use
@@ -379,7 +379,7 @@ github "postmates/PMHTTP" ~> 0.9.3
 To install using [CocoaPods](https://cocoapods.org), add the following to your Podfile:
 
 ```
-pod "PMHTTP", "~> 1.0"
+pod "PMHTTP", "~> 2.0"
 ```
 
 This release supports Swift 3.0. For Swift 2.3 you can use:
@@ -401,6 +401,21 @@ Licensed under either of
 Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you shall be dual licensed as above, without any additional terms or conditions.
 
 ## Version History
+
+#### v2.0.1 (2017-01-05)
+
+* Fix PMJSON dependency in CocoaPods podspec.
+
+#### v2.0.0 (2017-01-03)
+
+* Support `text/json` in addition to `application/json`.
+* Add 2 convenience methods for uploading `UIImage`s as PNG or JPEG data.
+* Add `objcError` property to `PMHTTPResult`.
+* Change `objcError` on `HTTPManagerTaskResult` to `Error?` instead of `NSError?`.
+* Fix Xcode 8.1 compatibility of unit tests.
+* Add optional `options` parameter to `parseAsJSON()` and `parseAsJSON(with:)`.
+* Add `withMultipartBody(using:)` to `HTTPManagerUploadFormRequest`.
+* Rename `parse(with:)`, `parseAsJSON(options:with:)`, and `addMultipartBody(with:)` to use the parameter name `using:` instead, which is more in line with Swift 3 Foundation naming conventions.
 
 #### v1.0.4 (2016-10-20)
 

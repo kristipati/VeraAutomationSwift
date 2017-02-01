@@ -12,6 +12,13 @@
 //  except according to those terms.
 //
 
+#if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+    import struct Foundation.Decimal
+#else
+    /// A placeholder used for platforms that don't support `Decimal`.
+    public typealias DecimalPlaceholder = ()
+#endif
+
 /// A single JSON-compatible value.
 public enum JSON {
     /// The null value.
@@ -26,6 +33,18 @@ public enum JSON {
     /// When decoding, any integer that doesn't fit in 64 bits and any floating-point number
     /// is decoded as a `Double`.
     case double(Double)
+    #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+    /// A decimal number.
+    /// When the decoding option `.useDecimals` is used, any value that would otherwise be
+    /// decoded as a `Double` is decoded as a `Decimal` instead.
+    case decimal(Decimal)
+    #else
+    /// A placeholder for decimal number support.
+    /// This exists purely to work around Swift's poor support for conditionally-compiled
+    /// enum variants. At such time as Linux gains `Decimal` support, this will turn
+    /// into a real case. In the meantime, this case should be ignored.
+    case decimal(DecimalPlaceholder)
+    #endif
     /// An object.
     case object(JSONObject)
     /// An array.
@@ -47,6 +66,11 @@ public enum JSON {
     public init(_ d: Double) {
         self = .double(d)
     }
+    #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+    public init(_ d: Decimal) {
+        self = .decimal(d)
+    }
+    #endif
     /// Initializes `self` as an object with the value `obj`.
     public init(_ obj: JSONObject) {
         self = .object(obj)
@@ -90,8 +114,21 @@ extension JSON: Equatable {
         case (.string(let a), .string(let b)): return a == b
         case (.int64(let a), .int64(let b)): return a == b
         case (.double(let a), .double(let b)): return a == b
+        case (.decimal(let a), .decimal(let b)): return a == b
         case (.int64(let a), .double(let b)): return Double(a) == b
-        case (.double(let a), .int64(let b)): return a == Double(b)
+        case (.int64(let a), .decimal(let b)):
+            #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+                return Decimal(workaround: a) == b
+            #else
+                return false
+            #endif
+        case (.double(let a), .decimal(let b)):
+            #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+                return Decimal(workaround: a) == b
+            #else
+                return false
+            #endif
+        case (.double, .int64), (.decimal, .int64), (.decimal, .double): return rhs == lhs
         case (.object(let a), .object(let b)): return a == b
         case (.array(let a), .array(let b)): return a == b
         default: return false
@@ -110,7 +147,12 @@ extension JSON: TextOutputStreamable, CustomStringConvertible, CustomDebugString
     
     public var debugDescription: String {
         let desc = JSON.encodeAsString(self)
-        return "JSON(\(desc))"
+        if case .decimal = self {
+            // Call out decimals specially because otherwise they look like regular numbers
+            return "JSON.decimal(\(desc))"
+        } else {
+            return "JSON(\(desc))"
+        }
     }
 }
 
@@ -159,7 +201,7 @@ extension JSON: ExpressibleByArrayLiteral, ExpressibleByDictionaryLiteral {
 extension JSON: CustomReflectable {
     public var customMirror: Mirror {
         switch self {
-        case .null, .bool, .string, .int64, .double: return Mirror(self, children: [])
+        case .null, .bool, .string, .int64, .double, .decimal: return Mirror(self, children: [])
         case .object(let obj):
             let children: LazyMapCollection<JSONObject, Mirror.Child> = obj.lazy.map({ ($0, $1) })
             return Mirror(self, children: children, displayStyle: .dictionary)

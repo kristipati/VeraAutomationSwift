@@ -171,7 +171,7 @@ extension HTTPManagerError: CustomNSError {
 
 extension HTTPManagerError {
     /// Returns an `NSError` that represents a given `ErrorType`.
-    @available(*, deprecated, message: "cast the error using `as NSError` instead")
+    @available(*, unavailable, message: "cast the error using `as NSError` instead")
     public static func toNSError(_ error: Error) -> NSError {
         return error as NSError
     }
@@ -181,7 +181,7 @@ extension HTTPManagerError {
     ///   In particular, null values will be stripped and JSON payloads where the top-level value is not an
     ///   object will be omitted.
     /// - SeeAlso: `init?(_ error:)`.
-    @available(*, deprecated, message: "cast the error using `as NSError` instead")
+    @available(*, unavailable, message: "cast the error using `as NSError` instead")
     public func toNSError() -> NSError {
         return self as NSError
     }
@@ -192,7 +192,7 @@ extension HTTPManagerError {
     ///   In particular, null values will be stripped and JSON payloads where the top-level value is not an
     ///   object will be omitted from the `NSError` version.
     /// - SeeAlso: `toNSError()`.
-    @available(*, deprecated, message: "cast the error using `as? HTTPManagerError` instead")
+    @available(*, unavailable, message: "cast the error using `as? HTTPManagerError` instead")
     public init?(_ error: NSError) {
         guard let httpError = error as? HTTPManagerError else { return nil }
         self = httpError
@@ -221,7 +221,7 @@ extension HTTPManagerRetryBehavior {
     ///   This block may be executed immediately or it may be saved and executed later on any thread or queue.
     ///
     ///   **Important:** This block must be executed at some point or the task will be stuck in the
-    ///   `.Processing` state forever.
+    ///   `.processing` state forever.
     ///
     ///   **Requires:** This block must not be executed more than once.
     @objc(retryBehaviorWithHandler:)
@@ -253,7 +253,7 @@ extension HTTPManagerRetryBehavior {
     ///   This block may be executed immediately or it may be saved and executed later on any thread or queue.
     ///
     ///   **Important:** This block must be executed at some point or the task will be stuck in the
-    ///   `.Processing` state forever.
+    ///   `.processing` state forever.
     ///
     ///   **Requires:** This block must not be executed more than once.
     @objc(retryBehaviorIgnoringIdempotenceWithHandler:)
@@ -266,7 +266,7 @@ extension HTTPManagerRetryBehavior {
     /// Returns a retry behavior that retries once automatically for networking errors.
     ///
     /// A networking error is defined as many errors in the `NSURLErrorDomain`, or a
-    /// `PMJSON.JSONParserError` with a code of `.UnexpectedEOF` (as this may indicate a
+    /// `PMJSON.JSONParserError` with a code of `.unexpectedEOF` (as this may indicate a
     /// truncated response). The request will not be retried for networking errors that
     /// are unlikely to change when retrying.
     ///
@@ -292,7 +292,7 @@ extension HTTPManagerRetryBehavior {
     /// delay.
     ///
     /// A networking error is defined as many errors in the `NSURLErrorDomain`, or a
-    /// `PMJSON.JSONParserError` with a code of `.UnexpectedEOF` (as this may indicate a
+    /// `PMJSON.JSONParserError` with a code of `.unexpectedEOF` (as this may indicate a
     /// truncated response). The request will not be retried for networking errors that
     /// are unlikely to change when retrying.
     ///
@@ -317,15 +317,15 @@ extension HTTPManagerRetryBehavior {
 // MARK: - Result
 
 public extension HTTPManagerTaskResult {
-    /// Returns the error or canceled state as an `NSError`, or `nil` if successful.
+    /// Returns the error or canceled state as an `Error`, or `nil` if successful.
     ///
     /// Canceled results are converted into `NSURLErrorCancelled` errors.
-    var objcError: NSError? {
+    var objcError: Error? {
         switch self {
         case .success:
             return nil
         case .error(_, let error):
-            return error as NSError
+            return error
         case .canceled:
             return NSError(domain: NSURLErrorDomain, code: NSURLErrorCancelled, userInfo: nil)
         }
@@ -365,6 +365,19 @@ public class PMHTTPResult: NSObject, NSCopying {
     /// - Note: Canceled tasks are not considered to be in error and therefore
     ///   return `nil` from both `value` and `error`.
     public let error: NSError?
+    
+    /// Returns the error or canceled state as an `NSError`, or `nil` if successful.
+    ///
+    /// Canceled results are converted into `NSURLErrorCancelled` errors.
+    public var objcError: NSError? {
+        if isSuccess {
+            return nil
+        } else if let error = error {
+            return error
+        } else {
+            return NSError(domain: NSURLErrorDomain, code: NSURLErrorCancelled, userInfo: nil)
+        }
+    }
     
     /// Creates and returns a new `PMHTTPResult` representing a successful result.
     public init(value: Any?, response: URLResponse) {
@@ -592,7 +605,7 @@ extension HTTPManagerNetworkRequest {
     /// Returns a new request that parses the data with the specified handler.
     /// - Note: If the server responds with 204 No Content, the parse handler is
     ///   invoked with an empty data. The handler may choose to return the error
-    ///   `HTTPManagerError.UnexpectedNoContent` if it does not handle this case.
+    ///   `HTTPManagerError.unexpectedNoContent` if it does not handle this case.
     /// - Parameter handler: The handler to call as part of the request
     ///   processing. This handler is not guaranteed to be called on any
     ///   particular thread. The handler returns the new value for the request.
@@ -608,7 +621,7 @@ extension HTTPManagerNetworkRequest {
     ///   the event of a cancelation.
     @objc(parseWithHandler:)
     public func __objc_parseWithHandler(_ handler: @escaping @convention(block) (_ response: URLResponse, _ data: Data, _ error: NSErrorPointer) -> Any?) -> HTTPManagerObjectParseRequest {
-        return HTTPManagerObjectParseRequest(request: parse(with: { response, data -> Any? in
+        return HTTPManagerObjectParseRequest(request: parse(using: { response, data -> Any? in
             var error: NSError?
             if let object = handler(response, data, &error) {
                 return object
@@ -699,7 +712,7 @@ extension HTTPManagerDataRequest {
     /// Returns a new request that parses the data as JSON.
     /// Any nulls in the JSON are represented as `NSNull`.
     /// - Note: If the server responds with 204 No Content, the parse is skipped
-    ///   and `HTTPManagerError.UnexpectedNoContent` is returned as the parse result.
+    ///   and `HTTPManagerError.unexpectedNoContent` is returned as the parse result.
     /// - Returns: An `HTTPManagerObjectParseRequest`.
     @objc(parseAsJSON)
     public func __objc_parseAsJSON() -> HTTPManagerObjectParseRequest {
@@ -708,14 +721,14 @@ extension HTTPManagerDataRequest {
     
     /// Returns a new request that parses the data as JSON.
     /// - Note: If the server responds with 204 No Content, the parse is skipped
-    ///   and `HTTPManagerError.UnexpectedNoContent` is returned as the parse result.
+    ///   and `HTTPManagerError.unexpectedNoContent` is returned as the parse result.
     /// - Parameter omitNulls: If `true`, nulls in the JSON are omitted from the result.
     ///   If `false`, nulls are represented as `NSNull`. If the top-level value is null,
     ///   it is always represented as `NSNull` regardless of this parameter.
     /// - Returns: An `HTTPManagerObjectParseRequest`.
     @objc(parseAsJSONOmitNulls:)
     public func __objc_parseAsJSONOmitNulls(_ omitNulls: Bool) -> HTTPManagerObjectParseRequest {
-        return HTTPManagerObjectParseRequest(request: parseAsJSON(with: { response, json -> Any? in
+        return HTTPManagerObjectParseRequest(request: parseAsJSON(using: { response, json -> Any? in
             return omitNulls ? (json.nsNoNull ?? NSNull()) : json.ns
         }))
     }
@@ -723,7 +736,7 @@ extension HTTPManagerDataRequest {
     /// Returns a new request that parses the data as JSON and passes it through
     /// the specified handler. Any nulls in the JSON are represented as `NSNull`.
     /// - Note: If the server responds with 204 No Content, the parse is skipped
-    ///   and `HTTPManagerError.UnexpectedNoContent` is returned as the parse result.
+    ///   and `HTTPManagerError.unexpectedNoContent` is returned as the parse result.
     /// - Parameter handler: The handler to call as part of the request
     ///   processing. This handler is not guaranteed to be called on any
     ///   particular thread. The handler returns the new value for the request.
@@ -745,7 +758,7 @@ extension HTTPManagerDataRequest {
     /// Returns a new request that parses the data as JSON and passes it through
     /// the specified handler.
     /// - Note: If the server responds with 204 No Content, the parse is skipped
-    ///   and `HTTPManagerError.UnexpectedNoContent` is returned as the parse result.
+    ///   and `HTTPManagerError.unexpectedNoContent` is returned as the parse result.
     /// - Parameter omitNulls: If `true`, nulls in the JSON are omitted from the result.
     ///   If `false`, nulls are represented as `NSNull`. If the top-level value is null,
     ///   it is always represented as `NSNull` regardless of this parameter.
@@ -764,7 +777,7 @@ extension HTTPManagerDataRequest {
     ///   the event of a cancelation.
     @objc(parseAsJSONOmitNulls:withHandler:)
     public func __objc_parseAsJSONOmitNulls(_ omitNulls: Bool, withHandler handler: @escaping @convention(block) (_ response: URLResponse, _ json: Any, _ error: NSErrorPointer) -> Any?) -> HTTPManagerObjectParseRequest {
-        return HTTPManagerObjectParseRequest(request: parseAsJSON(with: { response, json -> Any? in
+        return HTTPManagerObjectParseRequest(request: parseAsJSON(using: { response, json -> Any? in
             var error: NSError?
             let jsonObject = omitNulls ? (json.nsNoNull ?? NSNull()) : json.ns
             if let object = handler(response, jsonObject, &error) {
@@ -857,8 +870,8 @@ public final class HTTPManagerObjectParseRequest: HTTPManagerRequest, HTTPManage
         set { _request.mock = newValue }
     }
     
-    /// The expected MIME type of the response. Defaults to `["application/json"]` for
-    /// JSON parse requests, or `[]` for requests created with `-parseWithHandler:`.
+    /// The expected MIME type of the response. Defaults to `["application/json"]`
+    /// for JSON parse requests, or `[]` for requests created with `-parseWithHandler:`.
     ///
     /// This property is used to generate the `Accept` header, if not otherwise specified by
     /// the request. If multiple values are provided, they're treated as a priority list
@@ -868,7 +881,7 @@ public final class HTTPManagerObjectParseRequest: HTTPManagerRequest, HTTPManage
     /// response is a 204 No Content, the MIME type is not checked. For all other 2xx
     /// responses, if at least one expected content type is provided, the MIME type
     /// must match one of them. If it doesn't match any, the parse handler will be
-    /// skipped and `HTTPManagerError.UnexpectedContentType` will be returned as the result.
+    /// skipped and `HTTPManagerError.unexpectedContentType` will be returned as the result.
     ///
     /// - Note: The MIME type is only tested if the response includes a `Content-Type` header.
     ///   If the `Content-Type` header is missing, the response will always be assumed to be
@@ -1009,7 +1022,7 @@ extension HTTPManagerActionRequest {
     ///   will return `nil` for `value`.
     @objc(parseAsJSONOmitNulls:)
     public func __objc_parseAsJSONOmitNulls(_ omitNulls: Bool) -> HTTPManagerObjectParseRequest {
-        return HTTPManagerObjectParseRequest(request: parseAsJSON(with: { result -> Any? in
+        return HTTPManagerObjectParseRequest(request: parseAsJSON(using: { result -> Any? in
             return result.json.map({ omitNulls ? $0.nsNoNull ?? NSNull() : $0.ns })
         }))
     }
@@ -1059,7 +1072,7 @@ extension HTTPManagerActionRequest {
     ///   the event of a cancelation.
     @objc(parseAsJSONOmitNulls:withHandler:)
     public func __objc_parseAsJSONOmitNulls(_ omitNulls: Bool, withHandler handler: @escaping @convention(block) (_ response: URLResponse, _ json: Any?, _ error: NSErrorPointer) -> Any?) -> HTTPManagerObjectParseRequest {
-        return HTTPManagerObjectParseRequest(request: parseAsJSON(with: { result -> Any? in
+        return HTTPManagerObjectParseRequest(request: parseAsJSON(using: { result -> Any? in
             var error: NSError?
             let jsonObject = result.json.map({ omitNulls ? $0.nsNoNull ?? NSNull() : $0.ns })
             if let object = handler(result.response, jsonObject, &error) {

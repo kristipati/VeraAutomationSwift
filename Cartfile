@@ -1,4 +1,4 @@
-github "postmates/PMHTTP" ~> 1.0
+github "postmates/PMHTTP" ~> 2.0
 github "krzyzanowskim/CryptoSwift"
 github "marketplacer/keychain-swift" ~> 6.0
 github "DaveWoodCom/XCGLogger" ~> 4.0.0

@@ -15,7 +15,12 @@
 #if os(Linux)
     import Glibc
 #else
+    // Assume Darwin
     import Darwin
+#endif
+
+#if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+    import struct Foundation.Decimal
 #endif
 
 /// A streaming JSON parser that consumes a sequence of unicode scalars.
@@ -60,6 +65,14 @@ public struct JSONParserOptions {
     /// The default value is `false`.
     public var strict: Bool = false
     
+    /// If `true`, the parser will parse floating-point values as `Decimal`
+    /// instead of as `Double` values.
+    ///
+    /// The default value is `false`.
+    ///
+    /// - Note: This option is ignored on platforms without `Decimal`.
+    public var useDecimals: Bool = false
+    
     /// If `true`, the parser will parse a stream of json values with optional whitespace delimiters.
     /// The default value of `false` makes the parser emit an error if there are any non-whitespace
     /// characters after the first JSON value.
@@ -79,16 +92,28 @@ public struct JSONParserOptions {
     
     /// Returns a new `JSONParserOptions`.
     /// - Parameter strict: Whether the parser should be strict. Defaults to `false`.
+    /// - Parameter useDecimals: Whether the parser should parse floating-point values as `Decimal`.
     /// - Parameter streaming: Whether the parser should operate in streaming mode. Defaults to `false`.
-    public init(strict: Bool = false, streaming: Bool = false) {
+    /// - Note: The `useDecimals` option is ignored on platform without `Decimal`.
+    public init(strict: Bool = false, useDecimals: Bool = false, streaming: Bool = false) {
         self.strict = strict
+        self.useDecimals = useDecimals
         self.streaming = streaming
     }
 }
 
 extension JSONParserOptions: ExpressibleByArrayLiteral {
     public enum Element {
+        /// Makes the parser strictly conform to RFC 7159.
+        /// - SeeAlso: `JSONParserOptions.strict`.
         case strict
+        /// Causes the parser to parse floating-point values as `Decimal`
+        /// instead of as `Double` values.
+        /// - Note: This option is ignored on platforms without `Decimal`.
+        /// - SeeAlso: `JSONParserOptions.useDecimals`.
+        case useDecimals
+        /// Puts the parser into streaming mode.
+        /// - SeeAlso: `JSONParserOptions.streaming`.
         case streaming
     }
     
@@ -96,6 +121,7 @@ extension JSONParserOptions: ExpressibleByArrayLiteral {
         for elt in elements {
             switch elt {
             case .strict: strict = true
+            case .useDecimals: useDecimals = true
             case .streaming: streaming = true
             }
         }
@@ -351,8 +377,25 @@ public struct JSONParserIterator<Iter: IteratorProtocol>: JSONEventIterator wher
                     throw error(.invalidNumber)
                 }
             }
+            #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+                @inline(__always) func parseDecimal(from buffer: UnsafeBufferPointer<CChar>) throws -> Decimal {
+                    guard let baseAddress = buffer.baseAddress,
+                        // NB: For some reason String(bytesNoCopy:length:encoding:freeWhenDone:) takes a mutable pointer,
+                        // even though it doesn't mutate the data.
+                        let str = String(bytesNoCopy: UnsafeMutableRawPointer(mutating: UnsafeRawPointer(baseAddress)), length: buffer.count, encoding: .utf8, freeWhenDone: false)
+                        else {
+                            // It shouldn't be possible to fail, we already know it's valid utf-8
+                            return .nan
+                    }
+                    guard let decimal = Decimal(string: str, locale: nil) else {
+                        // The above shouldn't fail, we only pass valid numbers to Decimal
+                        throw error(.invalidNumber)
+                    }
+                    return decimal
+                }
+            #endif
             /// Invoke this after parsing the "e" character.
-            @inline(__always) func parseExponent() throws -> Double {
+            @inline(__always) func parseExponent() throws -> JSONEvent {
                 let c = try bumpRequired()
                 tempBuffer.append(Int8(truncatingBitPattern: c.value))
                 switch c {
@@ -371,8 +414,13 @@ public struct JSONParserIterator<Iter: IteratorProtocol>: JSONEventIterator wher
                         break loop
                     }
                 }
+                #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+                    if options.useDecimals {
+                        return try .decimalValue(tempBuffer.withUnsafeBufferPointer(parseDecimal(from:)))
+                    }
+                #endif
                 tempBuffer.append(0)
-                return tempBuffer.withUnsafeBufferPointer({strtod($0.baseAddress, nil)})
+                return .doubleValue(tempBuffer.withUnsafeBufferPointer({strtod($0.baseAddress, nil)}))
             }
             outerLoop: while let c = base.peek() {
                 switch c {
@@ -392,17 +440,22 @@ public struct JSONParserIterator<Iter: IteratorProtocol>: JSONEventIterator wher
                         case "e", "E":
                             bump()
                             tempBuffer.append(Int8(truncatingBitPattern: c.value))
-                            return try .doubleValue(parseExponent())
+                            return try parseExponent()
                         default:
                             break loop
                         }
                     }
+                    #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+                        if options.useDecimals {
+                            return try .decimalValue(tempBuffer.withUnsafeBufferPointer(parseDecimal(from:)))
+                        }
+                    #endif
                     tempBuffer.append(0)
                     return .doubleValue(tempBuffer.withUnsafeBufferPointer({strtod($0.baseAddress, nil)}))
                 case "e", "E":
                     bump()
                     tempBuffer.append(Int8(truncatingBitPattern: c.value))
-                    return try .doubleValue(parseExponent())
+                    return try parseExponent()
                 default:
                     break outerLoop
                 }
@@ -423,7 +476,13 @@ public struct JSONParserIterator<Iter: IteratorProtocol>: JSONEventIterator wher
             if let num = num {
                 return .int64Value(num)
             }
-            // out of range, fall back to Double
+            // out of range, fall back to double/decimal
+            #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+                if options.useDecimals {
+                    tempBuffer.removeLast() // drop the NUL
+                    return try .decimalValue(tempBuffer.withUnsafeBufferPointer(parseDecimal(from:)))
+                }
+            #endif
             return .doubleValue(tempBuffer.withUnsafeBufferPointer({strtod($0.baseAddress, nil)}))
         case "t":
             let line = self.line, column = self.column
@@ -554,6 +613,11 @@ public enum JSONEvent: Hashable {
     case int64Value(Int64)
     /// A double value.
     case doubleValue(Double)
+    #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+    case decimalValue(Decimal)
+    #else
+    case decimalValue(DecimalPlaceholder)
+    #endif
     /// A string value.
     case stringValue(String)
     /// The null value.
@@ -570,9 +634,15 @@ public enum JSONEvent: Hashable {
         case .booleanValue(let b): return b.hashValue << 4 + 5
         case .int64Value(let i): return i.hashValue << 4 + 6
         case .doubleValue(let d): return d.hashValue << 4 + 7
-        case .stringValue(let s): return s.hashValue << 4 + 8
-        case .nullValue: return 9
-        case .error(let error): return error.hashValue << 4 + 10
+        case .decimalValue(let d):
+            #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+                return d.hashValue << 4 + 8
+            #else
+                return 8
+            #endif
+        case .stringValue(let s): return s.hashValue << 4 + 9
+        case .nullValue: return 10
+        case .error(let error): return error.hashValue << 4 + 11
         }
     }
     
@@ -586,6 +656,8 @@ public enum JSONEvent: Hashable {
         case let (.int64Value(a), .int64Value(b)):
             return a == b
         case let (.doubleValue(a), .doubleValue(b)):
+            return a == b
+        case let (.decimalValue(a), .decimalValue(b)):
             return a == b
         case let (.stringValue(a), .stringValue(b)):
             return a == b

@@ -15,6 +15,10 @@
 import XCTest
 import PMJSON
 
+#if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+    import struct Foundation.Decimal
+#endif
+
 let bigJson: Data = {
     var s = "[\n"
     for _ in 0..<1000 {
@@ -40,11 +44,18 @@ class JSONDecoderTests: XCTestCase {
         assertMatchesJSON(try JSON.decode("[true, false]"), [true, false])
         assertMatchesJSON(try JSON.decode("[1, 2, 3]"), [1, 2, 3])
         assertMatchesJSON(try JSON.decode("{\"one\": 1, \"two\": 2, \"three\": 3}"), ["one": 1, "two": 2, "three": 3])
+        assertMatchesJSON(try JSON.decode("[1.23, 4e7]"), [1.23, 4e7])
+        #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+            assertMatchesJSON(try JSON.decode("[1.23, 4e7]", options: [.useDecimals]), [JSON(1.23 as Decimal), JSON(4e7 as Decimal)])
+        #endif
     }
     
     func testDouble() {
         XCTAssertEqual(try JSON.decode("-5.4272823085455e-05"), -5.4272823085455e-05)
         XCTAssertEqual(try JSON.decode("-5.4272823085455e+05"), -5.4272823085455e+05)
+        #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+            XCTAssertEqual(try JSON.decode("-5.4272823085455e+05", options: [.useDecimals]), JSON(Decimal(string: "-5.4272823085455e+05")!))
+        #endif
     }
     
     func testStringEscapes() {
@@ -56,16 +67,43 @@ class JSONDecoderTests: XCTestCase {
         assertMatchesJSON(try JSON.decode("\"emoji fun: 💩\\uD83D\\uDCA9\""), "emoji fun: 💩💩")
     }
     
+    #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+    func testDecimalParsing() throws {
+        let data = try readFixture("sample", withExtension: "json")
+        // Decode the data and make sure it contains no .double values
+        let json = try JSON.decode(data, options: [.useDecimals])
+        let value = json.walk { value in
+            return value.isDouble ? value : .none
+        }
+        XCTAssertNil(value)
+    }
+    #endif
+    
     func testReencode() throws {
         // sample.json contains a lot of edge cases, so we'll make sure we can re-encode it and re-decode it and get the same thing
         let data = try readFixture("sample", withExtension: "json")
-        let json = try JSON.decode(data)
-        let encoded = JSON.encodeAsData(json)
-        let json2 = try JSON.decode(encoded)
-        if !json.approximatelyEqual(json2) { // encoding/decoding again doesn't necessarily match the exact numeric precision of the original
-            // NB: Don't use XCTAssertEquals because this JSON is too large to be printed to the console
-            XCTFail("Re-encoded JSON doesn't match original")
+        do {
+            let json = try JSON.decode(data)
+            let encoded = JSON.encodeAsString(json)
+            let json2 = try JSON.decode(encoded)
+            if !json.approximatelyEqual(json2) { // encoding/decoding again doesn't necessarily match the exact numeric precision of the original
+                // NB: Don't use XCTAssertEquals because this JSON is too large to be printed to the console
+                XCTFail("Re-encoded JSON doesn't match original")
+            }
         }
+        #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+            do {
+                // test again with decimals
+                let json = try JSON.decode(data, options: [.useDecimals])
+                let encoded = JSON.encodeAsString(json)
+                let json2 = try JSON.decode(encoded, options: [.useDecimals])
+                if json != json2 { // This preserves all precision, but may still convert between int64 and decimal so we can't use matchesJSON
+                    // NB: Don't use XCTAssertEquals because this JSON is too large to be printed to the console
+                    try json.debugMatches(json2, ==)
+                    XCTFail("Re-encoded JSON doesn't match original")
+                }
+            }
+        #endif
     }
     
     func testConversions() {
@@ -73,204 +111,15 @@ class JSONDecoderTests: XCTestCase {
         XCTAssertEqual(JSON(42 as Int64), JSON.int64(42))
         XCTAssertEqual(JSON(42 as Double), JSON.double(42))
         XCTAssertEqual(JSON(42 as Int), JSON.int64(42))
+        #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+            XCTAssertEqual(JSON(42 as Decimal), JSON.decimal(42))
+        #endif
         XCTAssertEqual(JSON("foo"), JSON.string("foo"))
         XCTAssertEqual(JSON(["foo": true]), ["foo": true])
         XCTAssertEqual(JSON([JSON.bool(true)] as JSONArray), [true]) // JSONArray
         XCTAssertEqual(JSON([true].lazy.map(JSON.bool)), [true]) // Sequence of JSON
         XCTAssertEqual(JSON([["foo": true], ["bar": 42]].lazy.map(JSONObject.init)), [["foo": true], ["bar": 42]]) // Sequence of JSONObject
         XCTAssertEqual(JSON([[1,2,3],[4,5,6]].lazy.map(JSONArray.init)), [[1,2,3],[4,5,6]]) // Sequence of JSONArray
-    }
-    
-    func testConvenienceAccessors() {
-        let dict: JSON = [
-            "xs": [["x": 1], ["x": 2], ["x": 3]],
-            "ys": [["y": 1], ["y": nil], ["y": 3], [:]],
-            "zs": nil,
-            "s": "Hello",
-            "array": [
-                [["x": 1], ["x": 2], ["x": 3]],
-                [["y": 1], ["y": nil], ["y": 3], [:]],
-                [["x": [1,2]], ["x": []], ["x": [3]], ["x": [4,5,6]]],
-                nil,
-                "Hello"
-            ],
-            "concat": [["x": [1]], ["x": [2,3]], ["x": []], ["x": [4,5,6]]]
-        ]
-        
-        struct DummyError: Error {}
-        
-        // object-style accessors
-        XCTAssertEqual([1,2,3], try dict.mapArray("xs", { try $0.getInt("x") }))
-        XCTAssertThrowsError(try dict.mapArray("ys", { try $0.getInt("y") }))
-        XCTAssertThrowsError(try dict.mapArray("s", { _ in 1 }))
-        XCTAssertThrowsError(try dict.mapArray("invalid", { _ in 1 }))
-        XCTAssertThrowsError(try dict.mapArray("xs", { _ in throw DummyError() })) { error in
-            XCTAssert(error is DummyError, "expected DummyError, found \(error)")
-        }
-        XCTAssertEqual([1,2,3], try dict.object!.mapArray("xs", { try $0.getInt("x") }))
-        XCTAssertThrowsError(try dict.object!.mapArray("ys", { try $0.getInt("y") }))
-        XCTAssertThrowsError(try dict.object!.mapArray("s", { _ in 1 }))
-        XCTAssertThrowsError(try dict.object!.mapArray("invalid", { _ in 1 }))
-        XCTAssertThrowsError(try dict.object!.mapArray("xs", { _ in throw DummyError() })) { error in
-            XCTAssert(error is DummyError, "expected DummyError, found \(error)")
-        }
-        
-        XCTAssertEqual([1,2,3], try dict.mapArrayOrNil("xs", { try $0.getInt("x") }) ?? [-1])
-        XCTAssertThrowsError(try dict.mapArrayOrNil("ys", { try $0.getInt("y") }) ?? [-1])
-        XCTAssertNil(try dict.mapArrayOrNil("zs", { try $0.getInt("z") }))
-        XCTAssertNil(try dict.mapArrayOrNil("invalid", { try $0.getInt("z") }))
-        XCTAssertThrowsError(try dict.mapArrayOrNil("s", { _ in 1 })!)
-        XCTAssertThrowsError(try dict.mapArrayOrNil("xs", { _ in throw DummyError() })) { error in
-            XCTAssert(error is DummyError, "expected DummyError, found \(error)")
-        }
-        XCTAssertEqual([1,2,3], try dict.object!.mapArrayOrNil("xs", { try $0.getInt("x") }) ?? [-1])
-        XCTAssertThrowsError(try dict.object!.mapArrayOrNil("ys", { try $0.getInt("y") }) ?? [-1])
-        XCTAssertNil(try dict.object!.mapArrayOrNil("zs", { try $0.getInt("z") }))
-        XCTAssertNil(try dict.object!.mapArrayOrNil("invalid", { try $0.getInt("z") }))
-        XCTAssertThrowsError(try dict.object!.mapArrayOrNil("s", { _ in 1 })!)
-        XCTAssertThrowsError(try dict.object!.mapArrayOrNil("xs", { _ in throw DummyError() })) { error in
-            XCTAssert(error is DummyError, "expected DummyError, found \(error)")
-        }
-        
-        XCTAssertEqual([1,3], try dict.flatMapArray("ys", { try $0.getIntOrNil("y") }))
-        XCTAssertEqual([1,2,3,4,5,6], try dict.flatMapArray("concat", { try $0.mapArray("x", { try $0.getInt() }) }))
-        XCTAssertThrowsError(try dict.flatMapArray("zs", { _ in [1] }))
-        XCTAssertThrowsError(try dict.flatMapArray("s", { _ in [1] }))
-        XCTAssertThrowsError(try dict.flatMapArray("invalid", { _ in [1] }))
-        XCTAssertThrowsError(try dict.flatMapArray("xs", { _ -> [Int] in throw DummyError() })) { error in
-            XCTAssert(error is DummyError, "expected DummyError, found \(error)")
-        }
-        XCTAssertEqual([1,3], try dict.object!.flatMapArray("ys", { try $0.getIntOrNil("y") }))
-        XCTAssertEqual([1,2,3,4,5,6], try dict.object!.flatMapArray("concat", { try $0.mapArray("x", { try $0.getInt() }) }))
-        XCTAssertThrowsError(try dict.object!.flatMapArray("zs", { _ in [1] }))
-        XCTAssertThrowsError(try dict.object!.flatMapArray("s", { _ in [1] }))
-        XCTAssertThrowsError(try dict.object!.flatMapArray("invalid", { _ in [1] }))
-        XCTAssertThrowsError(try dict.object!.flatMapArray("xs", { _ -> [Int] in throw DummyError() })) { error in
-            XCTAssert(error is DummyError, "expected DummyError, found \(error)")
-        }
-        
-        XCTAssertEqual([1,3], try dict.flatMapArrayOrNil("ys", { try $0.getIntOrNil("y") }) ?? [])
-        XCTAssertEqual([1,2,3,4,5,6], try dict.flatMapArrayOrNil("concat", { try $0.mapArray("x", { try $0.getInt() }) }) ?? [])
-        XCTAssertNil(try dict.flatMapArrayOrNil("zs", { _ in [1] }))
-        XCTAssertThrowsError(try dict.flatMapArrayOrNil("s", { _ in [1] }))
-        XCTAssertNil(try dict.flatMapArrayOrNil("invalid", { _ in [1] }))
-        XCTAssertThrowsError(try dict.flatMapArrayOrNil("xs", { _ -> [Int] in throw DummyError() })) { error in
-            XCTAssert(error is DummyError, "expected DummyError, found \(error)")
-        }
-        XCTAssertEqual([1,3], try dict.object!.flatMapArrayOrNil("ys", { try $0.getIntOrNil("y") }) ?? [])
-        XCTAssertEqual([1,2,3,4,5,6], try dict.object!.flatMapArrayOrNil("concat", { try $0.mapArray("x", { try $0.getInt() }) }) ?? [])
-        XCTAssertNil(try dict.object!.flatMapArrayOrNil("zs", { _ in [1] }))
-        XCTAssertThrowsError(try dict.object!.flatMapArrayOrNil("s", { _ in [1] }))
-        XCTAssertNil(try dict.object!.flatMapArrayOrNil("invalid", { _ in [1] }))
-        XCTAssertThrowsError(try dict.object!.flatMapArrayOrNil("xs", { _ -> [Int] in throw DummyError() })) { error in
-            XCTAssert(error is DummyError, "expected DummyError, found \(error)")
-        }
-        
-        XCTAssertThrowsError(try dict["array"]!.mapArray("xs", { _ in 1 }))
-        XCTAssertThrowsError(try dict["array"]!.mapArrayOrNil("xs", { _ in 1 }))
-        XCTAssertThrowsError(try dict["array"]!.flatMapArray("xs", { _ -> Int? in 1 }))
-        XCTAssertThrowsError(try dict["array"]!.flatMapArray("xs", { _ in [1] }))
-        XCTAssertThrowsError(try dict["array"]!.flatMapArrayOrNil("xs", { _ -> Int? in 1 }))
-        XCTAssertThrowsError(try dict["array"]!.flatMapArrayOrNil("xs", { _ in [1] }))
-        
-        // array-style accessors
-        let array = dict["array"]!
-        XCTAssertEqual([1,2,3], try array.mapArray(0, { try $0.getInt("x") }))
-        XCTAssertThrowsError(try array.mapArray(1, { try $0.getInt("y") }))
-        XCTAssertEqual([2,0,1,3], try array.mapArray(2, { try $0.getArray("x").count }))
-        XCTAssertThrowsError(try array.mapArray(3, { _ in 1 })) // null
-        XCTAssertThrowsError(try array.mapArray(4, { _ in 1 })) // string
-        XCTAssertThrowsError(try array.mapArray(5, { _ in 1 })) // out of bounds
-        XCTAssertThrowsError(try array.mapArray(0, { _ in throw DummyError() })) { error in
-            XCTAssert(error is DummyError, "expected DummyError, found \(error)")
-        }
-        
-        XCTAssertEqual([1,2,3], try array.mapArrayOrNil(0, { try $0.getInt("x") }) ?? [])
-        XCTAssertThrowsError(try array.mapArrayOrNil(1, { try $0.getInt("y") }))
-        XCTAssertEqual([2,0,1,3], try array.mapArrayOrNil(2, { try $0.getArray("x").count }) ?? [])
-        XCTAssertNil(try array.mapArrayOrNil(3, { _ in 1 })) // null
-        XCTAssertThrowsError(try array.mapArrayOrNil(4, { _ in 1 })) // string
-        XCTAssertNil(try array.mapArrayOrNil(5, { _ in 1 })) // out of bounds
-        XCTAssertThrowsError(try array.mapArrayOrNil(0, { _ in throw DummyError() })) { error in
-            XCTAssert(error is DummyError, "expected DummyError, found \(error)")
-        }
-        
-        XCTAssertEqual([1,3], try array.flatMapArray(1, { try $0.getIntOrNil("y") }))
-        XCTAssertEqual([1,2,3,4,5,6], try array.flatMapArray(2, { try $0.mapArray("x", { try $0.getInt() }) }))
-        XCTAssertThrowsError(try array.flatMapArray(3, { _ in [1] })) // null
-        XCTAssertThrowsError(try array.flatMapArray(4, { _ in [1] })) // string
-        XCTAssertThrowsError(try array.flatMapArray(5, { _ in [1] })) // out of bounds
-        XCTAssertThrowsError(try array.flatMapArray(0, { _ -> [Int] in throw DummyError() })) { error in
-            XCTAssert(error is DummyError, "expected DummyError, found \(error)")
-        }
-        
-        XCTAssertEqual([1,3], try array.flatMapArrayOrNil(1, { try $0.getIntOrNil("y") }) ?? [])
-        XCTAssertEqual([1,2,3,4,5,6], try array.flatMapArrayOrNil(2, { try $0.mapArray("x", { try $0.getInt() }) }) ?? [])
-        XCTAssertNil(try array.flatMapArrayOrNil(3, { _ in [1] })) // null
-        XCTAssertThrowsError(try array.flatMapArrayOrNil(4, { _ in [1] })) // string
-        XCTAssertNil(try array.flatMapArrayOrNil(5, { _ in [1] })) // out of bounds
-        XCTAssertThrowsError(try array.flatMapArrayOrNil(0, { _ -> [Int] in throw DummyError() })) { error in
-            XCTAssert(error is DummyError, "expected DummyError, found \(error)")
-        }
-        
-        XCTAssertThrowsError(try dict.mapArray(0, { _ in 1 }))
-        XCTAssertThrowsError(try dict.mapArrayOrNil(0, { _ in 1 }))
-        XCTAssertThrowsError(try dict.flatMapArray(0, { _ in 1 }))
-        XCTAssertThrowsError(try dict.flatMapArrayOrNil(0, { _ in 1 }))
-    }
-    
-    func testConvenienceAccessorAssignments() {
-        var json: JSON = "test"
-        
-        XCTAssertNil(json.bool)
-        json.bool = true
-        XCTAssertEqual(json, true)
-        json.bool = nil
-        XCTAssertEqual(json, JSON.null)
-        
-        XCTAssertNil(json.string)
-        json.string = "foo"
-        XCTAssertEqual(json, "foo")
-        json.string = nil
-        XCTAssertEqual(json, JSON.null)
-        
-        XCTAssertNil(json.int64)
-        json.int64 = 42
-        XCTAssertEqual(json, 42)
-        json.int64 = nil
-        XCTAssertEqual(json, JSON.null)
-        
-        XCTAssertNil(json.int)
-        json.int = 42
-        XCTAssertEqual(json, 42)
-        json.int = nil
-        XCTAssertEqual(json, JSON.null)
-        
-        XCTAssertNil(json.double)
-        json.double = 42
-        XCTAssertEqual(json, 42)
-        json.double = nil
-        XCTAssertEqual(json, JSON.null)
-        
-        XCTAssertNil(json.object)
-        json.object = ["foo": "bar"]
-        XCTAssertEqual(json, ["foo": "bar"])
-        json.object = nil
-        XCTAssertEqual(json, JSON.null)
-        
-        XCTAssertNil(json.array)
-        json.array = [1,2,3]
-        XCTAssertEqual(json, [1,2,3])
-        json.array = nil
-        XCTAssertEqual(json, JSON.null)
-        
-        json = ["foo": "bar"]
-        json.object?["baz"] = "qux"
-        XCTAssertEqual(json, ["foo": "bar", "baz": "qux"])
-        
-        json = ["value": ["array": [1,2]]]
-        json.object?["value"]?.object?["array"]?.array?.append(3)
-        XCTAssertEqual(json, ["value": ["array": [1,2,3]]])
     }
     
     #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
@@ -474,6 +323,18 @@ class JSONBenchmarks: XCTestCase {
         }
     }
     
+    func testDecodeDecimalPerformance() {
+        measure { [bigJson] in
+            for _ in 0..<10 {
+                do {
+                    _ = try JSON.decode(bigJson, options: [.useDecimals])
+                } catch {
+                    XCTFail("error parsing json: \(error)")
+                }
+            }
+        }
+    }
+    
     func testDecodePerformanceCocoa() {
         measure { [bigJson] in
             for _ in 0..<10 {
@@ -559,6 +420,19 @@ class JSONBenchmarks: XCTestCase {
         }
     }
     
+    func testDecodeSampleJSONDecimalPerformance() throws {
+        let data = try readFixture("sample", withExtension: "json")
+        measure {
+            for _ in 0..<10 {
+                do {
+                    _ = try JSON.decode(data, options: [.useDecimals])
+                } catch {
+                    return XCTFail("error parsing json: \(error)")
+                }
+            }
+        }
+    }
+    
     func testDecodeSampleJSONCocoaPerformance() throws {
         let data = try readFixture("sample", withExtension: "json")
         measure {
@@ -584,7 +458,7 @@ func assertMatchesJSON(_ a: @autoclosure () throws -> JSON, _ b: @autoclosure ()
     }
 }
 
-/// Similar to JSON's equality test but does not convert between integral and double values.
+/// Similar to JSON's equality test but does not convert between numeric values.
 private func matchesJSON(_ a: JSON, _ b: JSON) -> Bool {
     switch (a, b) {
     case (.array(let a), .array(let b)):
@@ -602,6 +476,8 @@ private func matchesJSON(_ a: JSON, _ b: JSON) -> Bool {
     case (.int64(let a), .int64(let b)):
         return a == b
     case (.double(let a), .double(let b)):
+        return a == b
+    case (.decimal(let a), .decimal(let b)):
         return a == b
     case (.null, .null):
         return true
@@ -627,6 +503,76 @@ extension JSON {
                 { !$0.approximatelyEqual(v) }) ?? true })
         default:
             return self == other
+        }
+    }
+    
+    /// Invokes the given block on every JSON value within `self`.
+    /// For objects and arrays, the block is run with the object/array first, and then
+    /// with its contents afterward.
+    func walk<T>(using f: (JSON) throws -> T?) rethrows -> T? {
+        if let result = try f(self) {
+            return result
+        }
+        switch self {
+        case .object(let obj):
+            for value in obj.values {
+                if let result = try value.walk(using: f) {
+                    return result
+                }
+            }
+        case .array(let ary):
+            for elt in ary {
+                if let result = try elt.walk(using: f) {
+                    return result
+                }
+            }
+        default:
+            break
+        }
+        return nil
+    }
+    
+    /// Walks two JSON values in sync, performing the given equality test on
+    /// all leaf values and throwing an error when a mismatch is found.
+    /// The equality test is not performed on objects or arrays.
+    func debugMatches(_ other: JSON, _ compare: (JSON, JSON) -> Bool) throws {
+        enum Error: LocalizedError {
+            case objectCountMismatch
+            case objectKeyMismatch
+            case arrayCountMismatch
+            case typeMismatch
+            case equalityFailure(JSON, JSON)
+            
+            var errorDescription: String? {
+                switch self {
+                case .objectCountMismatch: return "object count mismatch"
+                case .objectKeyMismatch: return "object key mismatch"
+                case .arrayCountMismatch: return "array count mismatch"
+                case .typeMismatch: return "value type mismatch"
+                case let .equalityFailure(a, b): return "\(String(reflecting: a)) is not equal to \(String(reflecting: b))"
+                }
+            }
+        }
+        switch (self, other) {
+        case (.object(let a), .object(let b)):
+            guard a.count == b.count else { throw Error.objectCountMismatch }
+            for (k, v) in a {
+                guard let v2 = b[k] else { throw Error.objectKeyMismatch }
+                try v.debugMatches(v2, compare)
+            }
+        case (.object, _), (_, .object):
+            throw Error.typeMismatch
+        case (.array(let a), .array(let b)):
+            guard a.count == b.count else { throw Error.arrayCountMismatch }
+            for (v, v2) in zip(a,b) {
+                try v.debugMatches(v2, compare)
+            }
+        case (.array, _), (_, .array):
+            throw Error.typeMismatch
+        default:
+            if !compare(self, other) {
+                throw Error.equalityFailure(self, other)
+            }
         }
     }
 }
