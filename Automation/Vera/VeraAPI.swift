@@ -362,7 +362,7 @@ class VeraAPI {
                 }
 
                 if localPrefix == true && unit.ipAddress != nil && unit.ipAddress!.isEmpty == false {
-                    return "http://\(unit.ipAddress!)/port_3480/data_request?id="
+                    return "http://\(unit.ipAddress!):3480/data_request?id="
                 } else if unit.serverRelay != nil {
                     return "https://\(unit.serverRelay!)/relay/relay/relay/device/\(unit.serialNumber!)/port_3480/data_request?id="
                 }
