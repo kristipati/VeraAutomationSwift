@@ -96,19 +96,11 @@ public class HTTPManagerRequest: NSObject, NSCopying {
     /// Subclasses may override this behavior.
     public fileprivate(set) var parameters: [URLQueryItem]
     
-    /// The credential to use for the request. Default is the value of
-    /// `HTTPManager.defaultCredential`.
+    /// The `HTTPAuth` value to use for the request. Default is the value of
+    /// `HTTPManager.defaultAuth`.
     ///
-    /// - Note: Only password-based credentials are supported. It is an error to assign
-    /// any other type of credential.
-    public var credential: URLCredential? {
-        didSet {
-            if let credential = credential, credential.user == nil || !credential.hasPassword {
-                NSLog("[HTTPManager] Warning: Attempting to set request credential with a non-password-based credential")
-                self.credential = nil
-            }
-        }
-    }
+    /// - SeeAlso: `HTTPBasicAuth`.
+    public var auth: HTTPAuth?
     
     /// The timeout interval of the request, in seconds. If `nil`, the session's default
     /// timeout interval is used. Default is `nil`.
@@ -169,8 +161,8 @@ public class HTTPManagerRequest: NSObject, NSCopying {
     
     /// Additional HTTP header fields to pass in the request. Default is `[:]`.
     ///
-    /// - Note: If `self.credential` is non-`nil`, the `Authorization` header will be
-    /// ignored. `Content-Type` and `Content-Length` are always ignored.
+    /// - Note: `Content-Type` and `Content-Length` are always ignored. If `self.auth` is non-`nil`,
+    ///   it may override other headers, in particular `"Authorization"`.
     public var headerFields: HTTPHeaders = [:]
     
     // possibly expose some URLRequest properties here, if they're useful
@@ -222,7 +214,7 @@ public class HTTPManagerRequest: NSObject, NSCopying {
         requestMethod = request.requestMethod
         isIdempotent = request.isIdempotent
         parameters = request.parameters
-        credential = request.credential
+        auth = request.auth
         timeoutInterval = request.timeoutInterval
         cachePolicy = request.cachePolicy
         shouldFollowRedirects = request.shouldFollowRedirects
@@ -237,14 +229,8 @@ public class HTTPManagerRequest: NSObject, NSCopying {
         super.init()
     }
     
+    /// Returns the URL request, without applying the auth headers.
     internal final var _preparedURLRequest: URLRequest {
-        func basicAuthentication(_ credential: URLCredential) -> String {
-            let phrase = "\(credential.user ?? ""):\(credential.password ?? "")"
-            let data = phrase.data(using: String.Encoding.utf8)!
-            let encoded = data.base64EncodedString(options: [])
-            return "Basic \(encoded)"
-        }
-        
         var request = URLRequest(url: url)
         request.httpMethod = requestMethod.rawValue
         if let policy = cachePolicy {
@@ -255,9 +241,6 @@ public class HTTPManagerRequest: NSObject, NSCopying {
         }
         request.allowsCellularAccess = allowsCellularAccess
         request.allHTTPHeaderFields = headerFields.dictionary
-        if let credential = credential {
-            request.setValue(basicAuthentication(credential), forHTTPHeaderField: "Authorization")
-        }
         let contentType = self.contentType
         if contentType.isEmpty {
             request.allHTTPHeaderFields?["Content-Type"] = nil
@@ -482,6 +465,7 @@ public class HTTPManagerNetworkRequest: HTTPManagerRequest, HTTPManagerRequestPe
     /// as appropriate.
     public var preparedURLRequest: URLRequest {
         var request = _preparedURLRequest
+        auth?.applyHeaders(to: &request)
         switch uploadBody {
         case .data(let data)?:
             request.httpBody = data
@@ -535,29 +519,12 @@ public class HTTPManagerNetworkRequest: HTTPManagerRequest, HTTPManagerRequestPe
     /// - Returns: An `HTTPManagerTask` that represents the operation.
     /// - Important: After you create the task, you must start it by calling the `resume()` method.
     public func createTask(withCompletionQueue queue: OperationQueue? = nil, completion: @escaping (_ task: HTTPManagerTask, _ result: HTTPManagerTaskResult<Data>) -> Void) -> HTTPManagerTask {
-        return apiManager.createNetworkTaskWithRequest(self, uploadBody: uploadBody, processor: { [weak apiManager] task, result, attempt, retry in
-            let result = HTTPManagerNetworkRequest.taskProcessor(task, result)
-            if case .error(_, let error) = result, let retryBehavior = task.retryBehavior {
-                retryBehavior.handler(task, error, attempt, { shouldRetry in
-                    if shouldRetry, let apiManager = apiManager, retry(apiManager) {
-                        // The task is now retrying
-                        return
-                    } else if let queue = queue {
-                        queue.addOperation {
-                            HTTPManagerNetworkRequest.taskCompletion(task, result, completion)
-                        }
-                    } else {
-                        HTTPManagerNetworkRequest.taskCompletion(task, result, completion)
-                    }
-                })
-            } else if let queue = queue {
-                queue.addOperation {
-                    HTTPManagerNetworkRequest.taskCompletion(task, result, completion)
-                }
-            } else {
-                HTTPManagerNetworkRequest.taskCompletion(task, result, completion)
-            }
-            })
+        let completion = completionThunk(for: completion)
+        return apiManager.createNetworkTaskWithRequest(self, uploadBody: uploadBody,
+                                                       processor: networkTaskProcessor(queue: queue,
+                                                                                       processor: HTTPManagerNetworkRequest.taskProcessor,
+                                                                                       taskCompletion: HTTPManagerNetworkRequest.taskCompletion,
+                                                                                       completion: completion))
     }
     
     /// Executes a block with `self` as the argument, and then returns `self` again.
@@ -587,7 +554,7 @@ public class HTTPManagerNetworkRequest: HTTPManagerRequest, HTTPManagerRequestPe
                 default: json = nil
                 }
                 if statusCode == 401 { // Unauthorized
-                    throw HTTPManagerError.unauthorized(credential: task.credential, response: response, body: data, bodyJson: json)
+                    throw HTTPManagerError.unauthorized(auth: task.auth, response: response, body: data, bodyJson: json)
                 } else {
                     throw HTTPManagerError.failedResponse(statusCode: statusCode, response: response, body: data, bodyJson: json)
                 }
@@ -653,6 +620,78 @@ extension HTTPManagerRequestPerformable {
         let task = createTask(withCompletionQueue: queue, completion: completion)
         task.resume()
         return task
+    }
+    
+    /// A workaround to ensure the completion block deinits on the queue where it's fired from.
+    ///
+    /// Ownership of blocks is not passed directly into the queue that runs them, which means they could get
+    /// deallocated from the calling thread if the queue runs the block before control returns back to that
+    /// calling thread. We guard against that here by forcing the completion block to be released immediately
+    /// after it's fired. This ensures that it can only be deallocated on the completion queue or the thread that
+    /// creates the task in the first place.
+    fileprivate func completionThunk(for block: @escaping (_ task: HTTPManagerTask, _ result: HTTPManagerTaskResult<ResultValue>) -> Void) -> (HTTPManagerTask, HTTPManagerTaskResult<ResultValue>) -> Void {
+        var unmanagedThunk: Unmanaged<Thunk<(HTTPManagerTask, HTTPManagerTaskResult<ResultValue>), Void>>? = Unmanaged.passRetained(Thunk(block))
+        return { (task, result) in
+            let thunk = unmanagedThunk.unsafelyUnwrapped.takeRetainedValue()
+            unmanagedThunk = nil // effectively a debug assertion that ensures we don't call the completion block twice
+            thunk.block(task, result)
+        }
+    }
+}
+
+/// A wrapper class that allows us to stuff the block into an `Unmanaged`.
+private class Thunk<Args,ReturnValue> {
+    let block: (Args) -> ReturnValue
+    init(_ block: @escaping (Args) -> ReturnValue) {
+        self.block = block
+    }
+}
+
+private func networkTaskProcessor<T>(queue: OperationQueue?,
+                                  processor: @escaping (HTTPManagerTask, HTTPManagerTaskResult<Data>) -> HTTPManagerTaskResult<T>,
+                                  taskCompletion: @escaping (HTTPManagerTask, HTTPManagerTaskResult<T>, @escaping (HTTPManagerTask, HTTPManagerTaskResult<T>) -> Void) -> Void,
+                                  completion: @escaping (HTTPManagerTask, HTTPManagerTaskResult<T>) -> Void)
+    -> (HTTPManagerTask, HTTPManagerTaskResult<Data>, _ authToken: Any??, _ attempt: Int, _ retry: @escaping (_ isAuthRetry: Bool) -> Bool) -> Void
+{
+    return { (task, result, authToken, attempt, retry) in
+        let result = processor(task, result)
+        func runCompletion() {
+            if let queue = queue {
+                queue.addOperation {
+                    taskCompletion(task, result, completion)
+                }
+            } else {
+                taskCompletion(task, result, completion)
+            }
+        }
+        if case .error(_, let HTTPManagerError.unauthorized(auth?, response, body, _)) = result {
+            if let token = authToken, let handleUnauthorized = auth.handleUnauthorized {
+                var alreadyCalled = false // attempt to detect multiple invocations of the block. Not guaranteed to work.
+                handleUnauthorized(response, body, task, token) { shouldRetry in
+                    if alreadyCalled {
+                        NSLog("[HTTPManager] HTTPAuth completion block invoked multiple times (\(type(of: auth)))")
+                        assertionFailure("HTTPAuth completion block invoked multiple times")
+                        return
+                    }
+                    alreadyCalled = true
+                    autoreleasepool {
+                        if !(shouldRetry && retry(true)) {
+                            runCompletion()
+                        }
+                    }
+                }
+            } else {
+                runCompletion()
+            }
+        } else if case .error(_, let error) = result, let retryBehavior = task.retryBehavior {
+            retryBehavior.handler(task, error, attempt, { shouldRetry in
+                if !(shouldRetry && retry(false)) {
+                    runCompletion()
+                }
+            })
+        } else {
+            runCompletion()
+        }
     }
 }
 
@@ -798,29 +837,12 @@ public final class HTTPManagerParseRequest<T>: HTTPManagerRequest, HTTPManagerRe
             parseHandler = self.parseHandler
             expectedContentTypes = self.expectedContentTypes
         }
-        return apiManager.createNetworkTaskWithRequest(self, uploadBody: uploadBody, processor: { [weak apiManager] task, result, attempt, retry in
-            let result = HTTPManagerParseRequest<T>.taskProcessor(task, result, expectedContentTypes, parseHandler)
-            if case .error(_, let error) = result, let retryBehavior = task.retryBehavior {
-                retryBehavior.handler(task, error, attempt, { shouldRetry in
-                    if shouldRetry, let apiManager = apiManager, retry(apiManager) {
-                        // The task is now retrying
-                        return
-                    } else if let queue = queue {
-                        queue.addOperation {
-                            HTTPManagerParseRequest<T>.taskCompletion(task, result, completion)
-                        }
-                    } else {
-                        HTTPManagerParseRequest<T>.taskCompletion(task, result, completion)
-                    }
-                })
-            } else if let queue = queue {
-                queue.addOperation {
-                    HTTPManagerParseRequest<T>.taskCompletion(task, result, completion)
-                }
-            } else {
-                HTTPManagerParseRequest<T>.taskCompletion(task, result, completion)
-            }
-            })
+        let completion = completionThunk(for: completion)
+        return apiManager.createNetworkTaskWithRequest(self, uploadBody: uploadBody,
+                                                       processor: networkTaskProcessor(queue: queue,
+                                                                                       processor: { (task, result) in HTTPManagerParseRequest<T>.taskProcessor(task, result, expectedContentTypes, parseHandler) },
+                                                                                       taskCompletion: HTTPManagerParseRequest<T>.taskCompletion,
+                                                                                       completion: completion))
     }
     
     /// Executes a block with `self` as the argument, and then returns `self` again.
@@ -861,7 +883,7 @@ public final class HTTPManagerParseRequest<T>: HTTPManagerRequest, HTTPManagerRe
                     default: json = nil
                     }
                     if statusCode == 401 { // Unauthorized
-                        throw HTTPManagerError.unauthorized(credential: task.credential, response: response, body: data, bodyJson: json)
+                        throw HTTPManagerError.unauthorized(auth: task.auth, response: response, body: data, bodyJson: json)
                     } else {
                         throw HTTPManagerError.failedResponse(statusCode: statusCode, response: response, body: data, bodyJson: json)
                     }
@@ -920,7 +942,7 @@ public final class HTTPManagerParseRequest<T>: HTTPManagerRequest, HTTPManagerRe
         self.expectedContentTypes = expectedContentTypes
         super.init(apiManager: request.apiManager, URL: request.url, method: request.requestMethod, parameters: request.parameters)
         isIdempotent = request.isIdempotent
-        credential = request.credential
+        auth = request.auth
         timeoutInterval = request.timeoutInterval
         cachePolicy = request.cachePolicy
         shouldFollowRedirects = request.shouldFollowRedirects
@@ -985,38 +1007,10 @@ private func acceptHeaderValueForContentTypes(_ contentTypes: [String]) -> Strin
 /// Similar to an `HTTPManagerDataRequest` except that it handles 204 No Content
 /// instead of throwing `HTTPManagerError.unexpectedNoContent`.
 public class HTTPManagerActionRequest: HTTPManagerNetworkRequest {
-    /// The results of JSON parsing for use in `parseAsJSON(with:)`.
-    public enum JSONResult {
-        /// The server returned 204 No Content.
-        case noContent(HTTPURLResponse)
-        /// The server returned a valid JSON response.
-        case success(URLResponse, JSON)
-        
-        /// The server response.
-        public var response: URLResponse {
-            switch self {
-            case .noContent(let response): return response
-            case .success(let response, _): return response
-            }
-        }
-        
-        /// The parsed JSON response, or `nil` if the server returned 204 No Content.
-        public var json: JSON? {
-            switch self {
-            case .noContent: return nil
-            case .success(_, let json): return json
-            }
-        }
-        
-        /// Returns the parsed JSON response, or throws `HTTPManagerError.unexpectedNoContent`
-        /// if the server returned 204 No Content.
-        public func getJSON() throws -> JSON {
-            switch self {
-            case .noContent(let response): throw HTTPManagerError.unexpectedNoContent(response: response)
-            case .success(_, let json): return json
-            }
-        }
-    }
+    /// The results of parsing for use in parse methods that take handlers.
+    public typealias ParseResult<T> = HTTPManagerActionParseResult<T>
+    @available(*, deprecated, renamed: "ParseResult")
+    public typealias JSONResult = ParseResult<JSON>
     
     /// Returns a new request that parses the data as JSON.
     /// - Note: The parse result is `nil` if and only if the server responded with
@@ -1050,7 +1044,7 @@ public class HTTPManagerActionRequest: HTTPManagerNetworkRequest {
     ///   If the parse handler has side effects and can throw, you should either
     ///   ensure that it's safe to run the parse handler again or set `isIdempotent`
     ///   to `false`.
-    public func parseAsJSON<T>(options: JSONOptions = [], using handler: @escaping (JSONResult) throws -> T) -> HTTPManagerParseRequest<T> {
+    public func parseAsJSON<T>(options: JSONOptions = [], using handler: @escaping (ParseResult<JSON>) throws -> T) -> HTTPManagerParseRequest<T> {
         return HTTPManagerParseRequest(request: self, uploadBody: uploadBody, expectedContentTypes: ["application/json"], defaultResponseCacheStoragePolicy: .notAllowed, parseHandler: { response, data in
             if let response = response as? HTTPURLResponse, response.statusCode == 204 {
                 // No Content
@@ -1085,6 +1079,39 @@ public class HTTPManagerActionRequest: HTTPManagerNetworkRequest {
     
     public required init(__copyOfRequest request: HTTPManagerRequest) {
         super.init(__copyOfRequest: request)
+    }
+}
+
+/// The results of parsing for use in `HTTPManagerActionRequest` parse methods that take handlers.
+public enum HTTPManagerActionParseResult<T> {
+    /// The server returned 204 No Content.
+    case noContent(HTTPURLResponse)
+    /// The server returned a valid response.
+    case success(URLResponse, T)
+    
+    /// The server response.
+    public var response: URLResponse {
+        switch self {
+        case .noContent(let response): return response
+        case .success(let response, _): return response
+        }
+    }
+    
+    /// The parsed response, or `nil` if the server returned 204 No Content.
+    public var value: T? {
+        switch self {
+        case .noContent: return nil
+        case .success(_, let json): return json
+        }
+    }
+    
+    /// Returns the parsed response, or throws `HTTPManagerError.unexpectedNoContent` if the server
+    /// returned 204 No Content.
+    public func getValue() throws -> T {
+        switch self {
+        case .noContent(let response): throw HTTPManagerError.unexpectedNoContent(response: response)
+        case .success(_, let value): return value
+        }
     }
 }
 

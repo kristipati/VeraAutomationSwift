@@ -1,6 +1,6 @@
 # PMHTTP
 
-[![Version](https://img.shields.io/badge/version-v2.0.1-blue.svg)](https://github.com/postmates/PMHTTP/releases/latest)
+[![Version](https://img.shields.io/badge/version-v3.0.0-blue.svg)](https://github.com/postmates/PMHTTP/releases/latest)
 ![Platforms](https://img.shields.io/badge/platforms-ios%20%7C%20osx%20%7C%20watchos%20%7C%20tvos-lightgrey.svg)
 ![Languages](https://img.shields.io/badge/languages-swift%20%7C%20objc-orange.svg)
 ![License](https://img.shields.io/badge/license-MIT%2FApache-blue.svg)
@@ -318,7 +318,7 @@ responses for appropriate caching headers and explicitly prevents responses from
 if they do not include the appropriate cache directives. By default this behavior is only applied
 to requests created with `.parseAsJSON()` or `.parseAsJSON(with:)`, although it can be
 overridden on a per-request basis (see `HTTPManagerRequest.defaultResponseCacheStoragePolicy`).
-Notably, requests created with `.parse(with:)` do not use this cache strategy as it would
+Notably, requests created with `.parse(using:)` do not use this cache strategy as it would
 interfere with caching image requests.
 
 #### Mocking
@@ -366,7 +366,7 @@ After installation with any mechanism, you can use this by adding `import PMHTTP
 To install using [Carthage][], add the following to your Cartfile:
 
 ```
-github "postmates/PMHTTP" ~> 2.0
+github "postmates/PMHTTP" ~> 3.0
 ```
 
 This release supports Swift 3.0. For Swift 2.3 you can use
@@ -379,7 +379,7 @@ github "postmates/PMHTTP" ~> 0.9.3
 To install using [CocoaPods](https://cocoapods.org), add the following to your Podfile:
 
 ```
-pod "PMHTTP", "~> 2.0"
+pod "PMHTTP", "~> 3.0"
 ```
 
 This release supports Swift 3.0. For Swift 2.3 you can use:
@@ -401,6 +401,20 @@ Licensed under either of
 Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you shall be dual licensed as above, without any additional terms or conditions.
 
 ## Version History
+
+#### v3.0.0 (2017-02-27)
+
+* Preserve network task priority when retrying tasks.
+* Add convenience Obj-C function `PMHTTPErrorIsFailedResponse` to test PMHTTP errors easily.
+* Add methods `.parseAsImage(scale:)` and `.parseAsImage(scale:using:)` to `HTTPManagerDataRequest` and `HTTPManagerActionRequest`.
+* When a session is reset, cancel any tasks that were created but never resumed.
+* Ensure that the completion block is always deallocated on either the completion queue or on the thread that created the task. Previously there was a very subtle race that meant the completion block could deallocate on the `URLSession`'s delegate queue instead. This only matters if your completion block captures values whose `deinit` cares about the current thread.
+* Expand dictionaries, arrays, and sets passed as parameters. Dictionaries produce keys of the form `"foo[bar]"` and arrays and sets just use the key multiple times (e.g. `"foo=bar&foo=qux"`). The expansion is recursive. The order of values from expanded dictionaries and sets is implementation-defined. If you want `"array[]"` syntax, then put the `"[]"` in the key itself. See the documentation comments for more details. Do note that this behavior is slightly different from what AFNetworking does.
+* Also expand nested `URLQueryItem`s in parameters. The resulting parameter uses dictionary syntax (`"foo[bar]"`).
+* Change the type signature of the Obj-C parse methods that take handlers to make the error parameter non-optional.
+* Provide a callback that can be used for session-level authentication challenges. This can be used to implement SSL pinning using something like [TrustKit](https://github.com/datatheorem/TrustKit).
+* Fix a small memory leak when retrying tasks.
+* Rework how authorization works. The `defaultCredential` and `credential` properties have been replaced with `defaultAuth` and `auth`, using a brand new protocol `HTTPAuth`. An implementation of Basic authentication is provided with the `HTTPBasicAuth` object. This new authentication mechanism has been designed to allow for OAuth2-style refreshes, and a helper class `HTTPRefreshableAuth` is provided to make it easy to implement refreshable authentication.
 
 #### v2.0.1 (2017-01-05)
 

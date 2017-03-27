@@ -1155,7 +1155,7 @@ final class PMHTTPTests: PMHTTPTestCase {
                     completionHandler(HTTPServer.Response(status: .ok, headers: ["Content-Type": "application/json"], body: "{ \"ary\": [1,2,3] }"))
                 }
                 let req = request.parseAsJSON(using: { result -> Int in
-                    return Int(try result.getJSON().getArray("ary", { try $0.reduce(0, { try $0 + $1.getInt64() }) }))
+                    return Int(try result.getValue().getArray("ary", { try $0.reduce(0, { try $0 + $1.getInt64() }) }))
                 })
                 expectationForRequestSuccess(req) { task, response, value in
                     XCTAssertEqual(task.networkTask.currentRequest?.httpMethod, String(method), "current request method (\(method))")
@@ -1206,7 +1206,7 @@ final class PMHTTPTests: PMHTTPTestCase {
                 }
                 let req = request.parseAsJSON(using: { result -> Int in
                     XCTAssertEqual((result.response as? HTTPURLResponse)?.statusCode, 204, "parse handler response status code (\(method))")
-                    XCTAssertNil(result.json, "parse handler json value (\(method))")
+                    XCTAssertNil(result.value, "parse handler json value (\(method))")
                     return 42
                 })
                 expectationForRequestSuccess(req) { task, response, value in
@@ -1491,7 +1491,7 @@ final class PMHTTPTests: PMHTTPTestCase {
             let req = HTTP.request(DELETE: "foo")!
             XCTAssert(req.defaultResponseCacheStoragePolicy == .allowed, "request cache storage policy")
             XCTAssert(req.parseAsJSON().defaultResponseCacheStoragePolicy == .notAllowed, "json parse request cache storage policy")
-            XCTAssert(req.parseAsJSON(using: { $0.json }).defaultResponseCacheStoragePolicy == .notAllowed, "json with handler parse request cache storage policy")
+            XCTAssert(req.parseAsJSON(using: { $0.value }).defaultResponseCacheStoragePolicy == .notAllowed, "json with handler parse request cache storage policy")
         }
     }
     
@@ -1530,61 +1530,6 @@ final class PMHTTPTests: PMHTTPTestCase {
         check("https://ipa.postmates.com/api/v1/", isPrefixOfURL: "https://ipa.postmates.com:443/api/v1/", toBe: true)
         check("https://ipa.postmates.com:443/api/v1/", isPrefixOfURL: "https://ipa.postmates.com/api/v1/", toBe: true)
         check("https://ipa.postmates.com/api/v1/", isPrefixOfURL: "https://ipa.postmates.com:80/api/v1/", toBe: false)
-    }
-    
-    func testCredentials() {
-        func basicAuthentication(user: String, password: String) -> String {
-            let data = "\(user):\(password)".data(using: String.Encoding.utf8)!
-            let encoded = data.base64EncodedString(options: [])
-            return "Basic \(encoded)"
-        }
-        do {
-            expectationForHTTPRequest(httpServer, path: "/foo") { request, completionHandler in
-                XCTAssertNil(request.headers["Authorization"], "request authorization header")
-                completionHandler(HTTPServer.Response(status: .ok))
-            }
-            let req = HTTP.request(GET: "foo")!
-            XCTAssertNil(req.credential, "request object credential")
-            expectationForRequestSuccess(req) { _ in }
-            waitForExpectations(timeout: 5, handler: nil)
-        }
-        do {
-            expectationForHTTPRequest(httpServer, path: "/foo") { request, completionHandler in
-                XCTAssertEqual(request.headers["Authorization"], basicAuthentication(user: "alice", password: "secure"), "request authorization header")
-                completionHandler(HTTPServer.Response(status: .ok))
-            }
-            HTTP.defaultCredential = URLCredential(user: "alice", password: "secure", persistence: .none)
-            let req = HTTP.request(GET: "foo")!
-            HTTP.defaultCredential = nil
-            XCTAssertEqual(req.credential?.user, "alice", "request object credential user")
-            XCTAssertEqual(req.credential?.password, "secure", "request object credential password")
-            expectationForRequestSuccess(req) { _ in }
-            waitForExpectations(timeout: 5, handler: nil)
-        }
-        do {
-            expectationForHTTPRequest(httpServer, path: "/foo") { request, completionHandler in
-                XCTAssertEqual(request.headers["Authorization"], basicAuthentication(user: "alice", password: "secure"), "request authorization header")
-                completionHandler(HTTPServer.Response(status: .unauthorized, headers: ["Content-Type": "application/json"], body: "{ \"error\": \"unauthorized\" }"))
-            }
-            let req = HTTP.request(GET: "foo")!
-            req.credential = URLCredential(user: "alice", password: "secure", persistence: .none)
-            expectationForRequestFailure(req) { task, response, error in
-                XCTAssertEqual((response as? HTTPURLResponse)?.statusCode, 401, "response status code")
-                if case let HTTPManagerError.unauthorized(credential, response_, _, json) = error {
-                    XCTAssert(response === response_, "error response")
-                    XCTAssertEqual(credential?.user, "alice", "error credential user")
-                    XCTAssertEqual(credential?.password, "secure", "error credential password")
-                    XCTAssertEqual(json, ["error": "unauthorized"], "error body json")
-                } else {
-                    XCTFail("expected HTTPManagerError.unauthorized, found \(error)")
-                }
-            }
-            waitForExpectations(timeout: 5, handler: nil)
-        }
-        do {
-            let req = HTTP.request(GET: "http://apple.com/foo")!
-            XCTAssertNil(req.credential, "request object credential")
-        }
     }
     
     func testDataUpload() {
@@ -1640,5 +1585,55 @@ final class PMHTTPTests: PMHTTPTestCase {
             XCTAssertEqual(json, ["ok": true, "msg": "upload complete"], "response body json")
         }
         waitForExpectations(timeout: 5, handler: nil)
+    }
+    
+    func testResetSessionWithStoppedTask() {
+        _ = expectationForRequestCanceled(HTTP.request(GET: "foo"), startAutomatically: false)
+        HTTP.resetSession()
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+    
+    func testExpandedParameters() {
+        func queryItems(_ dict: DictionaryLiteral<String,String?>) -> [URLQueryItem] {
+            return dict.map({ URLQueryItem(name: $0, value: $1) })
+        }
+        func helper(file: StaticString = #file, line: UInt = #line, _ f: ([String: Any]) -> HTTPManagerRequest) {
+            do {
+                // nested dictionary
+                let parameters = f(["foo": "foo", "bar": 42, "dict": ["one": 1, "two": "something"]]).parameters
+                let sortedItems = parameters.sorted(by: { $0.name < $1.name })
+                XCTAssertEqual(sortedItems, queryItems(["bar": "42", "dict[one]": "1", "dict[two]": "something", "foo": "foo"]), "nested dictionary", file: file, line: line)
+            }
+            do {
+                // nested array
+                let parameters = f(["array": ["one", 2, true]]).parameters
+                XCTAssertEqual(parameters, queryItems(["array": "one", "array": "2", "array": "true"]), "nested array", file: file, line: line)
+            }
+            do {
+                // nested set
+                let parameters = f(["set": ["one", 2, true] as Set<AnyHashable>]).parameters
+                let sortedItems = parameters.sorted(by: { $0.value ?? "" < $1.value ?? "" })
+                XCTAssertEqual(sortedItems, queryItems(["set": "2", "set": "one", "set": "true"]), "nested set", file: file, line: line)
+            }
+            do {
+                // more complicated setup
+                let parameters = f(["value[]": [["names": ["foo", "bar"] as Set<String>], ["dict": ["values[]": [1,2,3]]]]]).parameters
+                // We've got a set, so there's two possible values
+                let expect1 = queryItems(["value[][names]": "foo", "value[][names]": "bar", "value[][dict][values][]": "1", "value[][dict][values][]": "2", "value[][dict][values][]": "3"])
+                let expect2 = queryItems(["value[][names]": "bar", "value[][names]": "foo", "value[][dict][values][]": "1", "value[][dict][values][]": "2", "value[][dict][values][]": "3"])
+                XCTAssert(parameters == expect1 || parameters == expect2, "\(parameters) is not equal to \(expect1) - complicated nesting", file: file, line: line)
+            }
+            do {
+                // nested query items
+                let parameters = f(["foo": URLQueryItem(name: "bar", value: "baz"), "qux": URLQueryItem(name: "quux", value: nil), "array": [URLQueryItem(name: "wat[]", value: "one"), URLQueryItem(name: "frob", value: "grably")]]).parameters
+                let sortedItems = parameters.sorted(by: { $0.name < $1.name })
+                XCTAssertEqual(sortedItems, queryItems(["array[frob]": "grably", "array[wat][]": "one", "foo[bar]": "baz", "qux[quux]": nil]), "nested query items", file: file, line: line)
+            }
+        }
+        helper({ HTTP.request(GET: "foo", parameters: $0) })
+        helper({ HTTP.request(POST: "foo", parameters: $0) })
+        helper({ HTTP.request(PATCH: "foo", parameters: $0) })
+        helper({ HTTP.request(PUT: "foo", parameters: $0) })
+        helper({ HTTP.request(DELETE: "foo", parameters: $0) })
     }
 }

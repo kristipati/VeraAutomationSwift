@@ -136,13 +136,13 @@ extension HTTPManagerError: CustomNSError {
             ]
             userInfo[PMHTTPBodyJSONErrorKey] = json?.object?.nsNoNull
             return userInfo
-        case let .unauthorized(credential, response, body, json):
+        case let .unauthorized(auth, response, body, json):
             var userInfo: [String: Any] = [
-                NSLocalizedDescriptionKey: "401 Unauthorized HTTP response",
+                NSLocalizedDescriptionKey: auth?.localizedDescription?(for: self) ?? "401 Unauthorized HTTP response",
                 PMHTTPURLResponseErrorKey: response,
                 PMHTTPBodyDataErrorKey: body
             ]
-            userInfo[PMHTTPCredentialErrorKey] = credential
+            userInfo[PMHTTPAuthErrorKey] = auth
             userInfo[PMHTTPBodyJSONErrorKey] = json?.object?.nsNoNull
             return userInfo
         case let .unexpectedContentType(contentType, response, body):
@@ -620,7 +620,7 @@ extension HTTPManagerNetworkRequest {
     ///   discarded. Any side-effects performed by your handler must be safe in
     ///   the event of a cancelation.
     @objc(parseWithHandler:)
-    public func __objc_parseWithHandler(_ handler: @escaping @convention(block) (_ response: URLResponse, _ data: Data, _ error: NSErrorPointer) -> Any?) -> HTTPManagerObjectParseRequest {
+    public func __objc_parseWithHandler(_ handler: @escaping @convention(block) (_ response: URLResponse, _ data: Data, _ error: AutoreleasingUnsafeMutablePointer<NSError?>) -> Any?) -> HTTPManagerObjectParseRequest {
         return HTTPManagerObjectParseRequest(request: parse(using: { response, data -> Any? in
             var error: NSError?
             if let object = handler(response, data, &error) {
@@ -751,7 +751,7 @@ extension HTTPManagerDataRequest {
     ///   discarded. Any side-effects performed by your handler must be safe in
     ///   the event of a cancelation.
     @objc(parseAsJSONWithHandler:)
-    public func __objc_parseAsJSONWithHandler(_ handler: @escaping @convention(block) (_ response: URLResponse, _ json: Any, _ error: NSErrorPointer) -> Any?) -> HTTPManagerObjectParseRequest {
+    public func __objc_parseAsJSONWithHandler(_ handler: @escaping @convention(block) (_ response: URLResponse, _ json: Any, _ error: AutoreleasingUnsafeMutablePointer<NSError?>) -> Any?) -> HTTPManagerObjectParseRequest {
         return __objc_parseAsJSONOmitNulls(false, withHandler: handler)
     }
     
@@ -776,7 +776,7 @@ extension HTTPManagerDataRequest {
     ///   discarded. Any side-effects performed by your handler must be safe in
     ///   the event of a cancelation.
     @objc(parseAsJSONOmitNulls:withHandler:)
-    public func __objc_parseAsJSONOmitNulls(_ omitNulls: Bool, withHandler handler: @escaping @convention(block) (_ response: URLResponse, _ json: Any, _ error: NSErrorPointer) -> Any?) -> HTTPManagerObjectParseRequest {
+    public func __objc_parseAsJSONOmitNulls(_ omitNulls: Bool, withHandler handler: @escaping @convention(block) (_ response: URLResponse, _ json: Any, _ error: AutoreleasingUnsafeMutablePointer<NSError?>) -> Any?) -> HTTPManagerObjectParseRequest {
         return HTTPManagerObjectParseRequest(request: parseAsJSON(using: { response, json -> Any? in
             var error: NSError?
             let jsonObject = omitNulls ? (json.nsNoNull ?? NSNull()) : json.ns
@@ -812,9 +812,9 @@ public final class HTTPManagerObjectParseRequest: HTTPManagerRequest, HTTPManage
         return _request.parameters
     }
     
-    public override var credential: URLCredential? {
-        get { return _request.credential }
-        set { _request.credential = newValue }
+    public override var auth: HTTPAuth? {
+        get { return _request.auth }
+        set { _request.auth = newValue }
     }
     
     public override var timeoutInterval: TimeInterval? {
@@ -1023,7 +1023,7 @@ extension HTTPManagerActionRequest {
     @objc(parseAsJSONOmitNulls:)
     public func __objc_parseAsJSONOmitNulls(_ omitNulls: Bool) -> HTTPManagerObjectParseRequest {
         return HTTPManagerObjectParseRequest(request: parseAsJSON(using: { result -> Any? in
-            return result.json.map({ omitNulls ? $0.nsNoNull ?? NSNull() : $0.ns })
+            return result.value.map({ omitNulls ? $0.nsNoNull ?? NSNull() : $0.ns })
         }))
     }
     
@@ -1045,7 +1045,7 @@ extension HTTPManagerActionRequest {
     ///   discarded. Any side-effects performed by your handler must be safe in
     ///   the event of a cancelation.
     @objc(parseAsJSONWithHandler:)
-    public func __objc_parseAsJSONWithHandler(_ handler: @escaping @convention(block) (_ response: URLResponse, _ json: Any?, _ error: NSErrorPointer) -> Any?) -> HTTPManagerObjectParseRequest {
+    public func __objc_parseAsJSONWithHandler(_ handler: @escaping @convention(block) (_ response: URLResponse, _ json: Any?, _ error: AutoreleasingUnsafeMutablePointer<NSError?>) -> Any?) -> HTTPManagerObjectParseRequest {
         return __objc_parseAsJSONOmitNulls(false, withHandler: handler)
     }
     
@@ -1071,10 +1071,10 @@ extension HTTPManagerActionRequest {
     ///   discarded. Any side-effects performed by your handler must be safe in
     ///   the event of a cancelation.
     @objc(parseAsJSONOmitNulls:withHandler:)
-    public func __objc_parseAsJSONOmitNulls(_ omitNulls: Bool, withHandler handler: @escaping @convention(block) (_ response: URLResponse, _ json: Any?, _ error: NSErrorPointer) -> Any?) -> HTTPManagerObjectParseRequest {
+    public func __objc_parseAsJSONOmitNulls(_ omitNulls: Bool, withHandler handler: @escaping @convention(block) (_ response: URLResponse, _ json: Any?, _ error: AutoreleasingUnsafeMutablePointer<NSError?>) -> Any?) -> HTTPManagerObjectParseRequest {
         return HTTPManagerObjectParseRequest(request: parseAsJSON(using: { result -> Any? in
             var error: NSError?
-            let jsonObject = result.json.map({ omitNulls ? $0.nsNoNull ?? NSNull() : $0.ns })
+            let jsonObject = result.value.map({ omitNulls ? $0.nsNoNull ?? NSNull() : $0.ns })
             if let object = handler(result.response, jsonObject, &error) {
                 return object
             } else if let error = error {
