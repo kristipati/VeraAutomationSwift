@@ -62,7 +62,7 @@ class SFSwiftNotification: UIView, UICollisionBehaviorDelegate, UIDynamicAnimato
         var newFrame = self.frame
         newFrame = newFrame.insetBy(dx: 20, dy: 0)
         label = UILabel(frame: newFrame)
-        label.text = title as? String
+        label.text = title as String?
         label.textAlignment = NSTextAlignment.center
         label.minimumScaleFactor = 0.5
         label.adjustsFontSizeToFitWidth = true

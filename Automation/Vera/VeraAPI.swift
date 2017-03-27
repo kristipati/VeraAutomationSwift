@@ -57,7 +57,7 @@ class VeraAPI {
 
     let stringParseHandler: (URLResponse, Data) throws -> String? = {response, data in
         if data.count > 0 {
-            return NSString(data: data, encoding: String.Encoding.utf8.rawValue) as? String
+            return NSString(data: data, encoding: String.Encoding.utf8.rawValue) as String?
         }
 
         return nil
@@ -73,16 +73,16 @@ class VeraAPI {
             self?.log.debug("Got a result")
             switch result {
             case let .success(response, data):
-                self?.log.debug("Success: \(response) data: \(data)")
+                self?.log.debug("Success: \(response) data: \(String(describing: data))")
                 if data != nil {
                     self?.currentExternalIPAddress = data?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                    self?.log.info("External IP address: \(self?.currentExternalIPAddress)")
+                    self?.log.info("External IP address: \(String(describing: self?.currentExternalIPAddress))")
                     self?.lastExternalIPAddressCheck = Date()
                 }
                 break
 
             case let .error(response, error):
-                self?.log.debug("Error: \(error) - \(response)")
+                self?.log.debug("Error: \(error) - \(String(describing: response))")
                 break
 
             case .canceled:
@@ -137,7 +137,7 @@ class VeraAPI {
                 strongSelf.log.debug("Got a result")
                 switch result {
                 case let .success(response, data):
-                    strongSelf.log.debug("Success: \(response) data: \(data)")
+                    strongSelf.log.debug("Success: \(response) data: \(String(describing: data))")
                     if let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode / 200 == 1 {
                         completionHandler(data)
                         return
@@ -146,7 +146,7 @@ class VeraAPI {
                     completionHandler(nil)
 
                 case let .error(response, error):
-                    strongSelf.log.debug("Error: \(error) - \(response)")
+                    strongSelf.log.debug("Error: \(error) - \(String(describing: response))")
 
                 case .canceled:
                     break
@@ -175,7 +175,7 @@ class VeraAPI {
                 break
 
             case let .error(response, error):
-                self.log.debug("Error: \(error) - \(response)")
+                self.log.debug("Error: \(error) - \(String(describing: response))")
                 completionhandler(nil)
                 break
 
@@ -190,7 +190,7 @@ class VeraAPI {
         if self.auth != nil && self.auth!.authToken != nil {
             if let data = Data(base64Encoded: self.auth!.authToken!, options: NSData.Base64DecodingOptions(rawValue: 0)) {
                 // swiftlint:disable force_cast
-                let decodedString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as! String
+                let decodedString = NSString(data: data, encoding: String.Encoding.utf8.rawValue)! as String
                 // swiftlint:enable force_cast
                 var tempAuth: VeraAuth?
                 if let json = try? JSON.decode(decodedString) {
@@ -243,7 +243,7 @@ class VeraAPI {
                                                                         if unit.serverRelay != nil {
                                                                             self.getSessionTokenForServer(server: unit.serverRelay!) { (token) -> Void in
                                                                                 self.sessionToken = token
-                                                                                self.log.info("Session token: \(token)")
+                                                                                self.log.info("Session token: \(String(describing: token))")
                                                                                 completionHandler(nil, nil, nil)
                                                                             }
                                                                         } else {
@@ -251,7 +251,7 @@ class VeraAPI {
                                                                         }
 
                                                             case let .error(response, error):
-                                                                self.log.debug("Error: \(error) - \(response)")
+                                                                self.log.debug("Error: \(error) - \(String(describing: response))")
                                                                 completionHandler(nil, nil, nil)
                                                                 break
 
@@ -274,7 +274,7 @@ class VeraAPI {
                                     break
 
                                 case let .error(response, error):
-                                    self.log.debug("Error: \(error) - \(response)")
+                                    self.log.debug("Error: \(error) - \(String(describing: response))")
                                     completionHandler(nil, nil, nil)
                                     break
 
@@ -326,7 +326,7 @@ class VeraAPI {
                 break
 
             case let .error(response, error):
-                self.log.debug("Error: \(error) - \(response)")
+                self.log.debug("Error: \(error) - \(String(describing: response))")
                 completionHandler(false)
                 break
 
@@ -469,7 +469,7 @@ class VeraAPI {
                         completionHandler(true, fullload)
 
                     case let .error(response, error):
-                        self.log.debug("Error: \(error) - \(response)")
+                        self.log.debug("Error: \(error) - \(String(describing: response))")
                         completionHandler(false, false)
                         break
 
@@ -713,11 +713,11 @@ class VeraAPI {
             self.log.debug("Got a result")
             switch result {
             case let .success(response, responseString):
-                self.log.debug("Success: \(response) data: \(responseString)")
+                self.log.debug("Success: \(response) data: \(String(describing: responseString))")
                 break
 
             case let .error(response, error):
-                self.log.debug("Error: \(error) - \(response)")
+                self.log.debug("Error: \(error) - \(String(describing: response))")
                 break
 
             case .canceled:
