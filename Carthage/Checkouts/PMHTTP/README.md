@@ -1,6 +1,6 @@
 # PMHTTP
 
-[![Version](https://img.shields.io/badge/version-v3.0.0-blue.svg)](https://github.com/postmates/PMHTTP/releases/latest)
+[![Version](https://img.shields.io/badge/version-v3.0.2-blue.svg)](https://github.com/postmates/PMHTTP/releases/latest)
 ![Platforms](https://img.shields.io/badge/platforms-ios%20%7C%20osx%20%7C%20watchos%20%7C%20tvos-lightgrey.svg)
 ![Languages](https://img.shields.io/badge/languages-swift%20%7C%20objc-orange.svg)
 ![License](https://img.shields.io/badge/license-MIT%2FApache-blue.svg)
@@ -85,7 +85,7 @@ A POST request might look like:
 ```swift
 // https://api.example.com/v1/submit_cat
 let task = HTTP.request(POST: "submit_cat", parameters: ["name": "Fluffles", "color": "tabby"])
-    .parseAsJSON(with: { response, json in
+    .parseAsJSON(using: { response, json in
         return try SubmitCatResponse(json: json)
     })
     .performRequest(withCompletionQueue: .main) { task, result in
@@ -113,7 +113,7 @@ req.addMultipartBody { upload in
         upload.addMultipart(data: data, withName: "photo", mimeType: "image/jpeg")
     }
 }
-let task = req.parseAsJSON(with: { try SubmitCatResponse(json: $1) })
+let task = req.parseAsJSON(using: { try SubmitCatResponse(json: $1) })
     .performRequest(withCompletionQueue: .main) { task, result in
         // ...
 }
@@ -316,7 +316,7 @@ However, this behavior is inappropriate for most REST API requests, and `URLSess
 document its caching strategy for such responses. To handle this case, PMHTTP inspects JSON
 responses for appropriate caching headers and explicitly prevents responses from being cached
 if they do not include the appropriate cache directives. By default this behavior is only applied
-to requests created with `.parseAsJSON()` or `.parseAsJSON(with:)`, although it can be
+to requests created with `.parseAsJSON()` or `.parseAsJSON(using:)`, although it can be
 overridden on a per-request basis (see `HTTPManagerRequest.defaultResponseCacheStoragePolicy`).
 Notably, requests created with `.parse(using:)` do not use this cache strategy as it would
 interfere with caching image requests.
@@ -401,6 +401,14 @@ Licensed under either of
 Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you shall be dual licensed as above, without any additional terms or conditions.
 
 ## Version History
+
+#### v3.0.2 (2017-05-01)
+
+* Add `@discardableResult` to Obj-C `-performRequest…` methods.
+
+#### v3.0.1 (2017-03-28)
+
+* Fix Xcode 8.3 compatibility.
 
 #### v3.0.0 (2017-02-27)
 

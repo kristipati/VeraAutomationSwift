@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "PMHTTP"
-  s.version      = "3.0.0"
+  s.version      = "3.0.2"
   s.summary      = "Swift/Obj-C HTTP framework with a focus on REST and JSON"
 
   s.description  = <<-DESC
@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
   s.private_header_files = "Sources/PMHTTPManager*.h"
 
   s.framework  = "CFNetwork"
-  s.module_map = "Sources/module.modulemap"
+  s.module_map = "Sources/pmhttp.modulemap"
 
   s.dependency "PMJSON", ">= 1.2", "< 3.0"
 end
