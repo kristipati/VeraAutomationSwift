@@ -9,6 +9,7 @@
 import UIKit
 import XCGLogger
 import KeychainSwift
+import OnePasswordExtension
 
 let kTabOrderDefault = "Tab Order"
 let kSelectedTabDefault = "Selected Tab"

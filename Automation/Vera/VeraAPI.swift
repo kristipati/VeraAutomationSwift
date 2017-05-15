@@ -10,6 +10,7 @@ import Foundation
 import CryptoSwift
 import XCGLogger
 import PMHTTP
+import UIKit
 
 // swiftlint:disable variable_name
 public let VeraUnitInfoUpdated = "com.grubysolutions.veraautomation.infoupdated"

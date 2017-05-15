@@ -46,8 +46,7 @@
 		D28514931D85BDCA00162FDE /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D28514921D85BDCA00162FDE /* Reachability.m */; };
 		D2A2A6DD1A0FFA4800BE65EE /* OnDeviceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */; };
 		D2A2A6DF1A101AF500BE65EE /* AudioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */; };
-		D2BB40E91BAC7E9C009BB9E3 /* 1Password.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2BB40E81BAC7E9C009BB9E3 /* 1Password.xcassets */; };
-		D2BB40F11BAC7EC5009BB9E3 /* OnePasswordExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BB40F01BAC7EC5009BB9E3 /* OnePasswordExtension.m */; };
+		D2A7F0C41ECA546400D399E5 /* OnePasswordExtension.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D2A7F0C11ECA544E00D399E5 /* OnePasswordExtension.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2E11B3D1DD0406E00701E72 /* PMHTTP.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D2E11B3C1DD0406E00701E72 /* PMHTTP.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2E11B3F1DD0407800701E72 /* CryptoSwift.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D2E11B3E1DD0407800701E72 /* CryptoSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2E11B411DD0408100701E72 /* KeychainSwift.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D2E11B401DD0408100701E72 /* KeychainSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -60,6 +59,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		D2A7F0C01ECA544E00D399E5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2A7F0BC1ECA544E00D399E5 /* OnePasswordExtension.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9C3F4D8C1A59ACDC004B3ECE;
+			remoteInfo = OnePasswordExtension;
+		};
+		D2A7F0C21ECA545900D399E5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2A7F0BC1ECA544E00D399E5 /* OnePasswordExtension.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 9C3F4D8B1A59ACDC004B3ECE;
+			remoteInfo = OnePasswordExtension;
+		};
 		D2BA9C801DF5C20900154FD5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2BA9C7B1DF5C20800154FD5 /* CryptoSwift.xcodeproj */;
@@ -258,6 +271,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				D2A7F0C41ECA546400D399E5 /* OnePasswordExtension.framework in Copy Frameworks */,
 				D2E11B3D1DD0406E00701E72 /* PMHTTP.framework in Copy Frameworks */,
 				D2E11B431DD0409700701E72 /* PMJSON.framework in Copy Frameworks */,
 				D2E11B3F1DD0407800701E72 /* CryptoSwift.framework in Copy Frameworks */,
@@ -314,6 +328,7 @@
 		D29867E81A15B628000E99E7 /* ReleaseNotes.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReleaseNotes.txt; sourceTree = "<group>"; };
 		D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnDeviceCell.swift; sourceTree = "<group>"; };
 		D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioCell.swift; sourceTree = "<group>"; };
+		D2A7F0BC1ECA544E00D399E5 /* OnePasswordExtension.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OnePasswordExtension.xcodeproj; path = "Carthage/Checkouts/onepassword-extension/OnePasswordExtension.xcodeproj"; sourceTree = "<group>"; };
 		D2A87DCD1D848BA000D2E5FD /* Automation.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Automation.entitlements; sourceTree = "<group>"; };
 		D2BA9C7B1DF5C20800154FD5 /* CryptoSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CryptoSwift.xcodeproj; path = Carthage/Checkouts/CryptoSwift/CryptoSwift.xcodeproj; sourceTree = "<group>"; };
 		D2BA9C841DF5C20E00154FD5 /* KeychainSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = KeychainSwift.xcodeproj; path = "Carthage/Checkouts/keychain-swift/KeychainSwift.xcodeproj"; sourceTree = "<group>"; };
@@ -322,8 +337,6 @@
 		D2BA9CB21DF5C22200154FD5 /* XCGLogger.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = XCGLogger.xcodeproj; path = Carthage/Checkouts/XCGLogger/Sources/XCGLogger.xcodeproj; sourceTree = "<group>"; };
 		D2BB40E81BAC7E9C009BB9E3 /* 1Password.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = 1Password.xcassets; path = "External/onepassword-app-extension/1Password.xcassets"; sourceTree = SOURCE_ROOT; };
 		D2BB40EE1BAC7EC4009BB9E3 /* Automation-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Automation-Bridging-Header.h"; sourceTree = "<group>"; };
-		D2BB40EF1BAC7EC5009BB9E3 /* OnePasswordExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OnePasswordExtension.h; path = "External/onepassword-app-extension/OnePasswordExtension.h"; sourceTree = SOURCE_ROOT; };
-		D2BB40F01BAC7EC5009BB9E3 /* OnePasswordExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OnePasswordExtension.m; path = "External/onepassword-app-extension/OnePasswordExtension.m"; sourceTree = SOURCE_ROOT; };
 		D2CEE4C319F8AA4D00D59BAF /* ToDo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ToDo.txt; sourceTree = "<group>"; };
 		D2E11B3C1DD0406E00701E72 /* PMHTTP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PMHTTP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2E11B3E1DD0407800701E72 /* CryptoSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CryptoSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -424,6 +437,7 @@
 		D2843B2D19E0E798007CC520 = {
 			isa = PBXGroup;
 			children = (
+				D2A7F0BC1ECA544E00D399E5 /* OnePasswordExtension.xcodeproj */,
 				D2BA9CB21DF5C22200154FD5 /* XCGLogger.xcodeproj */,
 				D2BA9CA91DF5C21A00154FD5 /* PMJSON.xcodeproj */,
 				D2BA9CA01DF5C21400154FD5 /* PMHTTP.xcodeproj */,
@@ -502,6 +516,14 @@
 			path = External/Reachability;
 			sourceTree = SOURCE_ROOT;
 		};
+		D2A7F0BD1ECA544E00D399E5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2A7F0C11ECA544E00D399E5 /* OnePasswordExtension.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		D2BA9C7C1DF5C20800154FD5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -559,20 +581,10 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D2BB40F21BAC7ED8009BB9E3 /* OnePasswordExtension */ = {
-			isa = PBXGroup;
-			children = (
-				D2BB40EF1BAC7EC5009BB9E3 /* OnePasswordExtension.h */,
-				D2BB40F01BAC7EC5009BB9E3 /* OnePasswordExtension.m */,
-			);
-			name = OnePasswordExtension;
-			sourceTree = "<group>";
-		};
 		D2BB41161BACA936009BB9E3 /* External */ = {
 			isa = PBXGroup;
 			children = (
 				D28514901D85BDCA00162FDE /* Reachability */,
-				D2BB40F21BAC7ED8009BB9E3 /* OnePasswordExtension */,
 				D28002B21A09D240005894C3 /* SFSwiftNotification */,
 			);
 			name = External;
@@ -607,6 +619,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D2A7F0C31ECA545900D399E5 /* PBXTargetDependency */,
 				D2BA9CCE1DF5C23200154FD5 /* PBXTargetDependency */,
 				D2BA9CD01DF5C23200154FD5 /* PBXTargetDependency */,
 				D2BA9CD21DF5C23200154FD5 /* PBXTargetDependency */,
@@ -662,6 +675,10 @@
 					ProjectRef = D2BA9C841DF5C20E00154FD5 /* KeychainSwift.xcodeproj */;
 				},
 				{
+					ProductGroup = D2A7F0BD1ECA544E00D399E5 /* Products */;
+					ProjectRef = D2A7F0BC1ECA544E00D399E5 /* OnePasswordExtension.xcodeproj */;
+				},
+				{
 					ProductGroup = D2BA9CA11DF5C21400154FD5 /* Products */;
 					ProjectRef = D2BA9CA01DF5C21400154FD5 /* PMHTTP.xcodeproj */;
 				},
@@ -682,6 +699,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		D2A7F0C11ECA544E00D399E5 /* OnePasswordExtension.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OnePasswordExtension.framework;
+			remoteRef = D2A7F0C01ECA544E00D399E5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		D2BA9C811DF5C20900154FD5 /* CryptoSwift.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -847,7 +871,6 @@
 				D21CB88219E20CDB0054A7D4 /* Localizable.strings in Resources */,
 				D21CB86F19E20BCA0054A7D4 /* Scenes.storyboard in Resources */,
 				D21CB87B19E20BF60054A7D4 /* Settings.storyboard in Resources */,
-				D2BB40E91BAC7E9C009BB9E3 /* 1Password.xcassets in Resources */,
 				D21CB87219E20BD60054A7D4 /* On.storyboard in Resources */,
 				D21CB86219E1FF970054A7D4 /* Settings.bundle in Resources */,
 				D21CB85819E1FEAF0054A7D4 /* LaunchScreen.xib in Resources */,
@@ -916,7 +939,6 @@
 				D23210891A07230500353F51 /* SwitchesListViewController.swift in Sources */,
 				D27772191A0DCAF400F33568 /* SceneCell.swift in Sources */,
 				D23210811A07230500353F51 /* AudioViewController.swift in Sources */,
-				D2BB40F11BAC7EC5009BB9E3 /* OnePasswordExtension.m in Sources */,
 				D2E3597D1A104A0F00F30C32 /* LockCell.swift in Sources */,
 				D23210841A07230500353F51 /* LocksViewController.swift in Sources */,
 				D28514571D85BCC400162FDE /* VeraDevice.swift in Sources */,
@@ -936,6 +958,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		D2A7F0C31ECA545900D399E5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = OnePasswordExtension;
+			targetProxy = D2A7F0C21ECA545900D399E5 /* PBXContainerItemProxy */;
+		};
 		D2BA9CCE1DF5C23200154FD5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "XCGLogger (iOS)";
