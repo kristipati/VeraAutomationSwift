@@ -1,0 +1,15 @@
+name: SFSwiftNotification, nameSpecified: , owner: sferrini, version: 1.0.0
+
+name: CryptoSwift, nameSpecified: , owner: krzyzanowskim, version: 0.6.9
+
+name: PMJSON, nameSpecified: , owner: postmates, version: v2.0.2
+
+name: XCGLogger, nameSpecified: , owner: DaveWoodCom, version: Version_4.0.0
+
+name: keychain-swift, nameSpecified: , owner: marketplacer, version: 6.0.2
+
+name: PMHTTP, nameSpecified: , owner: postmates, version: v3.0.2
+
+add-version-numbers: false
+
+LicensePlist Version: 1.3.5

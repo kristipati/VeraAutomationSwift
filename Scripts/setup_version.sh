@@ -21,6 +21,10 @@ echo $dest_file
 /usr/libexec/PlistBuddy -c "add :PreferenceSpecifiers:1:Title string Version" "$dest_file"
 /usr/libexec/PlistBuddy -c "add :PreferenceSpecifiers:1:Type string PSTitleValueSpecifier" "$dest_file"
 
-/usr/libexec/PlistBuddy -c "add :PreferenceSpecifiers:2:File string Acknowledgements" "$dest_file"
+/usr/libexec/PlistBuddy -c "add :PreferenceSpecifiers:2:File string com.mono0926.LicensePlist" "$dest_file"
 /usr/libexec/PlistBuddy -c "add :PreferenceSpecifiers:2:Title string Acknowledgements" "$dest_file"
 /usr/libexec/PlistBuddy -c "add :PreferenceSpecifiers:2:Type string PSChildPaneSpecifier" "$dest_file"
+
+/usr/libexec/PlistBuddy -c "add :PreferenceSpecifiers:3:File string Icons" "$dest_file"
+/usr/libexec/PlistBuddy -c "add :PreferenceSpecifiers:3:Title string Icons" "$dest_file"
+/usr/libexec/PlistBuddy -c "add :PreferenceSpecifiers:3:Type string PSChildPaneSpecifier" "$dest_file"

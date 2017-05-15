@@ -1,0 +1,8 @@
+# You can validate the YAML config file at http://yaml-online-parser.appspot.com
+
+# Specify GitHub's library manually.
+github:
+  - owner: sferrini
+    name: SFSwiftNotification
+    version: 1.0.0
+

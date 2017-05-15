@@ -612,6 +612,7 @@
 				D2843B3219E0E798007CC520 /* Sources */,
 				D234D4741DE920BD00EFC511 /* Swift Lint */,
 				D2843B3319E0E798007CC520 /* Frameworks */,
+				D2A7F0C51ECA596C00D399E5 /* Update License Files */,
 				D2843B3419E0E798007CC520 /* Resources */,
 				D21CB86019E1FF660054A7D4 /* Setup Version */,
 				D2BB41011BAC90BB009BB9E3 /* Copy Frameworks */,
@@ -913,6 +914,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi";
+		};
+		D2A7F0C51ECA596C00D399E5 /* Update License Files */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Update License Files";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which license-plist >/dev/null; then\ncd $SRCROOT\nlicense-plist --output-path Automation/Resources/Settings.bundle\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 

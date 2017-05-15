@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PreferenceSpecifiers</key>
+	<array>
+		<dict>
+			<key>FooterText</key>
+			<string>Thermometer icon by Marco Olgio and is in the public domain.
+Light Bulb icon by OCHA Visual Information Unit and is in the public domain.
+Radio icon by Camilo Villegas and is in the public domain.
+Leaf icon by Arthy.P and is in the public domain.
+Cinema icon by Saman Bemel-Benrud and is in the public domain.
+Power icon by Amos and is in the public domain.
+Lock icon by Lea Verou and is in the public domain.
+Gear icon by Ryan Oksenhorn and is in the public domain.
+</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+	</array>
+</dict>
+</plist>
