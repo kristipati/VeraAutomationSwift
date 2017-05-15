@@ -1,35 +1,0 @@
-"CryptoSwift" = "CryptoSwift-------------Copyright (C) 2014 Marcin Krzyżanowski <marcin.krzyzanowski@gmail.com>";
-"CryptoSwift2" = "This software is provided 'as-is', without any express or implied warranty.";
-"CryptoSwift3" = "In no event will the authors be held liable for any damages arising from the use of this software.";
-"CryptoSwift4" = "Permission is granted to anyone to use this software for any purpose,including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:";
-"CryptoSwift5" = "- The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation is required.- Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.";
-"CryptoSwift6" = "- This notice may not be removed or altered from any source or binary distribution.";
-"Icons" = "Icons------Thermometer icon by Marco Olgio and is in the public domain.";
-"Icons2" = "Light Bulb icon by OCHA Visual Information Unit and is in the public domain.";
-"Icons3" = "Radio icon by Camilo Villegas and is in the public domain.";
-"Icons4" = "Leaf icon by Arthy.P and is in the public domain.";
-"Icons5" = "Cinema icon by Saman Bemel-Benrud and is in the public domain.";
-"Icons6" = "Power icon by Amos and is in the public domain.";
-"Icons7" = "Lock icon by Lea Verou and is in the public domain.";
-"Icons8" = "Gear icon by Ryan Oksenhorn and is in the public domain.";
-"KeychainSwift" = "KeychainSwift-------------The MIT License";
-"KeychainSwift2" = "Copyright (c) 2015 Marketplacer";
-"KeychainSwift3" = "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:";
-"KeychainSwift4" = "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.";
-"KeychainSwift5" = "THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.";
-"PMHTTP" = "PMJSON and PMHTTP----------------The MIT License (MIT)";
-"PMHTTP2" = "Copyright (c) 2016 Postmates Inc.";
-"PMHTTP3" = "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:";
-"PMHTTP4" = "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.";
-"PMHTTP5" = "THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.";
-"SFSwiftNotification" = "SFSwiftNotification-------------The MIT License (MIT)";
-"SFSwiftNotification2" = "Copyright (c) 2014 Simone Ferrini";
-"SFSwiftNotification3" = "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:";
-"SFSwiftNotification4" = "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.";
-"SFSwiftNotification5" = "THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.";
-"XCGLogger" = "XCGLogger";
-"XCGLogger2" = "The MIT License (MIT)";
-"XCGLogger3" = "Copyright (c) 2014 Dave Wood, Cerebral Gardens http://www.cerebralgardens.com/";
-"XCGLogger4" = "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:";
-"XCGLogger5" = "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.";
-"XCGLogger6" = "THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.";
