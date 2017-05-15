@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol AudioProtocol {
+protocol AudioProtocol: class {
     func setDevicePower(_ device: VeraDevice, turnOn: Bool)
     func changeDeviceVolume(_ device: VeraDevice, increase: Bool)
     func setDeviceServer(_ device: VeraDevice, server: Int)
@@ -31,7 +31,7 @@ class AudioViewController: UICollectionViewController, AudioProtocol {
 
     func unitInfoUpdated(_ notification: Notification) {
         var fullload = false
-        if let info = (notification as NSNotification).userInfo as? Dictionary<String, AnyObject>, let tempFullLoad = info[VeraUnitInfoFullLoad] as? Bool {
+        if let info = (notification as NSNotification).userInfo as? [String: AnyObject], let tempFullLoad = info[VeraUnitInfoFullLoad] as? Bool {
             fullload = tempFullLoad
         }
 

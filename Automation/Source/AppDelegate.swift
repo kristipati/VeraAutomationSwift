@@ -242,7 +242,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
             for index in 0..<tabbarController.viewControllers!.count {
                 let viewController = tabbarController.viewControllers![index]
-                if let _ = viewController as? UISplitViewController {
+                if viewController as? UISplitViewController != nil {
                     if index > 3 {
                         rearrangeViewControllers = true
                     }
@@ -295,8 +295,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     func presentLogin() {
         let alertController = UIAlertController(title: nil, message: NSLocalizedString("LOGIN_ALERT_TITLE", comment: ""), preferredStyle: .alert)
+        var textFieldObserver: NSObjectProtocol?
 
         let loginAction = UIAlertAction(title: NSLocalizedString("LOGIN_TITLE", comment: ""), style: .default) {[weak self] (_) in
+            NotificationCenter.default.removeObserver(textFieldObserver as Any)
             self?.handlingLogin = false
             let loginTextField = alertController.textFields![0]
             let passwordTextField = alertController.textFields![1]
@@ -321,19 +323,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         loginAction.isEnabled = false
 
         let cancelAction = UIAlertAction(title: NSLocalizedString("CANCEL_TITLE", comment: ""), style: .cancel) {[weak self] (_) in
+            NotificationCenter.default.removeObserver(textFieldObserver as Any)
             self?.handlingLogin = false
         }
 
         let domainForOnePassword = "getvera.com"
 
         let onePasswordAction = UIAlertAction(title: NSLocalizedString("ONE_PASSWORD_ACTION", comment: ""), style: .destructive) {[weak self] (_) in
+            NotificationCenter.default.removeObserver(textFieldObserver as Any)
             guard let strongSelf = self else {return}
             // swiftlint:disable force_cast
             let tabbarController = strongSelf.window!.rootViewController as! UITabBarController
             // swiftlint:enable force_cast
 
             OnePasswordExtension.shared().findLogin(forURLString: domainForOnePassword, for: strongSelf.window!.rootViewController!,
-                sender: tabbarController.tabBar) { (credentials, error) -> Void in
+                sender: tabbarController.tabBar) { (credentials, _) -> Void in
                     strongSelf.handlingLogin = false
                     if let creds = credentials as? [String:String] {
                         let username = creds[AppExtensionUsernameKey] as String?
@@ -357,7 +361,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             textField.placeholder = NSLocalizedString("USERNAME_PLACEHOLDER", comment: "")
             textField.text = KeychainSwift(keyPrefix: "").get(kUsername)
 
-            NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: textField, queue: OperationQueue.main) { (notification) in
+            textFieldObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: textField, queue: OperationQueue.main) { (_) in
                 loginAction.isEnabled = textField.text != ""
             }
         }
@@ -405,7 +409,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                 if let presentedController = tabbarController.presentedViewController {
                     presentedController.dismiss(animated: true) {}
                 }
-                NotificationCenter.default.post(name: Notification.Name(rawValue: VeraUnitInfoUpdated), object: nil, userInfo: [VeraUnitInfoFullLoad:fullload])
+                NotificationCenter.default.post(name: Notification.Name(rawValue: VeraUnitInfoUpdated), object: nil, userInfo: [VeraUnitInfoFullLoad: fullload])
             } else {
                 strongSelf.log.info("Did not get unit info")
                 if strongSelf.handlingLogin == false {
@@ -462,13 +466,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
             veraAPI.excludedDevices = array
 
-            var fullload = false
+            let fullload = veraAPI.getVeraUnit() != nil
 
-            if let _ = veraAPI.getVeraUnit() {
-                fullload = true
-            }
-
-            NotificationCenter.default.post(name: Notification.Name(rawValue: VeraUnitInfoUpdated), object: nil, userInfo: [VeraUnitInfoFullLoad:fullload])
+            NotificationCenter.default.post(name: Notification.Name(rawValue: VeraUnitInfoUpdated), object: nil, userInfo: [VeraUnitInfoFullLoad: fullload])
         }
     }
 
@@ -485,12 +485,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
             veraAPI.excludedScenes = array
 
-            var fullload = false
-            if let _ = veraAPI.getVeraUnit() {
-                fullload = true
-            }
+            let fullload = veraAPI.getVeraUnit() != nil
 
-            NotificationCenter.default.post(name: Notification.Name(rawValue: VeraUnitInfoUpdated), object: nil, userInfo: [VeraUnitInfoFullLoad:fullload])
+            NotificationCenter.default.post(name: Notification.Name(rawValue: VeraUnitInfoUpdated), object: nil, userInfo: [VeraUnitInfoFullLoad: fullload])
         }
     }
 

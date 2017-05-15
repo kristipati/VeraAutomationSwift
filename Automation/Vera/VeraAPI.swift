@@ -69,7 +69,7 @@ class VeraAPI {
         }
 
         let requestString = "https://ip.gruby.com"
-        HTTP.request(GET: requestString).parse(using: stringParseHandler).performRequest(withCompletionQueue: .main) { [weak self] (task, result) in
+        HTTP.request(GET: requestString).parse(using: stringParseHandler).performRequest(withCompletionQueue: .main) { [weak self] (_, result) in
             self?.log.debug("Got a result")
             switch result {
             case let .success(response, data):
@@ -99,15 +99,15 @@ class VeraAPI {
         lastExternalIPAddressCheck = nil
     }
 
-    func sessionTokenHeaders() -> Dictionary<String, String>? {
+    func sessionTokenHeaders() -> [String: String]? {
         if let token = self.sessionToken {
-            return ["MMSSession":token]
+            return ["MMSSession": token]
         }
 
         return nil
     }
 
-    func authTokenHeaders() -> Dictionary<String, String>? {
+    func authTokenHeaders() -> [String: String]? {
         var dict: [String:String] = [:]
         if let localAuth = self.auth, let localAuthToken = localAuth.authToken, let localAuthSigToken = localAuth.authSigToken {
             dict["MMSAuth"] = localAuthToken
@@ -132,7 +132,7 @@ class VeraAPI {
             }
         }
 
-        req?.parse(using: stringParseHandler).performRequest(withCompletionQueue: .main) { [weak self] (task, result) in
+        req?.parse(using: stringParseHandler).performRequest(withCompletionQueue: .main) { [weak self] (_, result) in
             guard let strongSelf = self else {return}
                 strongSelf.log.debug("Got a result")
                 switch result {
@@ -159,7 +159,7 @@ class VeraAPI {
         let hashedString = stringToHash.sha1()
         let requestString = "https://us-autha11.mios.com/autha/auth/username/\(self.username!.lowercased())?SHA1Password=\(hashedString)&PK_Oem=1"
 
-        HTTP.request(GET: requestString).parseAsJSON().performRequest(withCompletionQueue: .main) { (task, result) in
+        HTTP.request(GET: requestString).parseAsJSON().performRequest(withCompletionQueue: .main) { (_, result) in
             self.log.debug("Got a result")
             switch result {
             case let .success(response, json):
@@ -210,7 +210,7 @@ class VeraAPI {
                         let req = HTTP.request(GET: requestString)
                         req?.__objc_setValue(token!, forHeaderField: "MMSSession")
 
-                        req?.parseAsJSON().performRequest(withCompletionQueue: .main) { (task, result) in
+                        req?.parseAsJSON().performRequest(withCompletionQueue: .main) { (_, result) in
 
                                 switch result {
                                 case let .success(_, json):
@@ -230,7 +230,7 @@ class VeraAPI {
                                                     let req = HTTP.request(GET: requestString)
                                                     req?.__objc_setValue(token!, forHeaderField: "MMSSession")
 
-                                                    req?.parseAsJSON().performRequest(withCompletionQueue: .main) { (task, result) in
+                                                    req?.parseAsJSON().performRequest(withCompletionQueue: .main) { (_, result) in
                                                             switch result {
                                                                 case let .success(response, json):
                                                                     self.log.debug("Success: \(response) data: \(json)")
@@ -291,9 +291,9 @@ class VeraAPI {
 
     func getUnitsInformationForUser(completionHandler: @escaping (_ success: Bool) -> Void) {
         if self.username != nil && self.password != nil {
-            self.getAuthenticationToken() { (auth) -> Void in
+            self.getAuthenticationToken { (auth) -> Void in
                 self.auth = auth
-                self.getVeraDevices() { (device, internalIP, serverDevice) in
+                self.getVeraDevices { (_, _, _) in
                     completionHandler(self.auth != nil && self.auth?.authSigToken != nil && self.auth?.authToken != nil)
                 }
             }
@@ -309,7 +309,7 @@ class VeraAPI {
         let requestString = "https://sta\(server).mios.com/locator_json.php?username=\(self.username!)"
         log.info("Request: \(requestString)")
 
-        HTTP.request(GET: requestString).parseAsJSON().performRequest(withCompletionQueue: .main) { (task, result) in
+        HTTP.request(GET: requestString).parseAsJSON().performRequest(withCompletionQueue: .main) { (_, result) in
             self.log.debug("Got a result")
             switch result {
             case let .success(response, json):
@@ -442,7 +442,7 @@ class VeraAPI {
                     }
                 }
 
-                req?.parseAsJSON().performRequest(withCompletionQueue: .main) { (task, result) in
+                req?.parseAsJSON().performRequest(withCompletionQueue: .main) { (_, result) in
                     self.log.debug("Got a result")
                     switch result {
                     case let .success(response, json):
@@ -486,16 +486,16 @@ class VeraAPI {
         }
     }
 
-    func setDeviceStatus(device: VeraDevice, newDeviceStatus: Int?, newDeviceLevel: Int?) -> Void {
+    func setDeviceStatus(device: VeraDevice, newDeviceStatus: Int?, newDeviceLevel: Int?) {
         self.setDeviceStatus(useLocalServer: true, device: device, newDeviceStatus: newDeviceStatus, newDeviceLevel: newDeviceLevel) { (error) -> Void in
             if error != nil {
-                self.setDeviceStatus(useLocalServer: false, device: device, newDeviceStatus: newDeviceStatus, newDeviceLevel: newDeviceLevel) { (error) -> Void in
+                self.setDeviceStatus(useLocalServer: false, device: device, newDeviceStatus: newDeviceStatus, newDeviceLevel: newDeviceLevel) { (_) -> Void in
                 }
             }
         }
     }
 
-    func setDeviceStatus(useLocalServer: Bool, device: VeraDevice, newDeviceStatus: Int?, newDeviceLevel: Int?, completionHandler:@escaping (NSError?) -> Void) -> Void {
+    func setDeviceStatus(useLocalServer: Bool, device: VeraDevice, newDeviceStatus: Int?, newDeviceLevel: Int?, completionHandler:@escaping (NSError?) -> Void) {
 
         if let prefix = self.requestPrefix(localPrefix: useLocalServer) {
             if let deviceID = device.id {
@@ -517,13 +517,13 @@ class VeraAPI {
     func runScene(scene: VeraScene) {
         self.runScene(useLocalServer: true, scene:scene) { (error) -> Void in
             if error != nil {
-                self.runScene(useLocalServer: false, scene:scene) { (error) -> Void in
+                self.runScene(useLocalServer: false, scene:scene) { (_) -> Void in
                 }
             }
         }
     }
 
-    func runScene(useLocalServer: Bool, scene: VeraScene, completionHandler:@escaping (NSError?) -> Void) -> Void {
+    func runScene(useLocalServer: Bool, scene: VeraScene, completionHandler:@escaping (NSError?) -> Void) {
         if let prefix = self.requestPrefix(localPrefix: useLocalServer) {
             if let sceneID = scene.id {
 
@@ -538,13 +538,13 @@ class VeraAPI {
     func setAudioPower(device: VeraDevice, on turnOn: Bool) {
         self.setAudioPower(useLocalServer: true, device:device, on:turnOn) { (error) -> Void in
             if error != nil {
-                self.setAudioPower(useLocalServer: false, device:device, on:turnOn) { (error) -> Void in
+                self.setAudioPower(useLocalServer: false, device:device, on:turnOn) { (_) -> Void in
                 }
             }
         }
     }
 
-    func setAudioPower(useLocalServer: Bool, device: VeraDevice, on turnOn: Bool, completionHandler:@escaping (NSError?) -> Void) -> Void {
+    func setAudioPower(useLocalServer: Bool, device: VeraDevice, on turnOn: Bool, completionHandler:@escaping (NSError?) -> Void) {
         if let prefix = self.requestPrefix(localPrefix: useLocalServer) {
             if let deviceID = device.id {
 
@@ -570,13 +570,13 @@ class VeraAPI {
     func changeAudioVolume(device: VeraDevice, increase: Bool) {
         self.changeAudioVolume(useLocalServer: true, device:device, increase:increase) { (error) -> Void in
             if error != nil {
-                self.changeAudioVolume(useLocalServer: false, device:device, increase:increase) { (error) -> Void in
+                self.changeAudioVolume(useLocalServer: false, device:device, increase:increase) { (_) -> Void in
                 }
             }
         }
     }
 
-    func changeAudioVolume(useLocalServer: Bool, device: VeraDevice, increase: Bool, completionHandler:@escaping (NSError?) -> Void) -> Void {
+    func changeAudioVolume(useLocalServer: Bool, device: VeraDevice, increase: Bool, completionHandler:@escaping (NSError?) -> Void) {
         if let prefix = self.requestPrefix(localPrefix: useLocalServer) {
             if let deviceID = device.id {
                 var newAction = "Up"
@@ -595,13 +595,13 @@ class VeraAPI {
     func setAudioInput(device: VeraDevice, input: Int) {
         self.setAudioInput(useLocalServer: true, device:device, input:input) { (error) -> Void in
             if error != nil {
-                self.setAudioInput(useLocalServer: false, device:device, input:input) { (error) -> Void in
+                self.setAudioInput(useLocalServer: false, device:device, input:input) { (_) -> Void in
                 }
             }
         }
     }
 
-    func setAudioInput(useLocalServer: Bool, device: VeraDevice, input: Int, completionHandler:@escaping (NSError?) -> Void) -> Void {
+    func setAudioInput(useLocalServer: Bool, device: VeraDevice, input: Int, completionHandler:@escaping (NSError?) -> Void) {
         if let prefix = self.requestPrefix(localPrefix: useLocalServer) {
             if let deviceID = device.id {
                 let requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:micasaverde-com:serviceId:InputSelection1&action=Input\(input)"
@@ -615,13 +615,13 @@ class VeraAPI {
     func setLockState(device: VeraDevice, locked: Bool) {
         self.setLockState(useLocalServer: true, device:device, locked:locked) { (error) -> Void in
             if error != nil {
-                self.setLockState(useLocalServer: false, device:device, locked:locked) { (error) -> Void in
+                self.setLockState(useLocalServer: false, device:device, locked:locked) { (_) -> Void in
                 }
             }
         }
     }
 
-    func setLockState(useLocalServer: Bool, device: VeraDevice, locked: Bool, completionHandler:@escaping (NSError?) -> Void) -> Void {
+    func setLockState(useLocalServer: Bool, device: VeraDevice, locked: Bool, completionHandler:@escaping (NSError?) -> Void) {
         if let prefix = self.requestPrefix(localPrefix: useLocalServer) {
             if let deviceID = device.id {
                 let requestString = prefix + "lu_action&DeviceNum=\(deviceID)&serviceId=urn:micasaverde-com:serviceId:DoorLock1&action=SetTarget&newTargetValue=\(locked == true ? 1 : 0)"
@@ -635,7 +635,7 @@ class VeraAPI {
     func changeHVAC(device: VeraDevice, fanMode: VeraDevice.FanMode?, hvacMode: VeraDevice.HVACMode?, coolTemp: Int?, heatTemp: Int?) {
         self.changeHVAC(useLocalServer: true, device:device, fanMode:fanMode, hvacMode:hvacMode, coolTemp: coolTemp, heatTemp: heatTemp) { (error) -> Void in
             if error != nil {
-                self.changeHVAC(useLocalServer: false, device:device, fanMode:fanMode, hvacMode:hvacMode, coolTemp: coolTemp, heatTemp: heatTemp) { (error) -> Void in
+                self.changeHVAC(useLocalServer: false, device:device, fanMode:fanMode, hvacMode:hvacMode, coolTemp: coolTemp, heatTemp: heatTemp) { (_) -> Void in
                 }
             }
         }
@@ -643,7 +643,7 @@ class VeraAPI {
 
     // swiftlint:disable function_parameter_count
     // swiftlint:disable line_length
-    func changeHVAC(useLocalServer: Bool, device: VeraDevice, fanMode: VeraDevice.FanMode?, hvacMode: VeraDevice.HVACMode?, coolTemp: Int?, heatTemp: Int?, completionHandler:@escaping (NSError?) -> Void) -> Void {
+    func changeHVAC(useLocalServer: Bool, device: VeraDevice, fanMode: VeraDevice.FanMode?, hvacMode: VeraDevice.HVACMode?, coolTemp: Int?, heatTemp: Int?, completionHandler:@escaping (NSError?) -> Void) {
         if let prefix = self.requestPrefix(localPrefix: useLocalServer) {
             if let deviceID = device.id {
                 var requestString = ""
@@ -709,7 +709,7 @@ class VeraAPI {
             }
         }
 
-        req?.parse(using: stringParseHandler).performRequest(withCompletionQueue: .main) { (task, result) in
+        req?.parse(using: stringParseHandler).performRequest(withCompletionQueue: .main) { (_, result) in
             self.log.debug("Got a result")
             switch result {
             case let .success(response, responseString):

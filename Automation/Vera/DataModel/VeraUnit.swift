@@ -171,10 +171,8 @@ class VeraUnit: CustomStringConvertible {
     func roomsWithDevices(_ excluded: [Int]? = nil, categories: [VeraDevice.Category]) -> [VeraRoom]? {
         var roomSet = Set<VeraRoom>()
         if let rooms = self.rooms {
-            for room in rooms {
-                if let _ = self.devicesForRoom(room, excluded: excluded, categories: categories) {
-                    roomSet.insert(room)
-                }
+            for room in rooms where devicesForRoom(room, excluded: excluded, categories: categories) != nil {
+                roomSet.insert(room)
             }
         }
 
@@ -188,10 +186,8 @@ class VeraUnit: CustomStringConvertible {
     func roomsWithScenes(_ excluded: [Int]? = nil) -> [VeraRoom]? {
         var roomSet = Set<VeraRoom>()
         if let rooms = self.rooms {
-            for room in rooms {
-                if let _ = scenesForRoom(room, excluded: excluded) {
-                    roomSet.insert(room)
-                }
+            for room in rooms where scenesForRoom(room, excluded: excluded) != nil {
+                roomSet.insert(room)
             }
         }
 

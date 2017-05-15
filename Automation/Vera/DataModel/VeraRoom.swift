@@ -37,11 +37,13 @@ struct VeraRoom: CustomStringConvertible, Hashable {
     }
 
     var hashValue: Int {
+        // swiftlint:disable implicit_getter
         get {
             if self.id == nil {
                 return 0
             }
             return self.id!
         }
+        // swiftlint:enable implicit_getter
     }
 }

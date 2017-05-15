@@ -15,7 +15,7 @@ class DeviceCell: BaseCell {
     @IBOutlet weak var slider: UISlider!
 
     var device: VeraDevice?
-    var delegate: SwitchProtocol?
+    weak var delegate: SwitchProtocol?
 
     @IBAction func sliderTouchUpAction(_ sender: UISlider) {
         if let delegate = delegate, let device = device {

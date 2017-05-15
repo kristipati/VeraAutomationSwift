@@ -11,7 +11,7 @@ import UIKit
 class AudioCell: BaseCell {
 
     var device: VeraDevice?
-    var delegate: AudioProtocol?
+    weak var delegate: AudioProtocol?
 
     @IBOutlet weak var decreaseVolumeButton: UIButton!
     @IBOutlet weak var increaseVolumeButton: UIButton!

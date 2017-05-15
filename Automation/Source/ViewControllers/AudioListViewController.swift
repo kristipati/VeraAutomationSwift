@@ -54,7 +54,7 @@ class AudioListViewController: UITableViewController {
 
     func unitInfoUpdated(_ notification: Notification) {
         var fullload = false
-        if let info = (notification as NSNotification).userInfo as? Dictionary<String, AnyObject>, let tempFullLoad = info[VeraUnitInfoFullLoad] as? Bool {
+        if let info = (notification as NSNotification).userInfo as? [String: AnyObject], let tempFullLoad = info[VeraUnitInfoFullLoad] as? Bool {
             fullload = tempFullLoad
         }
         loadRooms(fullload)

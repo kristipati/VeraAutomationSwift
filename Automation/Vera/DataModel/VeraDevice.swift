@@ -17,7 +17,9 @@ class VeraDevice: CustomStringConvertible {
     }
 
     enum FanMode {
+        // swiftlint:disable identifier_name
         case on
+        // swiftlint:enable identifier_name
         case auto
     }
 

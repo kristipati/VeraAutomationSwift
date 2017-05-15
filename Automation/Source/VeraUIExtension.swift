@@ -9,7 +9,7 @@
 import UIKit
 
 extension VeraAPI {
-    func setDeviceStatusWithNotification(_ device: VeraDevice, newDeviceStatus: Int?, newDeviceLevel: Int?) -> Void {
+    func setDeviceStatusWithNotification(_ device: VeraDevice, newDeviceStatus: Int?, newDeviceLevel: Int?) {
 
         var notificationText = ""
         var deviceName = ""

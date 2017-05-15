@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol LockProtocol {
+protocol LockProtocol: class {
     func setDeviceLocked(_ device: VeraDevice, locked: Bool)
 }
 

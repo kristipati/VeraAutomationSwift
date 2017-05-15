@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol ThermostatProtocol {
+protocol ThermostatProtocol: class {
     func changeHVAC(_ device: VeraDevice, fanMode: VeraDevice.FanMode?, hvacMode: VeraDevice.HVACMode?, coolTemp: Int?, heatTemp: Int?)
 }
 

@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol SwitchProtocol {
+protocol SwitchProtocol: class {
     func changeDeviceLevel(_ device: VeraDevice, level: Int)
 }
 
@@ -29,7 +29,7 @@ class SwitchesViewController: UICollectionViewController, SwitchProtocol {
 
     func unitInfoUpdated(_ notification: Notification) {
         var fullload = false
-        if let info = (notification as NSNotification).userInfo as? Dictionary<String, AnyObject> {
+        if let info = (notification as NSNotification).userInfo as? [String: AnyObject] {
             if let tempFullLoad = info[VeraUnitInfoFullLoad] as? Bool {
                 fullload = tempFullLoad
             }
