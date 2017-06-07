@@ -83,7 +83,7 @@ class SFSwiftNotification: UIView, UICollisionBehaviorDelegate, UIDynamicAnimato
         self.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    func invokeTapAction() {
+    @objc func invokeTapAction() {
         
         if self.delegate != nil {
             self.delegate!.didTapNotification()

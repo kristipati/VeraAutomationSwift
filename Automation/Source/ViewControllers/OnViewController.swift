@@ -19,7 +19,7 @@ class OnViewController: UICollectionViewController {
         loadOnDevices()
     }
 
-    func unitInfoUpdated(_ notification: Notification) {
+    @objc func unitInfoUpdated(_ notification: Notification) {
         loadOnDevices()
     }
 

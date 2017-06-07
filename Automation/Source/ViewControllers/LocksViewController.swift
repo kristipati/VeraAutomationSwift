@@ -23,7 +23,7 @@ class LocksViewController: UICollectionViewController, LockProtocol {
         loadLockDevices()
     }
 
-    func unitInfoUpdated(_ notification: Notification) {
+    @objc func unitInfoUpdated(_ notification: Notification) {
         loadLockDevices()
     }
 

@@ -94,7 +94,7 @@ class SettingsViewController: UITableViewController {
         }
     }
 
-    func audioTabChanged() {
+    @objc func audioTabChanged() {
         UserDefaults.standard.set(audioSwitch.isOn, forKey: kShowAudioTabDefault)
         UserDefaults.standard.synchronize()
         AppDelegate.appDelegate().showHideAudioTab()

@@ -23,7 +23,7 @@ class ClimateViewController: UICollectionViewController, ThermostatProtocol {
         loadThermostats()
     }
 
-    func unitInfoUpdated(_ notification: Notification) {
+    @objc func unitInfoUpdated(_ notification: Notification) {
         loadThermostats()
     }
 

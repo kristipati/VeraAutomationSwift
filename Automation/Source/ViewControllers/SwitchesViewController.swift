@@ -27,7 +27,7 @@ class SwitchesViewController: UICollectionViewController, SwitchProtocol {
         NotificationCenter.default.addObserver(self, selector: #selector(SwitchesViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
     }
 
-    func unitInfoUpdated(_ notification: Notification) {
+    @objc func unitInfoUpdated(_ notification: Notification) {
         var fullload = false
         if let info = (notification as NSNotification).userInfo as? [String: AnyObject] {
             if let tempFullLoad = info[VeraUnitInfoFullLoad] as? Bool {

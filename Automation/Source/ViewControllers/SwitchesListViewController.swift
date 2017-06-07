@@ -30,7 +30,7 @@ class SwitchesListViewController: UITableViewController {
         loadRooms(true)
     }
 
-    func unitInfoUpdated(_ notification: Notification) {
+    @objc func unitInfoUpdated(_ notification: Notification) {
         var fullload = false
         if let info = (notification as NSNotification).userInfo as? [String: AnyObject] {
             if let tempFullLoad = info[VeraUnitInfoFullLoad] as? Bool {

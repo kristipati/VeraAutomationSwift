@@ -389,7 +389,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     }
 
-    func updateVeraInfo() {
+    @objc func updateVeraInfo() {
         // We must have a username and password
         if queryingVera == true || veraAPI.username == nil || veraAPI.password == nil || (lastUnitCheck != nil && Date().timeIntervalSince(lastUnitCheck!) < sTimeForCheck) {
             if veraAPI.username == nil && veraAPI.password == nil {
@@ -492,7 +492,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         }
     }
 
-    func orientationChanged(notification: Notification) {
+    @objc func orientationChanged(notification: Notification) {
         if notifyView != nil {
             notifyView!.hide()
         }
