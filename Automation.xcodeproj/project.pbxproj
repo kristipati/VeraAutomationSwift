@@ -33,6 +33,7 @@
 		D232108A1A07230500353F51 /* SwitchesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D232107F1A07230500353F51 /* SwitchesViewController.swift */; };
 		D232108D1A07232600353F51 /* DeviceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D232108C1A07232600353F51 /* DeviceCell.swift */; };
 		D25D95FA1EE8B4E200A71B69 /* XCGLogger.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D25D95E11EE8B4A300A71B69 /* XCGLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D25D95FC1EE8B68200A71B69 /* SHA1.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25D95FB1EE8B68200A71B69 /* SHA1.swift */; };
 		D27772191A0DCAF400F33568 /* SceneCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27772181A0DCAF400F33568 /* SceneCell.swift */; };
 		D27B15AD1A0730B5003790CE /* BaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27B15AC1A0730B5003790CE /* BaseCell.swift */; };
 		D28002AF1A09B5C6005894C3 /* VeraUIExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28002AE1A09B5C6005894C3 /* VeraUIExtension.swift */; };
@@ -49,7 +50,6 @@
 		D2A2A6DF1A101AF500BE65EE /* AudioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */; };
 		D2A7F0C41ECA546400D399E5 /* OnePasswordExtension.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D2A7F0C11ECA544E00D399E5 /* OnePasswordExtension.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2E11B3D1DD0406E00701E72 /* PMHTTP.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D2E11B3C1DD0406E00701E72 /* PMHTTP.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D2E11B3F1DD0407800701E72 /* CryptoSwift.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D2E11B3E1DD0407800701E72 /* CryptoSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2E11B411DD0408100701E72 /* KeychainSwift.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D2E11B401DD0408100701E72 /* KeychainSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2E11B431DD0409700701E72 /* PMJSON.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D2E11B421DD0409700701E72 /* PMJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2E3597D1A104A0F00F30C32 /* LockCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E3597C1A104A0F00F30C32 /* LockCell.swift */; };
@@ -164,20 +164,6 @@
 			remoteGlobalIDString = 9C3F4D8B1A59ACDC004B3ECE;
 			remoteInfo = OnePasswordExtension;
 		};
-		D2BA9C801DF5C20900154FD5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2BA9C7B1DF5C20800154FD5 /* CryptoSwift.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 754BE45519693E190098E6F3;
-			remoteInfo = CryptoSwift;
-		};
-		D2BA9C821DF5C20900154FD5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2BA9C7B1DF5C20800154FD5 /* CryptoSwift.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 754BE46019693E190098E6F3;
-			remoteInfo = Tests;
-		};
 		D2BA9C901DF5C20F00154FD5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2BA9C841DF5C20E00154FD5 /* KeychainSwift.xcodeproj */;
@@ -283,13 +269,6 @@
 			remoteGlobalIDString = 7ED6C96B1B1C118F00FE8090;
 			remoteInfo = KeychainSwift;
 		};
-		D2BA9CD51DF5C23200154FD5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2BA9C7B1DF5C20800154FD5 /* CryptoSwift.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 754BE45419693E190098E6F3;
-			remoteInfo = CryptoSwift;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -303,7 +282,6 @@
 				D2A7F0C41ECA546400D399E5 /* OnePasswordExtension.framework in Copy Frameworks */,
 				D2E11B3D1DD0406E00701E72 /* PMHTTP.framework in Copy Frameworks */,
 				D2E11B431DD0409700701E72 /* PMJSON.framework in Copy Frameworks */,
-				D2E11B3F1DD0407800701E72 /* CryptoSwift.framework in Copy Frameworks */,
 				D2E11B411DD0408100701E72 /* KeychainSwift.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
@@ -340,6 +318,7 @@
 		D232107F1A07230500353F51 /* SwitchesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SwitchesViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		D232108C1A07232600353F51 /* DeviceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceCell.swift; sourceTree = "<group>"; };
 		D25D95C61EE8B4A300A71B69 /* XCGLogger.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = XCGLogger.xcodeproj; path = Carthage/Checkouts/XCGLogger/XCGLogger.xcodeproj; sourceTree = "<group>"; };
+		D25D95FB1EE8B68200A71B69 /* SHA1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SHA1.swift; path = External/SHA1.swift; sourceTree = SOURCE_ROOT; };
 		D27772181A0DCAF400F33568 /* SceneCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneCell.swift; sourceTree = "<group>"; };
 		D27B15AC1A0730B5003790CE /* BaseCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCell.swift; sourceTree = "<group>"; };
 		D28002AE1A09B5C6005894C3 /* VeraUIExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VeraUIExtension.swift; sourceTree = "<group>"; };
@@ -359,7 +338,6 @@
 		D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioCell.swift; sourceTree = "<group>"; };
 		D2A7F0BC1ECA544E00D399E5 /* OnePasswordExtension.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OnePasswordExtension.xcodeproj; path = "Carthage/Checkouts/onepassword-extension/OnePasswordExtension.xcodeproj"; sourceTree = "<group>"; };
 		D2A87DCD1D848BA000D2E5FD /* Automation.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Automation.entitlements; sourceTree = "<group>"; };
-		D2BA9C7B1DF5C20800154FD5 /* CryptoSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CryptoSwift.xcodeproj; path = Carthage/Checkouts/CryptoSwift/CryptoSwift.xcodeproj; sourceTree = "<group>"; };
 		D2BA9C841DF5C20E00154FD5 /* KeychainSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = KeychainSwift.xcodeproj; path = "Carthage/Checkouts/keychain-swift/KeychainSwift.xcodeproj"; sourceTree = "<group>"; };
 		D2BA9CA01DF5C21400154FD5 /* PMHTTP.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PMHTTP.xcodeproj; path = Carthage/Checkouts/PMHTTP/PMHTTP.xcodeproj; sourceTree = "<group>"; };
 		D2BA9CA91DF5C21A00154FD5 /* PMJSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PMJSON.xcodeproj; path = Carthage/Checkouts/PMJSON/PMJSON.xcodeproj; sourceTree = "<group>"; };
@@ -487,7 +465,6 @@
 				D2BA9CA91DF5C21A00154FD5 /* PMJSON.xcodeproj */,
 				D2BA9CA01DF5C21400154FD5 /* PMHTTP.xcodeproj */,
 				D2BA9C841DF5C20E00154FD5 /* KeychainSwift.xcodeproj */,
-				D2BA9C7B1DF5C20800154FD5 /* CryptoSwift.xcodeproj */,
 				D2EE377C19EB0BE900630C86 /* CurrentRelease.txt */,
 				D29867E81A15B628000E99E7 /* ReleaseNotes.txt */,
 				D2CEE4C319F8AA4D00D59BAF /* ToDo.txt */,
@@ -569,15 +546,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D2BA9C7C1DF5C20800154FD5 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D2BA9C811DF5C20900154FD5 /* CryptoSwift.framework */,
-				D2BA9C831DF5C20900154FD5 /* Tests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		D2BA9C851DF5C20E00154FD5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -616,6 +584,7 @@
 			children = (
 				D28514901D85BDCA00162FDE /* Reachability */,
 				D28002B21A09D240005894C3 /* SFSwiftNotification */,
+				D25D95FB1EE8B68200A71B69 /* SHA1.swift */,
 			);
 			name = External;
 			sourceTree = "<group>";
@@ -654,7 +623,6 @@
 				D2BA9CD01DF5C23200154FD5 /* PBXTargetDependency */,
 				D2BA9CD21DF5C23200154FD5 /* PBXTargetDependency */,
 				D2BA9CD41DF5C23200154FD5 /* PBXTargetDependency */,
-				D2BA9CD61DF5C23200154FD5 /* PBXTargetDependency */,
 			);
 			name = Automation;
 			productName = Automation;
@@ -696,10 +664,6 @@
 			productRefGroup = D2843B3719E0E798007CC520 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
-				{
-					ProductGroup = D2BA9C7C1DF5C20800154FD5 /* Products */;
-					ProjectRef = D2BA9C7B1DF5C20800154FD5 /* CryptoSwift.xcodeproj */;
-				},
 				{
 					ProductGroup = D2BA9C851DF5C20E00154FD5 /* Products */;
 					ProjectRef = D2BA9C841DF5C20E00154FD5 /* KeychainSwift.xcodeproj */;
@@ -818,20 +782,6 @@
 			fileType = wrapper.framework;
 			path = OnePasswordExtension.framework;
 			remoteRef = D2A7F0C01ECA544E00D399E5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D2BA9C811DF5C20900154FD5 /* CryptoSwift.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = CryptoSwift.framework;
-			remoteRef = D2BA9C801DF5C20900154FD5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D2BA9C831DF5C20900154FD5 /* Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = Tests.xctest;
-			remoteRef = D2BA9C821DF5C20900154FD5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D2BA9C911DF5C20F00154FD5 /* KeychainSwift.framework */ = {
@@ -1009,6 +959,7 @@
 				D28514591D85BCC400162FDE /* VeraScene.swift in Sources */,
 				D285145B1D85BCC400162FDE /* VeraUser.swift in Sources */,
 				D23210801A07230500353F51 /* AudioListViewController.swift in Sources */,
+				D25D95FC1EE8B68200A71B69 /* SHA1.swift in Sources */,
 				D23210831A07230500353F51 /* ExcludedItemsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1040,11 +991,6 @@
 			isa = PBXTargetDependency;
 			name = KeychainSwift;
 			targetProxy = D2BA9CD31DF5C23200154FD5 /* PBXContainerItemProxy */;
-		};
-		D2BA9CD61DF5C23200154FD5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = CryptoSwift;
-			targetProxy = D2BA9CD51DF5C23200154FD5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
