@@ -1,5 +1,19 @@
 # KeychainSwift version history
 
+## 8.0.3 (2017-04-08)
+
+Fixed Package Manager setup ([maxkramerbcgdv](https://github.com/maxkramerbcgdv)).
+
+## 8.0.0 (2017-04-08)
+
+Added Swif 3.1 support ([CraigSiemens](https://github.com/CraigSiemens)).
+
+
+## 7.0.0 (2016-10-08)
+
+Swift package manager support ([diogoguimaraes](https://github.com/diogoguimaraes)).
+
+
 ## 6.0.2 (2016-09-11)
 
 Change the `public` access modifier to `open` to allow subclassing of the `KeychainSwift` class and overriding its methods ([djensenius](https://github.com/djensenius)).

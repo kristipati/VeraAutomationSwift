@@ -1,13 +1,9 @@
 # Helper functions for storing text in Keychain for iOS, macOS, tvOS and WatchOS
 
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)][carthage]
-[![CocoaPods Version](https://img.shields.io/cocoapods/v/KeychainSwift.svg?style=flat)][cocoadocs]
-[![License](https://img.shields.io/cocoapods/l/KeychainSwift.svg?style=flat)][cocoadocs]
-[![Platform](https://img.shields.io/cocoapods/p/KeychainSwift.svg?style=flat)][cocoadocs]
-[cocoadocs]: http://cocoadocs.org/docsets/KeychainSwift
-[carthage]: https://github.com/Carthage/Carthage
-
-**⚠️ Xcode 8 warning ⚠️**: Keychain currently does not work on iOS 10 / Xcode 8. To make it work please enable *Keychain Sharing* in *Capabilities* tab. See this [stackoverflow answer](http://stackoverflow.com/a/38543243/297131) for details.
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![CocoaPods Version](https://img.shields.io/cocoapods/v/KeychainSwift.svg?style=flat)](http://cocoadocs.org/docsets/KeychainSwift)
+[![License](https://img.shields.io/cocoapods/l/KeychainSwift.svg?style=flat)](http://cocoadocs.org/docsets/KeychainSwift)
+[![Platform](https://img.shields.io/cocoapods/p/KeychainSwift.svg?style=flat)](http://cocoadocs.org/docsets/KeychainSwift)
 
 This is a collection of helper functions for saving text and data in the Keychain.
  As you probably noticed Apple's keychain API is a bit verbose. This library was designed to provide shorter syntax for accomplishing a simple task: reading/writing text values for specified keys:
@@ -18,7 +14,7 @@ keychain.set("hello world", forKey: "my key")
 keychain.get("my key")
  ```
 
- The Keychain library includes the following features:
+The Keychain library includes the following features:
 
  * <a href="#usage">Get, set and delete string, boolean and Data Keychain items</a>
  * <a href="#keychain_item_access">Specify item access security level</a>
@@ -40,7 +36,7 @@ Simply add [KeychainSwiftDistrib.swift](https://github.com/marketplacer/keychain
 
 #### Setup with Carthage (iOS 8+)
 
-Alternatively, add `github "marketplacer/keychain-swift" ~> 6.0` to your Cartfile and run `carthage update`.
+Alternatively, add `github "marketplacer/keychain-swift" ~> 8.0` to your Cartfile and run `carthage update`.
 
 #### Setup with CocoaPods (iOS 8+)
 
@@ -48,7 +44,24 @@ If you are using CocoaPods add this text to your Podfile and run `pod install`.
 
     use_frameworks!
     target 'Your target name'
-    pod 'KeychainSwift', '~> 6.0'
+    pod 'KeychainSwift', '~> 8.0'
+
+
+#### Setup with Swift Package Manager
+
+Add the following text to your Package.swift file and run `swift build`.
+
+```Swift
+import PackageDescription
+
+let package = Package(
+    name: "KeychainSwift",
+    dependencies: [
+        .Package(url: "https://github.com/marketplacer/keychain-swift.git",
+                 versions: Version(8,0,0)..<Version(9,0,0))
+    ]
+)
+```
 
 
 ## Legacy Swift versions
@@ -62,7 +75,7 @@ Use [iOS 7 compatible](https://github.com/marketplacer/keychain-swift/blob/iOS7/
 
 <h2 id="usage">Usage</h2>
 
-Add `import KeychainSwift` to your source code if you used Carthage or CocoaPods setup methods.
+Add `import KeychainSwift` to your source code unless you used the file setup method.
 
 #### String values
 
@@ -110,7 +123,7 @@ KeychainSwift().set("Hello world", forKey: "key 1", withAccess: .accessibleWhenU
 
 You can use `.accessibleAfterFirstUnlock` if you need your app to access the keychain item while in the background. Note that it is less secure than the `.accessibleWhenUnlocked` option.
 
-See the list of all available [access options](https://github.com/marketplacer/keychain-swift/blob/master/KeychainSwift/KeychainSwiftAccessOptions.swift).
+See the list of all available [access options](https://github.com/marketplacer/keychain-swift/blob/master/Sources/KeychainSwiftAccessOptions.swift).
 
 
 <h3 id="keychain_synchronization">Synchronizing keychain items with other devices</h3>
@@ -157,7 +170,7 @@ keychain.clear()
 
 ### Setting key prefix
 
-One can pass a `keyPrefix` argument when initializing a `KeychainSwift` object. The string passed in `keyPrefix` argument will be used as a prefix to **all the keys** used in `set`, `get`, `getData` and `delete` methods. I use the prefixed keychain in tests. This prevents the tests from changing the Keychain keys that are used when the app is launched manually.
+One can pass a `keyPrefix` argument when initializing a `KeychainSwift` object. The string passed in `keyPrefix` argument will be used as a prefix to **all the keys** used in `set`, `get`, `getData` and `delete` methods. Adding a prefix to the keychain keys can be useful in unit tests. This prevents the tests from changing the Keychain keys that are used when the app is launched manually.
 
 Note that `clear` method still clears everything from the Keychain regardless of the prefix used.
 
@@ -187,6 +200,10 @@ keychain.set("hello world", forKey: "my key")
 if keychain.lastResultCode != noErr { /* Report error */ }
 ```
 
+## Using KeychainSwift from Objective-C
+
+[This manual](https://github.com/marketplacer/keychain-swift/wiki/Using-KeychainSwift-in-Objective-C-project) describes how to use KeychainSwift in Objective-C apps.
+
 ## Known serious issue
 
 It [has been reported](https://github.com/marketplacer/keychain-swift/issues/15) that the library sometimes returns `nil`  instead of the stored Keychain value. The issue seems to be random and hard to reproduce. It may be connected with [the Keychain issue](https://forums.developer.apple.com/thread/4743) reported on Apple developer forums. If you experienced this problem feel free to create an issue so we can discuss it and find solutions.
@@ -194,6 +211,16 @@ It [has been reported](https://github.com/marketplacer/keychain-swift/issues/15)
 ## Demo app
 
 <img src="https://raw.githubusercontent.com/marketplacer/keychain-swift/master/graphics/keychain-swift-demo-3.png" alt="Keychain Swift demo app" width="320">
+
+## Running Keychain unit tests
+
+Xcode 8 introduced additional hoops that one needs to jump through in order to run the unit test:
+
+1. Enable signing in both the demo app and the test target.
+1. Enable *Keychain Sharing* in the *Capabilities* tab of the demo app target.
+1. Select the demo app as *Host Application* in the test target.
+
+The process is shown in more details in [this article](http://evgenii.com/blog/testing-a-keychain-library-in-xcode/).
 
 ## Alternative solutions
 
@@ -210,13 +237,24 @@ Here are some other Keychain libraries.
 ## Thanks 👍
 
 * The code is based on this example: [https://gist.github.com/s-aska/e7ad24175fb7b04f78e7](https://gist.github.com/s-aska/e7ad24175fb7b04f78e7)
+* Thanks to [diogoguimaraes](https://github.com/diogoguimaraes) for adding Swift Package Manager setup option.
 * Thanks to [glyuck](https://github.com/glyuck) for taming booleans.
 * Thanks to [pepibumur](https://github.com/pepibumur) for adding macOS, watchOS and tvOS support.
 * Thanks to [ezura](https://github.com/ezura) for iOS 7 support.
 * Thanks to [mikaoj](https://github.com/mikaoj) for adding keychain synchronization.
 * Thanks to [tcirwin](https://github.com/tcirwin) for adding Swift 3.0 support.
 * Thanks to [Tulleb](https://github.com/Tulleb) for adding Xcode 8 beta 6 support.
+* Thanks to [CraigSiemens](https://github.com/CraigSiemens) for adding Swift 3.1 support.
+* Thanks to [maxkramerbcgdv](https://github.com/maxkramerbcgdv) for fixing Package Manager setup in Xcode 8.2.
 
+
+## Submitting a pull request
+
+Before submitting a pull request please note that this library is not a full featured wrapper around Keychain API. The purpose of this project is to do few things and do them well. There are many excellent [alternative solutions](#alternative-solutions) that provide additional features to people who need them. This project, in contrast, is a single-purpose tool that sacrifices functionality in favor of the ease of use.
+
+## Feedback is welcome
+
+If you notice any issue, got stuck or just want to chat feel free to create an issue. We will be happy to help you.
 
 ## License
 
