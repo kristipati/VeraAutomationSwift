@@ -32,6 +32,7 @@
 		D23210891A07230500353F51 /* SwitchesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D232107E1A07230500353F51 /* SwitchesListViewController.swift */; };
 		D232108A1A07230500353F51 /* SwitchesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D232107F1A07230500353F51 /* SwitchesViewController.swift */; };
 		D232108D1A07232600353F51 /* DeviceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D232108C1A07232600353F51 /* DeviceCell.swift */; };
+		D237DB391F69ACCD00C7546B /* ObjcExceptionBridging.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D25D95F11EE8B4A300A71B69 /* ObjcExceptionBridging.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D25D95FA1EE8B4E200A71B69 /* XCGLogger.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D25D95E11EE8B4A300A71B69 /* XCGLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D25D95FC1EE8B68200A71B69 /* SHA1.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25D95FB1EE8B68200A71B69 /* SHA1.swift */; };
 		D27772191A0DCAF400F33568 /* SceneCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27772181A0DCAF400F33568 /* SceneCell.swift */; };
@@ -59,6 +60,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		D237DB221F69ACBF00C7546B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D25D95C61EE8B4A300A71B69 /* XCGLogger.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 7573B4BD1DE4146300726CE1;
+			remoteInfo = "ObjcExceptionBridging (iOS)";
+		};
 		D25D95E01EE8B4A300A71B69 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D25D95C61EE8B4A300A71B69 /* XCGLogger.xcodeproj */;
@@ -279,6 +287,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				D25D95FA1EE8B4E200A71B69 /* XCGLogger.framework in Copy Frameworks */,
+				D237DB391F69ACCD00C7546B /* ObjcExceptionBridging.framework in Copy Frameworks */,
 				D2A7F0C41ECA546400D399E5 /* OnePasswordExtension.framework in Copy Frameworks */,
 				D2E11B3D1DD0406E00701E72 /* PMHTTP.framework in Copy Frameworks */,
 				D2E11B431DD0409700701E72 /* PMJSON.framework in Copy Frameworks */,
@@ -618,6 +627,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D237DB231F69ACBF00C7546B /* PBXTargetDependency */,
 				D25D95F91EE8B4D100A71B69 /* PBXTargetDependency */,
 				D2A7F0C31ECA545900D399E5 /* PBXTargetDependency */,
 				D2BA9CD01DF5C23200154FD5 /* PBXTargetDependency */,
@@ -967,6 +977,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		D237DB231F69ACBF00C7546B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "ObjcExceptionBridging (iOS)";
+			targetProxy = D237DB221F69ACBF00C7546B /* PBXContainerItemProxy */;
+		};
 		D25D95F91EE8B4D100A71B69 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "XCGLogger (iOS)";
@@ -1202,7 +1217,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "Scott Gruby - Development";
 				SWIFT_OBJC_BRIDGING_HEADER = "Automation/Automation-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -1230,7 +1245,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "VeraLite Automation AdHoc";
 				SWIFT_OBJC_BRIDGING_HEADER = "Automation/Automation-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
