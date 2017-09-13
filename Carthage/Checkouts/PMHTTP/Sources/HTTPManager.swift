@@ -63,7 +63,8 @@ public final class HTTPManager: NSObject {
     ///   but requests created with absolute URLs will continue to work. See `HTTPManagerConfigurable`
     ///   for how to configure the shared `HTTPManager` prior to first use.
     ///
-    /// - SeeAlso: `resetSession()`, `HTTPManagerConfigurable`, `defaultAuth`.
+    /// - SeeAlso: `resetSession()`, `HTTPManagerConfigurable`, `defaultAuth`,
+    ///   `defaultServerRequiresContentLength`.
     public var environment: Environment? {
         get {
             return inner.sync({ $0.environment })
@@ -156,7 +157,7 @@ public final class HTTPManager: NSObject {
     ///   the resulting URL does not represent a resource found within the environment's base URL,
     ///   the request will not be assigned the default auth.
     ///
-    /// - SeeAlso: `environment`, `HTTPBasicAuth`.
+    /// - SeeAlso: `environment`, `HTTPBasicAuth`, `HTTPManagerRequest.auth`.
     public var defaultAuth: HTTPAuth? {
         get {
             return inner.sync({ $0.defaultAuth })
@@ -174,6 +175,8 @@ public final class HTTPManager: NSObject {
     ///
     /// Changes to this property affect any newly-created requests but do not affect
     /// any existing requests or any tasks that are in-progress.
+    ///
+    /// - SeeAlso: `HTTPManagerRequest.retryBehavior`.
     public var defaultRetryBehavior: HTTPManagerRetryBehavior? {
         get {
             return inner.sync({ $0.defaultRetryBehavior })
@@ -190,6 +193,11 @@ public final class HTTPManager: NSObject {
     /// If `true`, all error bodies are parsed as JSON regardless of their declared
     /// Content-Type. This setting is intended to work around bad servers that
     /// don't declare their Content-Types properly.
+    ///
+    /// Changes to this property affect any newly-created requests but do not affect
+    /// any existing requests or any tasks that are in-progress.
+    ///
+    /// - SeeAlso: `HTTPManagerRequest.assumeErrorsAreJSON`.
     public var defaultAssumeErrorsAreJSON: Bool {
         get {
             return inner.sync({ $0.defaultAssumeErrorsAreJSON })
@@ -197,6 +205,32 @@ public final class HTTPManager: NSObject {
         set {
             inner.asyncBarrier {
                 $0.defaultAssumeErrorsAreJSON = newValue
+            }
+        }
+    }
+    
+    /// If `true`, assume the server requires the `Content-Length` header for uploads. The default
+    /// value is `false`.
+    ///
+    /// Setting this to `true` forces JSON and multipart/mixed uploads to be encoded synchronously
+    /// when the request is performed rather than happening in the background.
+    ///
+    /// - Note: This property is only used for HTTP requests that are located within the current
+    ///   environment's base URL. If a request is created with an absolute path or absolute URL, and
+    ///   the resulting URL does not represent a resource found within the environment's base URL,
+    ///   the request will not be assigned this value.
+    ///
+    /// Changes to this property affect any newly-created requests but do not affect any existing
+    /// requests or any tasks that are in-progress.
+    ///
+    /// - SeeAlso: `environment`, `HTTPManagerRequest.serverRequiresContentLength`.
+    public var defaultServerRequiresContentLength: Bool {
+        get {
+            return inner.sync({ $0.defaultServerRequiresContentLength })
+        }
+        set {
+            inner.asyncBarrier {
+                $0.defaultServerRequiresContentLength = newValue
             }
         }
     }
@@ -296,6 +330,7 @@ public final class HTTPManager: NSObject {
         var defaultAuth: HTTPAuth?
         var defaultRetryBehavior: HTTPManagerRetryBehavior?
         var defaultAssumeErrorsAreJSON: Bool = false
+        var defaultServerRequiresContentLength: Bool = false
 
         var session: URLSession!
         var sessionDelegate: SessionDelegate!
@@ -571,6 +606,42 @@ extension HTTPManager {
         return constructRequest(path, f: { HTTPManagerDataRequest(apiManager: self, URL: $0, method: .GET, parameters: parameters) })
     }
     
+    /// Creates a GET request.
+    /// - Parameter url: The URL for the request. If relative, it's interpreted relative to the
+    ///   environment.
+    /// - Parameter parameters: The request parameters, passed in the query
+    ///   string. Default is `[:]`.
+    ///
+    ///   For every value in the dictionary, if it's a `Dictionary`, `Array`, or `Set`, it will be
+    ///   recursively expanded. If it's a `URLQueryItem` it will expand similarly to a dictionary of
+    ///   one element. All other values will use their string representation. For dictionaries and
+    ///   query items, the recursive expansion will produce keys of the form `"foo[bar]"`. For
+    ///   arrays and sets, the recursive expansion will just repeat the key. If you wish to use the
+    ///   `"foo[]"` key syntax, then you can use `"foo[]"` as the key.
+    ///
+    ///   **Note** If a dictionary entry or nested `URLQueryItem` has a key of the form `"foo[]"`,
+    ///     the trailing `"[]"` will be moved outside of the enclosing `"dict[key]"` brackets. For
+    ///     example, if the parameters are `["foo": ["bar[]": [1,2,3]]]`, the resulting query string
+    ///     will be `"foo[bar][]=1&foo[bar][]=2&foo[bar][]=3"`.
+    ///
+    ///   **Important**: For dictionary and set expansion, the order of the values is
+    ///     implementation-defined. If the ordering is important, you must expand it yourself.
+    /// - Returns: An `HTTPManagerDataRequest`.
+    @objc(requestForGETWithURL:parameters:)
+    public func request(GET url: URL, parameters: [String: Any] = [:]) -> HTTPManagerDataRequest {
+        return request(GET: url, parameters: expandParameters(parameters))
+    }
+    /// Creates a GET request.
+    /// - Parameter url: The URL for the request. If relative, it's interpreted relative to the
+    ///   environment.
+    /// - Parameter parameters: The request parameters, passed in the query
+    ///   string.
+    /// - Returns: An `HTTPManagerDataRequest`.
+    @objc(requestForGETWithURL:queryItems:)
+    public func request(GET url: URL, parameters: [URLQueryItem]) -> HTTPManagerDataRequest {
+        return constructRequest(url, f: { HTTPManagerDataRequest(apiManager: self, URL: $0, method: .GET, parameters: parameters) })
+    }
+    
     /// Creates a DELETE request.
     /// - Parameter path: The path for the request, interpreted relative to the
     ///   environment. May be an absolute URL.
@@ -607,6 +678,42 @@ extension HTTPManager {
     @objc(requestForDELETE:queryItems:)
     public func request(DELETE path: String, parameters: [URLQueryItem]) -> HTTPManagerActionRequest! {
         return constructRequest(path, f: { HTTPManagerActionRequest(apiManager: self, URL: $0, method: .DELETE, parameters: parameters) })
+    }
+    
+    /// Creates a DELETE request.
+    /// - Parameter url: The URL for the request. If relative, it's interpreted relative to the
+    ///   environment.
+    /// - Parameter parameters: The request parameters, passed in the query
+    ///   string. Default is `[:]`.
+    ///
+    ///   For every value in the dictionary, if it's a `Dictionary`, `Array`, or `Set`, it will be
+    ///   recursively expanded. If it's a `URLQueryItem` it will expand similarly to a dictionary of
+    ///   one element. All other values will use their string representation. For dictionaries and
+    ///   query items, the recursive expansion will produce keys of the form `"foo[bar]"`. For
+    ///   arrays and sets, the recursive expansion will just repeat the key. If you wish to use the
+    ///   `"foo[]"` key syntax, then you can use `"foo[]"` as the key.
+    ///
+    ///   **Note** If a dictionary entry or nested `URLQueryItem` has a key of the form `"foo[]"`,
+    ///     the trailing `"[]"` will be moved outside of the enclosing `"dict[key]"` brackets. For
+    ///     example, if the parameters are `["foo": ["bar[]": [1,2,3]]]`, the resulting query string
+    ///     will be `"foo[bar][]=1&foo[bar][]=2&foo[bar][]=3"`.
+    ///
+    ///   **Important**: For dictionary and set expansion, the order of the values is
+    ///     implementation-defined. If the ordering is important, you must expand it yourself.
+    /// - Returns: An `HTTPManagerActionRequest`.
+    @objc(requestForDELETEWithURL:parameters:)
+    public func request(DELETE url: URL, parameters: [String: Any] = [:]) -> HTTPManagerActionRequest {
+        return request(DELETE: url, parameters: expandParameters(parameters))
+    }
+    /// Creates a DELETE request.
+    /// - Parameter url: The URL for the request. If relative, it's interpreted relative to the
+    ///   environment.
+    /// - Parameter parameters: The request parameters, passed in the query
+    ///   string.
+    /// - Returns: An `HTTPManagerActionRequest`.
+    @objc(requestForDELETEWithURL:queryItems:)
+    public func request(DELETE url: URL, parameters: [URLQueryItem]) -> HTTPManagerActionRequest {
+        return constructRequest(url, f: { HTTPManagerActionRequest(apiManager: self, URL: $0, method: .DELETE, parameters: parameters) })
     }
     
     /// Creates a POST request.
@@ -667,6 +774,60 @@ extension HTTPManager {
         return constructRequest(path, f: { HTTPManagerUploadJSONRequest(apiManager: self, URL: $0, method: .POST, json: json) })
     }
     
+    /// Creates a POST request.
+    /// - Parameter url: The URL for the request. If relative, it's interpreted relative to the
+    ///   environment.
+    /// - Parameter parameters: The request parameters, passed in the body as
+    ///   `application/x-www-form-urlencoded`. Default is `[:]`.
+    ///
+    ///   For every value in the dictionary, if it's a `Dictionary`, `Array`, or `Set`, it will be
+    ///   recursively expanded. If it's a `URLQueryItem` it will expand similarly to a dictionary of
+    ///   one element. All other values will use their string representation. For dictionaries and
+    ///   query items, the recursive expansion will produce keys of the form `"foo[bar]"`. For
+    ///   arrays and sets, the recursive expansion will just repeat the key. If you wish to use the
+    ///   `"foo[]"` key syntax, then you can use `"foo[]"` as the key.
+    ///
+    ///   **Note** If a dictionary entry or nested `URLQueryItem` has a key of the form `"foo[]"`,
+    ///     the trailing `"[]"` will be moved outside of the enclosing `"dict[key]"` brackets. For
+    ///     example, if the parameters are `["foo": ["bar[]": [1,2,3]]]`, the resulting query string
+    ///     will be `"foo[bar][]=1&foo[bar][]=2&foo[bar][]=3"`.
+    ///
+    ///   **Important**: For dictionary and set expansion, the order of the values is
+    ///     implementation-defined. If the ordering is important, you must expand it yourself.
+    /// - Returns: An `HTTPManagerUploadFormRequest`.
+    @objc(requestForPOSTWithURL:parameters:)
+    public func request(POST url: URL, parameters: [String: Any] = [:]) -> HTTPManagerUploadFormRequest {
+        return request(POST: url, parameters: expandParameters(parameters))
+    }
+    /// Creates a POST request.
+    /// - Parameter url: The URL for the request. If relative, it's interpreted relative to the
+    ///   environment.
+    /// - Parameter parameters: The request parameters, passed in the body as
+    ///   `application/x-www-form-urlencoded`.
+    /// - Returns: An `HTTPManagerUploadFormRequest`.
+    @objc(requestForPOSTWithURL:queryItems:)
+    public func request(POST url: URL, parameters: [URLQueryItem]) -> HTTPManagerUploadFormRequest {
+        return constructRequest(url, f: { HTTPManagerUploadFormRequest(apiManager: self, URL: $0, method: .POST, parameters: parameters) })
+    }
+    /// Creates a POST request.
+    /// - Parameter url: The URL for the request. If relative, it's interpreted relative to the
+    ///   environment.
+    /// - Parameter contentType: The MIME type of the data. Defaults to `"application/octet-stream"`.
+    /// - Parameter data: The data to upload as the body of the request.
+    /// - Returns: An `HTTPManagerUploadDataRequest`.
+    @objc(requestForPOSTWithURL:contentType:data:)
+    public func request(POST url: URL, contentType: String = "application/octet-stream", data: Data) -> HTTPManagerUploadDataRequest {
+        return constructRequest(url, f: { HTTPManagerUploadDataRequest(apiManager: self, URL: $0, method: .POST, contentType: contentType, data: data) })
+    }
+    /// Creates a POST request.
+    /// - Parameter url: The URL for the request. If relative, it's interpreted relative to the
+    ///   environment.
+    /// - Parameter json: The JSON data to upload as the body of the request.
+    /// - Returns: An `HTTPManagerUploadJSONRequest`.
+    @nonobjc public func request(POST url: URL, json: JSON) -> HTTPManagerUploadJSONRequest {
+        return constructRequest(url, f: { HTTPManagerUploadJSONRequest(apiManager: self, URL: $0, method: .POST, json: json) })
+    }
+    
     /// Creates a PUT request.
     /// - Parameter path: The path for the request, interpreted relative to the
     ///   environment. May be an absolute URL.
@@ -723,6 +884,60 @@ extension HTTPManager {
     ///   be parsed by `URL`.
     @nonobjc public func request(PUT path: String, json: JSON) -> HTTPManagerUploadJSONRequest! {
         return constructRequest(path, f: { HTTPManagerUploadJSONRequest(apiManager: self, URL: $0, method: .PUT, json: json) })
+    }
+    
+    /// Creates a PUT request.
+    /// - Parameter url: The URL for the request. If relative, it's interpreted relative to the
+    ///   environment.
+    /// - Parameter parameters: The request parameters, passed in the body as
+    ///   `application/x-www-form-urlencoded`. Default is `[:]`.
+    ///
+    ///   For every value in the dictionary, if it's a `Dictionary`, `Array`, or `Set`, it will be
+    ///   recursively expanded. If it's a `URLQueryItem` it will expand similarly to a dictionary of
+    ///   one element. All other values will use their string representation. For dictionaries and
+    ///   query items, the recursive expansion will produce keys of the form `"foo[bar]"`. For
+    ///   arrays and sets, the recursive expansion will just repeat the key. If you wish to use the
+    ///   `"foo[]"` key syntax, then you can use `"foo[]"` as the key.
+    ///
+    ///   **Note** If a dictionary entry or nested `URLQueryItem` has a key of the form `"foo[]"`,
+    ///     the trailing `"[]"` will be moved outside of the enclosing `"dict[key]"` brackets. For
+    ///     example, if the parameters are `["foo": ["bar[]": [1,2,3]]]`, the resulting query string
+    ///     will be `"foo[bar][]=1&foo[bar][]=2&foo[bar][]=3"`.
+    ///
+    ///   **Important**: For dictionary and set expansion, the order of the values is
+    ///     implementation-defined. If the ordering is important, you must expand it yourself.
+    /// - Returns: An `HTTPManagerUploadFormRequest`.
+    @objc(requestForPUTWithURL:parameters:)
+    public func request(PUT url: URL, parameters: [String: Any] = [:]) -> HTTPManagerUploadFormRequest {
+        return request(PUT: url, parameters: expandParameters(parameters))
+    }
+    /// Creates a PUT request.
+    /// - Parameter url: The URL for the request. If relative, it's interpreted relative to the
+    ///   environment.
+    /// - Parameter parameters: The request parameters, passed in the body as
+    ///   `application/x-www-form-urlencoded`.
+    /// - Returns: An `HTTPManagerUploadFormRequest`.
+    @objc(requestForPUTWithURL:queryItems:)
+    public func request(PUT url: URL, parameters: [URLQueryItem]) -> HTTPManagerUploadFormRequest {
+        return constructRequest(url, f: { HTTPManagerUploadFormRequest(apiManager: self, URL: $0, method: .PUT, parameters: parameters) })
+    }
+    /// Creates a PUT request.
+    /// - Parameter url: The URL for the request. If relative, it's interpreted relative to the
+    ///   environment.
+    /// - Parameter contentType: The MIME type of the data. Defaults to `"application/octet-stream"`.
+    /// - Parameter data: The data to upload as the body of the request.
+    /// - Returns: An `HTTPManagerUploadDataRequest`.
+    @objc(requestForPUTWithURL:contentType:data:)
+    public func request(PUT url: URL, contentType: String = "application/octet-stream", data: Data) -> HTTPManagerUploadDataRequest {
+        return constructRequest(url, f: { HTTPManagerUploadDataRequest(apiManager: self, URL: $0, method: .PUT, contentType: contentType, data: data) })
+    }
+    /// Creates a PUT request.
+    /// - Parameter url: The URL for the request. If relative, it's interpreted relative to the
+    ///   environment.
+    /// - Parameter json: The JSON data to upload as the body of the request.
+    /// - Returns: An `HTTPManagerUploadJSONRequest`.
+    @nonobjc public func request(PUT url: URL, json: JSON) -> HTTPManagerUploadJSONRequest {
+        return constructRequest(url, f: { HTTPManagerUploadJSONRequest(apiManager: self, URL: $0, method: .PUT, json: json) })
     }
     
     /// Creates a PATCH request.
@@ -783,24 +998,117 @@ extension HTTPManager {
         return constructRequest(path, f: { HTTPManagerUploadJSONRequest(apiManager: self, URL: $0, method: .PATCH, json: json) })
     }
     
+    /// Creates a PATCH request.
+    /// - Parameter url: The URL for the request. If relative, it's interpreted relative to the
+    ///   environment.
+    /// - Parameter parameters: The request parameters, passed in the body as
+    ///   `application/x-www-form-urlencoded`. Default is `[:]`.
+    ///
+    ///   For every value in the dictionary, if it's a `Dictionary`, `Array`, or `Set`, it will be
+    ///   recursively expanded. If it's a `URLQueryItem` it will expand similarly to a dictionary of
+    ///   one element. All other values will use their string representation. For dictionaries and
+    ///   query items, the recursive expansion will produce keys of the form `"foo[bar]"`. For
+    ///   arrays and sets, the recursive expansion will just repeat the key. If you wish to use the
+    ///   `"foo[]"` key syntax, then you can use `"foo[]"` as the key.
+    ///
+    ///   **Note** If a dictionary entry or nested `URLQueryItem` has a key of the form `"foo[]"`,
+    ///     the trailing `"[]"` will be moved outside of the enclosing `"dict[key]"` brackets. For
+    ///     example, if the parameters are `["foo": ["bar[]": [1,2,3]]]`, the resulting query string
+    ///     will be `"foo[bar][]=1&foo[bar][]=2&foo[bar][]=3"`.
+    ///
+    ///   **Important**: For dictionary and set expansion, the order of the values is
+    ///     implementation-defined. If the ordering is important, you must expand it yourself.
+    /// - Returns: An `HTTPManagerUploadFormRequest`.
+    @objc(requestForPATCHWithURL:parameters:)
+    public func request(PATCH url: URL, parameters: [String: Any] = [:]) -> HTTPManagerUploadFormRequest {
+        return request(PATCH: url, parameters: expandParameters(parameters))
+    }
+    /// Creates a PATCH request.
+    /// - Parameter url: The URL for the request. If relative, it's interpreted relative to the
+    ///   environment.
+    /// - Parameter parameters: The request parameters, passed in the body as
+    ///   `application/x-www-form-urlencoded`.
+    /// - Returns: An `HTTPManagerUploadFormRequest`.
+    @objc(requestForPATCHWithURL:queryItems:)
+    public func request(PATCH url: URL, parameters: [URLQueryItem]) -> HTTPManagerUploadFormRequest {
+        return constructRequest(url, f: { HTTPManagerUploadFormRequest(apiManager: self, URL: $0, method: .PATCH, parameters: parameters) })
+    }
+    /// Creates a PATCH request.
+    /// - Parameter url: The URL for the request. If relative, it's interpreted relative to the
+    ///   environment.
+    /// - Parameter contentType: The MIME type of the data. Defaults to `"application/octet-stream"`.
+    /// - Parameter data: The data to upload as the body of the request.
+    /// - Returns: An `HTTPManagerUploadDataRequest`.
+    @objc(requestForPATCHWithURL:contentType:data:)
+    public func request(PATCH url: URL, contentType: String = "application/octet-stream", data: Data) -> HTTPManagerUploadDataRequest {
+        return constructRequest(url, f: { HTTPManagerUploadDataRequest(apiManager: self, URL: $0, method: .PATCH, contentType: contentType, data: data) })
+    }
+    /// Creates a PATCH request.
+    /// - Parameter url: The URL for the request. If relative, it's interpreted relative to the
+    ///   environment.
+    /// - Parameter json: The JSON data to upload as the body of the request.
+    /// - Returns: An `HTTPManagerUploadJSONRequest`.
+    @nonobjc public func request(PATCH url: URL, json: JSON) -> HTTPManagerUploadJSONRequest {
+        return constructRequest(url, f: { HTTPManagerUploadJSONRequest(apiManager: self, URL: $0, method: .PATCH, json: json) })
+    }
+    
     private func constructRequest<T: HTTPManagerRequest>(_ path: String, f: (URL) -> T) -> T? {
-        let (environment, auth, defaultRetryBehavior, assumeErrorsAreJSON) = inner.sync({ inner -> (Environment?, HTTPAuth?, HTTPManagerRetryBehavior?, Bool) in
-            return (inner.environment, inner.defaultAuth, inner.defaultRetryBehavior, inner.defaultAssumeErrorsAreJSON)
-        })
+        let info = _configureRequestInfo()
         // FIXME: Get rid of NSURL when https://github.com/apple/swift/pull/3910 is fixed.
         guard let url = NSURL(string: path, relativeTo: environment?.baseURL) as URL? else { return nil }
         let request = f(url)
-        if let auth = auth, let environment = environment,
-            // make sure we aren't suppressing this auth
-            !HTTPManager.isAuthSuppressed(auth),
+        _configureRequest(request, url: url, with: info)
+        return request
+    }
+    
+    private func constructRequest<T: HTTPManagerRequest>(_ url: URL, f: (URL) -> T) -> T {
+        let info = _configureRequestInfo()
+        let request: T
+        if url.scheme == nil {
+            // try to make it relative to the environment. This shouldn't fail, but in case it does
+            // for some reason, just fall back to using the relative URL, which should produce a URL
+            // loading error later. This allows us to preserve the non-optional return type.
+            let url_ = NSURL(string: url.absoluteString, relativeTo: environment?.baseURL) as URL? ?? url
+            request = f(url_)
+        } else {
+            request = f(url)
+        }
+        _configureRequest(request, url: url, with: info)
+        return request
+    }
+    
+    private typealias ConfigureRequestInfo = (environment: Environment?, auth: HTTPAuth?, defaultRetryBehavior: HTTPManagerRetryBehavior?, assumeErrorsAreJSON: Bool, serverRequiresContentLength: Bool)
+    
+    private func _configureRequestInfo() -> ConfigureRequestInfo {
+        return inner.sync({ inner in
+            return (inner.environment, inner.defaultAuth, inner.defaultRetryBehavior, inner.defaultAssumeErrorsAreJSON, inner.defaultServerRequiresContentLength)
+        })
+    }
+    
+    private func _configureRequest<T: HTTPManagerRequest>(_ request: T, url: URL, with info: ConfigureRequestInfo) {
+        if let environment = info.environment,
             // make sure the requested entity is within the space defined by baseURL
             environment.isPrefix(of: url)
         {
-            request.auth = auth
+            // NB: If you add more properties here, also update
+            // `applyEnvironmentDefaultValues(to:)`.
+            if let auth = info.auth, !HTTPManager.isAuthSuppressed(auth) {
+                request.auth = auth
+            }
+            request.serverRequiresContentLength = info.serverRequiresContentLength
         }
-        request.retryBehavior = defaultRetryBehavior
-        request.assumeErrorsAreJSON = assumeErrorsAreJSON
-        return request
+        request.retryBehavior = info.defaultRetryBehavior
+        request.assumeErrorsAreJSON = info.assumeErrorsAreJSON
+    }
+    
+    internal func applyEnvironmentDefaultValues(to request: HTTPManagerRequest) {
+        inner.sync { inner in
+            let auth = inner.defaultAuth
+            if auth.map({ !HTTPManager.isAuthSuppressed($0) }) ?? true {
+                request.auth = auth
+            }
+            request.serverRequiresContentLength = inner.defaultServerRequiresContentLength
+        }
     }
     
     private func expandParameters(_ parameters: [String: Any]) -> [URLQueryItem] {
@@ -1311,12 +1619,12 @@ private class SessionDelegate: NSObject {
         let uploadBody: UploadBody?
         let originalRequest: URLRequest
         let authToken: Any?
-        let processor: (HTTPManagerTask, HTTPManagerTaskResult<Data>, _ authToken: Any??, _ attempt: Int, _ retry: @escaping (_ isAuthRetry: Bool) -> Bool) -> Void
+        let processor: (HTTPManagerTask, HTTPManagerTaskResult<Data>, _ authToken: Any??, _ attempt: Int, _ retry: @escaping (_ reason: HTTPManager.RetryReason) -> Bool) -> Void
         var data: NSMutableData? = nil
         var attempt: Int = 0
-        var retriedAuth: Bool = false
+        var highestRetryReason: HTTPManager.RetryReason?
         
-        init(task: HTTPManagerTask, uploadBody: UploadBody?, originalRequest: URLRequest, authToken: Any?, processor: @escaping (HTTPManagerTask, HTTPManagerTaskResult<Data>, _ authToken: Any??, _ attempt: Int, _ retry: @escaping (_ isAuthRetry: Bool) -> Bool) -> Void) {
+        init(task: HTTPManagerTask, uploadBody: UploadBody?, originalRequest: URLRequest, authToken: Any?, processor: @escaping (HTTPManagerTask, HTTPManagerTaskResult<Data>, _ authToken: Any??, _ attempt: Int, _ retry: @escaping (_ reason: HTTPManager.RetryReason) -> Bool) -> Void) {
             self.task = task
             self.uploadBody = uploadBody
             self.originalRequest = originalRequest
@@ -1336,11 +1644,27 @@ extension HTTPManager {
     ///   for the task to transition to `.completed` (unless it's already been canceled).
     /// - Returns: An `HTTPManagerTask`.
     /// - Important: After creating the task, you must start it by calling the `resume()` method.
-    internal func createNetworkTaskWithRequest(_ request: HTTPManagerRequest, uploadBody: UploadBody?, processor: @escaping (HTTPManagerTask, HTTPManagerTaskResult<Data>, _ authToken: Any??, _ attempt: Int, _ retry: @escaping (_ isAuthRetry: Bool) -> Bool) -> Void) -> HTTPManagerTask {
+    internal func createNetworkTaskWithRequest(_ request: HTTPManagerRequest, uploadBody: UploadBody?, processor: @escaping (HTTPManagerTask, HTTPManagerTaskResult<Data>, _ authToken: Any??, _ attempt: Int, _ retry: @escaping (_ reason: RetryReason) -> Bool) -> Void) -> HTTPManagerTask {
         var urlRequest = request._preparedURLRequest
         var uploadBody = uploadBody
-        if case .formUrlEncoded(let queryItems)? = uploadBody {
+        switch uploadBody {
+        case nil, .data?: break
+        case .formUrlEncoded(let queryItems)?:
             uploadBody = .data(FormURLEncoded.data(for: queryItems))
+        case .json(let json)? where request.serverRequiresContentLength:
+            uploadBody = .data(JSON.encodeAsData(json))
+        case .json?: break
+        case let .multipartMixed(boundary, parameters, bodyParts)? where request.serverRequiresContentLength:
+            let stream = HTTPBody.createMultipartMixedStream(boundary, parameters: parameters, bodyParts: bodyParts)
+            stream.open()
+            do {
+                uploadBody = try .data(stream.readAll())
+            } catch {
+                // If we can't read it now (and it really shouldn't be able to fail anyway), just
+                // leave it as a streaming body, where it will presumably fail again and produce a
+                // URL error.
+            }
+        case .multipartMixed?: break
         }
         uploadBody?.evaluatePending()
         // NB: We are evaluating the mock before adding the auth headers. If we ever add the ability
@@ -1379,6 +1703,28 @@ extension HTTPManager {
         return apiTask
     }
     
+    /// The reason for retrying a task.
+    internal enum RetryReason: Comparable {
+        /// The retry was requested by the configured retry behavior.
+        case normal
+        /// The retry was requested by an `HTTPAuth` object after receiving a 401 Unauthorized.
+        case unauthorized
+        /// The retry was requested by an `HTTPAuth` object after receiving a 403 Forbidden.
+        case forbidden
+        
+        static func <(lhs: RetryReason, rhs: RetryReason) -> Bool {
+            return lhs.sortOrder < rhs.sortOrder
+        }
+        
+        private var sortOrder: Int {
+            switch self {
+            case .normal: return 0
+            case .unauthorized: return 1
+            case .forbidden: return 2
+            }
+        }
+    }
+    
     /// Transitions the given task back into `.running` with a new network task.
     ///
     /// This method updates the `SessionDelegate`'s `tasks` dictionary for the new
@@ -1388,10 +1734,10 @@ extension HTTPManager {
     /// The newly-created `URLSessionTask` is automatically resumed.
     ///
     /// - Parameter taskInfo: The `TaskInfo` object representing the task to retry.
-    /// - Parameter isAuthRetry: Whether this is a retry requested by an `HTTPAuth` object.
+    /// - Parameter reason: The reason for retrying the task.
     /// - Returns: `true` if the task is retrying, or `false` if it could not be retried
     ///   (e.g. because it's already been canceled).
-    fileprivate func retryNetworkTask(_ taskInfo: SessionDelegate.TaskInfo, isAuthRetry: Bool) -> Bool {
+    fileprivate func retryNetworkTask(_ taskInfo: SessionDelegate.TaskInfo, reason: RetryReason) -> Bool {
         var request = taskInfo.originalRequest
         taskInfo.task.auth?.applyHeaders(to: &request)
         let networkTask = inner.sync { inner -> URLSessionTask? in
@@ -1412,12 +1758,13 @@ extension HTTPManager {
                 return nil
             }
             var taskInfo = taskInfo
-            if isAuthRetry {
-                taskInfo.attempt = 0
-                taskInfo.retriedAuth = true
-            } else {
+            switch reason {
+            case .normal:
                 taskInfo.attempt += 1
+            case .unauthorized, .forbidden:
+                taskInfo.attempt = 0
             }
+            taskInfo.highestRetryReason = max(taskInfo.highestRetryReason ?? .normal, reason)
             inner.session.delegateQueue.addOperation { [sessionDelegate=inner.sessionDelegate!] in
                 assert(sessionDelegate.tasks[networkTask.taskIdentifier] == nil, "internal HTTPManager error: tasks contains unknown taskInfo")
                 sessionDelegate.tasks[networkTask.taskIdentifier] = taskInfo
@@ -1554,11 +1901,20 @@ extension SessionDelegate: URLSessionDataDelegate {
             if result.ok {
                 assert(result.oldState == .running, "internal HTTPManager error: tried to process task that's already processing")
                 queue.async { [weak apiManager] in
-                    func retry(isAuthRetry: Bool) -> Bool {
-                        return apiManager?.retryNetworkTask(taskInfo, isAuthRetry: isAuthRetry) ?? false
+                    func retry(reason: HTTPManager.RetryReason) -> Bool {
+                        return apiManager?.retryNetworkTask(taskInfo, reason: reason) ?? false
                     }
                     autoreleasepool {
-                        let authToken: Any?? = taskInfo.retriedAuth ? .none : .some(taskInfo.authToken)
+                        let authToken: Any??
+                        switch taskInfo.highestRetryReason {
+                        case .unauthorized? where (task.response as? HTTPURLResponse)?.statusCode == 403:
+                            // Allow retrying 403 Forbidden after 401 Unauthorized
+                            authToken = .some(taskInfo.authToken)
+                        case .unauthorized?, .forbidden?:
+                            authToken = .none
+                        case .normal?, nil:
+                            authToken = .some(taskInfo.authToken)
+                        }
                         if let error = error {
                             processor(apiTask, .error(task.response, error), authToken, taskInfo.attempt, retry)
                         } else if let response = task.response {
@@ -1671,8 +2027,8 @@ extension SessionDelegate: URLSessionDataDelegate {
             }
         case let .multipartMixed(boundary, parameters, bodyParts)?:
             if bodyParts.contains(where: { if case .pending = $0 { return true } else { return false } }) {
-                // We have at least one Pending value, we need to wait for them to evaluate (otherwise we can't
-                // accurately implement the `canRead` stream callback) so we'll do it asynchronously.
+                // We have at least one Pending value, we need to wait for them to evaluate
+                // (otherwise we might block the network thread) so we'll do it asynchronously.
                 let group = DispatchGroup()
                 let qos: DispatchQoS = taskInfo.task.userInitiated ? .userInitiated : .utility
                 for case .pending(let deferred) in bodyParts {

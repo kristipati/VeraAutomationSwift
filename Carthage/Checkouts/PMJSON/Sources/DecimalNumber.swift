@@ -12,7 +12,7 @@
 //  except according to those terms.
 //
 
-#if os(iOS) || os(OSX) || os(tvOS) || os(watchOS)
+#if os(iOS) || os(OSX) || os(tvOS) || os(watchOS) || swift(>=3.1)
     
     import Foundation
     
@@ -52,10 +52,17 @@
                 let scanner = Scanner(string: s)
                 scanner.charactersToBeSkipped = nil
                 var decimal = Decimal()
-                if scanner.scanDecimal(&decimal) && scanner.isAtEnd {
-                    return decimal
+                if !scanner.scanDecimal(&decimal) {
+                    return nil
                 }
-                return nil
+                #if os(iOS) || os(OSX) || os(tvOS) || os(watchOS)
+                    if !scanner.isAtEnd { return nil }
+                #else
+                    // Linux in Swift 3.1 doesn't have isAtEnd
+                    // Instead we'll just rely on knowing that scanLocation is in NSString indices (i.e. UTF-16 indices)
+                    if scanner.scanLocation != s.utf16.count { return nil }
+                #endif
+                return decimal
             default: return nil
             }
         }
@@ -68,7 +75,7 @@
             case .int64(let i): return Decimal(workaround: i)
             case .double(let d): return Decimal(workaround: d)
             case .decimal(let d): return d
-            default: throw JSONError.missingOrInvalidType(path: nil, expected: .required(.number), actual: .forValue(self))
+            default: throw hideThrow(JSONError.missingOrInvalidType(path: nil, expected: .required(.number), actual: .forValue(self)))
             }
         }
         
@@ -81,7 +88,7 @@
             case .double(let d): return Decimal(workaround: d)
             case .decimal(let d): return d
             case .null: return nil
-            default: throw JSONError.missingOrInvalidType(path: nil, expected: .required(.number), actual: .forValue(self))
+            default: throw hideThrow(JSONError.missingOrInvalidType(path: nil, expected: .required(.number), actual: .forValue(self)))
             }
         }
         
@@ -93,7 +100,7 @@
         /// - Note: Whitespace is not allowed in the string representation.
         func toDecimal() throws -> Decimal {
             guard let value = asDecimal else {
-                throw JSONError.missingOrInvalidType(path: nil, expected: .required(.number), actual: .forValue(self))
+                throw hideThrow(JSONError.missingOrInvalidType(path: nil, expected: .required(.number), actual: .forValue(self)))
             }
             return value
         }
@@ -107,7 +114,7 @@
         func toDecimalOrNil() throws -> Decimal? {
             if let value = asDecimal { return value }
             else if isNull { return nil }
-            else { throw JSONError.missingOrInvalidType(path: nil, expected: .optional(.number), actual: .forValue(self)) }
+            else { throw hideThrow(JSONError.missingOrInvalidType(path: nil, expected: .optional(.number), actual: .forValue(self))) }
         }
         
         // MARK: - Deprecated
@@ -459,13 +466,13 @@
         // and Decimal(_: Double) can produce incorrect results (SR-3130), so for now we're going to
         // always go through NSNumber.
         init(workaround value: Int64) {
-            self = (value as NSNumber).decimalValue
+            self = NSNumber(value: value).decimalValue
         }
         
         // NB: As of Swift 3.0.1, Decimal(_: Double) can produce incorrect results (SR-3130)
         init(workaround value: Double) {
-            self = (value as NSNumber).decimalValue
+            self = NSNumber(value: value).decimalValue
         }
     }
     
-#endif // os(iOS) || os(OSX) || os(tvOS) || os(watchOS)
+#endif // os(iOS) || os(OSX) || os(tvOS) || os(watchOS) || swift(>=3.1)

@@ -24,6 +24,7 @@
 		9E4C77C91C3B568C000FF8AC /* HTTPManagerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4C77C81C3B568C000FF8AC /* HTTPManagerRequest.swift */; };
 		9E4C77CB1C3B56D6000FF8AC /* HTTPManagerTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4C77CA1C3B56D6000FF8AC /* HTTPManagerTask.swift */; };
 		9E4C77CD1C3C696D000FF8AC /* UploadSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4C77CC1C3C696D000FF8AC /* UploadSupport.swift */; };
+		9E555D031F0199DD0007C7EE /* PMHTTPURLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E555D021F0199DD0007C7EE /* PMHTTPURLTests.swift */; };
 		9E55BD721C5FE25F001CC5D6 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E55BD711C5FE25F001CC5D6 /* CFNetwork.framework */; };
 		9E681CB81C56EB1000422CE4 /* SipHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E681CB71C56EB1000422CE4 /* SipHash.swift */; };
 		9E681CBA1C56FBF100422CE4 /* SipHashTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E681CB91C56FBF100422CE4 /* SipHashTests.swift */; };
@@ -41,6 +42,8 @@
 		9ED4FA181CC072F2001A0693 /* MultipartTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED4FA171CC072F2001A0693 /* MultipartTests.swift */; };
 		9ED5D3621D936295007C2A65 /* Deprecations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED5D3611D936295007C2A65 /* Deprecations.swift */; };
 		9ED901301E2EDB4E00332D39 /* ImageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED9012F1E2EDB4E00332D39 /* ImageTests.swift */; };
+		9EDBA9B21F477360005EDC9F /* InputStream+ReadAll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDBA9B11F47735F005EDC9F /* InputStream+ReadAll.swift */; };
+		9EDBA9B41F478BB9005EDC9F /* InputStreamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDBA9B31F478BB9005EDC9F /* InputStreamTests.swift */; };
 		9EEF318B1E4A74C40086AAFF /* HTTPAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEF318A1E4A74C40086AAFF /* HTTPAuth.swift */; };
 		9EEF318D1E4ABF050086AAFF /* AuthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEF318C1E4ABF050086AAFF /* AuthTests.swift */; };
 		9EEF318F1E4D4F440086AAFF /* SSLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEF318E1E4D4F440086AAFF /* SSLTests.swift */; };
@@ -78,6 +81,7 @@
 		9E4C77C81C3B568C000FF8AC /* HTTPManagerRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPManagerRequest.swift; sourceTree = "<group>"; };
 		9E4C77CA1C3B56D6000FF8AC /* HTTPManagerTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPManagerTask.swift; sourceTree = "<group>"; };
 		9E4C77CC1C3C696D000FF8AC /* UploadSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadSupport.swift; sourceTree = "<group>"; };
+		9E555D021F0199DD0007C7EE /* PMHTTPURLTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PMHTTPURLTests.swift; sourceTree = "<group>"; };
 		9E55BD711C5FE25F001CC5D6 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		9E67E0BC1CC6DD7D007FE41F /* LICENSE-APACHE */ = {isa = PBXFileReference; lastKnownFileType = text; path = "LICENSE-APACHE"; sourceTree = "<group>"; };
 		9E67E0BD1CC6DD7D007FE41F /* LICENSE-MIT */ = {isa = PBXFileReference; lastKnownFileType = text; path = "LICENSE-MIT"; sourceTree = "<group>"; };
@@ -101,6 +105,8 @@
 		9ED4FA171CC072F2001A0693 /* MultipartTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipartTests.swift; sourceTree = "<group>"; };
 		9ED5D3611D936295007C2A65 /* Deprecations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deprecations.swift; sourceTree = "<group>"; };
 		9ED9012F1E2EDB4E00332D39 /* ImageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageTests.swift; sourceTree = "<group>"; };
+		9EDBA9B11F47735F005EDC9F /* InputStream+ReadAll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "InputStream+ReadAll.swift"; sourceTree = "<group>"; };
+		9EDBA9B31F478BB9005EDC9F /* InputStreamTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputStreamTests.swift; sourceTree = "<group>"; };
 		9EEF318A1E4A74C40086AAFF /* HTTPAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPAuth.swift; sourceTree = "<group>"; };
 		9EEF318C1E4ABF050086AAFF /* AuthTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthTests.swift; sourceTree = "<group>"; };
 		9EEF318E1E4D4F440086AAFF /* SSLTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSLTests.swift; sourceTree = "<group>"; };
@@ -183,6 +189,7 @@
 				9E4C77CC1C3C696D000FF8AC /* UploadSupport.swift */,
 				9ED4FA151CC01E54001A0693 /* HTTPBodyStream.swift */,
 				9E29514A1C4D95CB001D38AC /* Utilities.swift */,
+				9EDBA9B11F47735F005EDC9F /* InputStream+ReadAll.swift */,
 				9E39E9BF1C3E100D005F7A95 /* NetworkActivityManager.swift */,
 				9ED5D3611D936295007C2A65 /* Deprecations.swift */,
 				9E22DD291C88CEF200C49993 /* DateParsing.swift */,
@@ -205,6 +212,7 @@
 				9EC8F0D11C408F1400297FC5 /* HTTP Server */,
 				9E7FBAA81C52EFE7000D7A70 /* PMHTTPTestCase.swift */,
 				9E7DDF301C18F2B600EA43AD /* PMHTTPTests.swift */,
+				9E555D021F0199DD0007C7EE /* PMHTTPURLTests.swift */,
 				9E8C1E431CAF50A6000D7FA2 /* PMHTTPRetryTests.swift */,
 				9ED4FA171CC072F2001A0693 /* MultipartTests.swift */,
 				9ED9012F1E2EDB4E00332D39 /* ImageTests.swift */,
@@ -213,6 +221,7 @@
 				9EEF318C1E4ABF050086AAFF /* AuthTests.swift */,
 				9E11A8DB1D1B4AC100D63318 /* NetworkActivityTests.swift */,
 				9EEF69F51D2C343E00C6E603 /* KVOTests.swift */,
+				9EDBA9B31F478BB9005EDC9F /* InputStreamTests.swift */,
 				9E22DD2B1C88D09100C49993 /* DateParsingTests.swift */,
 				9E681CB91C56FBF100422CE4 /* SipHashTests.swift */,
 				9E7DDF321C18F2B600EA43AD /* Info.plist */,
@@ -292,7 +301,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = Postmates;
 				TargetAttributes = {
 					9E7DDF201C18F2B500EA43AD = {
@@ -380,6 +389,7 @@
 				9E29514B1C4D95CB001D38AC /* Utilities.swift in Sources */,
 				9E4C77CB1C3B56D6000FF8AC /* HTTPManagerTask.swift in Sources */,
 				9E22DD2A1C88CEF200C49993 /* DateParsing.swift in Sources */,
+				9EDBA9B21F477360005EDC9F /* InputStream+ReadAll.swift in Sources */,
 				9E4C77A91C360714000FF8AC /* ObjectiveC.swift in Sources */,
 				9E14D4FF1DC81E4800BE34D5 /* PlatformSpecific.swift in Sources */,
 				9EEF318B1E4A74C40086AAFF /* HTTPAuth.swift in Sources */,
@@ -392,6 +402,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9EDBA9B41F478BB9005EDC9F /* InputStreamTests.swift in Sources */,
 				9EEF69F61D2C343E00C6E603 /* KVOTests.swift in Sources */,
 				9ED901301E2EDB4E00332D39 /* ImageTests.swift in Sources */,
 				9EA4EE371CBC197D00E4E531 /* MockingTests.swift in Sources */,
@@ -401,6 +412,7 @@
 				9E681CBA1C56FBF100422CE4 /* SipHashTests.swift in Sources */,
 				9EC8F0D01C408EEC00297FC5 /* HTTPServer.swift in Sources */,
 				9E7DDF311C18F2B600EA43AD /* PMHTTPTests.swift in Sources */,
+				9E555D031F0199DD0007C7EE /* PMHTTPURLTests.swift in Sources */,
 				9E11A8DC1D1B4AC100D63318 /* NetworkActivityTests.swift in Sources */,
 				9EEF318D1E4ABF050086AAFF /* AuthTests.swift in Sources */,
 				9EC8F0D31C408F2200297FC5 /* XCTest+HTTPServerExpectation.swift in Sources */,
@@ -429,14 +441,20 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -483,14 +501,20 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;

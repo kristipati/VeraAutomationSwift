@@ -1,6 +1,6 @@
 # PMJSON
 
-[![Version](https://img.shields.io/badge/version-v2.0.2-blue.svg)](https://github.com/postmates/PMJSON/releases/latest)
+[![Version](https://img.shields.io/badge/version-v2.0.3-blue.svg)](https://github.com/postmates/PMJSON/releases/latest)
 ![Platforms](https://img.shields.io/badge/platforms-ios%20%7C%20osx%20%7C%20watchos%20%7C%20tvos-lightgrey.svg)
 ![Languages](https://img.shields.io/badge/languages-swift-orange.svg)
 ![License](https://img.shields.io/badge/license-MIT%2FApache-blue.svg)
@@ -247,6 +247,14 @@ Licensed under either of
 Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you shall be dual licensed as above, without any additional terms or conditions.
 
 ## Version History
+
+#### v2.0.3 (2017-09-12)
+
+* Add Linux support for `Decimal` (on Swift 3.1 and later). NOTE: Decimal support is still buggy in Swift 3.1, and the workarounds we employ to get the correct values on Apple platforms don't work on Linux. You probably shouldn't rely on this working correctly on Linux until Swift fixes its Decimal implementation.
+* Add Linux support for decoding from/encoding to `Data`.
+* Add Linux support for `LocalizedError` on the Error types (only really applies to Swift 3.1 and later).
+* Fix compilation on Linux using the release configuration.
+* Support running the test suite with `swift test`.
 
 #### v2.0.2 (2017-03-06)
 

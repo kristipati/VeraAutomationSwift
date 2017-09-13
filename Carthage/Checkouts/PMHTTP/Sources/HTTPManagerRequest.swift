@@ -99,7 +99,7 @@ public class HTTPManagerRequest: NSObject, NSCopying {
     /// The `HTTPAuth` value to use for the request. Default is the value of
     /// `HTTPManager.defaultAuth`.
     ///
-    /// - SeeAlso: `HTTPBasicAuth`.
+    /// - SeeAlso: `HTTPBasicAuth`, `HTTPManager.defaultAuth`.
     public var auth: HTTPAuth?
     
     /// The timeout interval of the request, in seconds. If `nil`, the session's default
@@ -141,6 +141,8 @@ public class HTTPManagerRequest: NSObject, NSCopying {
     
     /// The retry behavior to use for the request. Default is the value of
     /// `HTTPManager.defaultRetryBehavior`.
+    ///
+    /// - SeeAlso: `HTTPManager.defaultRetryBehavior`.
     public var retryBehavior: HTTPManagerRetryBehavior?
     
     /// Whether errors should be assumed to be JSON.
@@ -150,7 +152,20 @@ public class HTTPManagerRequest: NSObject, NSCopying {
     /// don't declare their Content-Types properly.
     ///
     /// The default value is provided by `HTTPManager.defaultAssumeErrorsAreJSON`.
+    ///
+    /// - SeeAlso: `HTTPManager.defaultAssumeErrorsAreJSON`.
     public var assumeErrorsAreJSON: Bool = false
+    
+    /// If `true`, assume the server requires the `Content-Length` header for uploads. The default
+    /// value is `false`.
+    ///
+    /// Setting this to `true` forces JSON and multipart/mixed uploads to be encoded synchronously
+    /// when the request is performed rather than happening in the background.
+    ///
+    /// The default value is provided by `HTTPManager.defaultServerRequiresContentLength`.
+    ///
+    /// - SeeAlso: `HTTPManager.defaultServerRequiresContentLength`.
+    public var serverRequiresContentLength: Bool = false
     
     /// Whether tasks created from this request should affect the visiblity of the
     /// network activity indicator. Default is `true`.
@@ -185,6 +200,29 @@ public class HTTPManagerRequest: NSObject, NSCopying {
     @nonobjc public func with(_ f: (HTTPManagerRequest) throws -> Void) rethrows -> Self {
         try f(self)
         return self
+    }
+    
+    /// Sets properties whose default values depend on the environment.
+    ///
+    /// This will set all properties whose default value depends on the environment to the value
+    /// they would have if the request was located within the environment. For example, this will
+    /// set the `auth` property to `HTTP.defaultAuth`.
+    ///
+    /// This is intended for use with requests that are constructed using an absolute path (and
+    /// therefore are still at the same domain), but want to be treated as though they're within the
+    /// environment path.
+    ///
+    /// **Example:**
+    ///
+    /// ```
+    /// HTTP.request(GET: "/foo")
+    ///     .with({ $0.setDefaultEnvironmentalProperties() })
+    ///     .performRequest { task, result in
+    ///         // ....
+    /// }
+    /// ```
+    public func setDefaultEnvironmentalProperties() {
+        apiManager.applyEnvironmentDefaultValues(to: self)
     }
     
     public func copy(with _: NSZone? = nil) -> Any {
@@ -223,6 +261,7 @@ public class HTTPManagerRequest: NSObject, NSCopying {
         userInitiated = request.userInitiated
         retryBehavior = request.retryBehavior
         assumeErrorsAreJSON = request.assumeErrorsAreJSON
+        serverRequiresContentLength = request.serverRequiresContentLength
         mock = request.mock
         affectsNetworkActivityIndicator = request.affectsNetworkActivityIndicator
         headerFields = request.headerFields
@@ -473,9 +512,13 @@ public class HTTPManagerNetworkRequest: HTTPManagerRequest, HTTPManagerRequestPe
             request.httpBody = FormURLEncoded.data(for: queryItems)
         case .json(let json)?:
             request.httpBody = JSON.encodeAsData(json)
+        case let .multipartMixed(boundary, parameters, bodyParts)? where serverRequiresContentLength:
+            let stream = HTTPBody.createMultipartMixedStream(boundary, parameters: parameters, bodyParts: bodyParts)
+            stream.open()
+            request.httpBody = try? stream.readAll()
         case let .multipartMixed(boundary, parameters, bodyParts)?:
-            // We have at least one Pending value, we need to wait for them to evaluate (otherwise we can't
-            // accurately implement the `canRead` stream callback).
+            // We have at least one Pending value, we need to wait for them to evaluate (otherwise
+            // we might block the network thread).
             for case .pending(let deferred) in bodyParts {
                 deferred.wait()
             }
@@ -651,7 +694,7 @@ private func networkTaskProcessor<T>(queue: OperationQueue?,
                                   processor: @escaping (HTTPManagerTask, HTTPManagerTaskResult<Data>) -> HTTPManagerTaskResult<T>,
                                   taskCompletion: @escaping (HTTPManagerTask, HTTPManagerTaskResult<T>, @escaping (HTTPManagerTask, HTTPManagerTaskResult<T>) -> Void) -> Void,
                                   completion: @escaping (HTTPManagerTask, HTTPManagerTaskResult<T>) -> Void)
-    -> (HTTPManagerTask, HTTPManagerTaskResult<Data>, _ authToken: Any??, _ attempt: Int, _ retry: @escaping (_ isAuthRetry: Bool) -> Bool) -> Void
+    -> (HTTPManagerTask, HTTPManagerTaskResult<Data>, _ authToken: Any??, _ attempt: Int, _ retry: @escaping (_ reason: HTTPManager.RetryReason) -> Bool) -> Void
 {
     return { (task, result, authToken, attempt, retry) in
         let result = processor(task, result)
@@ -675,7 +718,7 @@ private func networkTaskProcessor<T>(queue: OperationQueue?,
                     }
                     alreadyCalled = true
                     autoreleasepool {
-                        if !(shouldRetry && retry(true)) {
+                        if !(shouldRetry && retry(.unauthorized)) {
                             runCompletion()
                         }
                     }
@@ -683,9 +726,31 @@ private func networkTaskProcessor<T>(queue: OperationQueue?,
             } else {
                 runCompletion()
             }
+        } else if case .error(_, let HTTPManagerError.failedResponse(403, response, body, _)) = result,
+            // NB: If any of the following fail we want to fall back to retry behavior. This is in
+            // contrast with 401 Unauthorized handling, where we explicitly disable retries if an
+            // `auth` is set.
+            let auth = task.auth,
+            let token = authToken,
+            let handleForbidden = auth.handleForbidden
+        {
+            var alreadyCalled = false // attempt to detect multiple invocations of the block. Not guaranteed to work.
+            handleForbidden(response, body, task, token) { shouldRetry in
+                if alreadyCalled {
+                    NSLog("[HTTPManager] HTTPAuth completion block invoked multiple times (\(type(of: auth)))")
+                    assertionFailure("HTTPAuth completion block invoked multiple times")
+                    return
+                }
+                alreadyCalled = true
+                autoreleasepool {
+                    if !(shouldRetry && retry(.forbidden)) {
+                        runCompletion()
+                    }
+                }
+            }
         } else if case .error(_, let error) = result, let retryBehavior = task.retryBehavior {
             retryBehavior.handler(task, error, attempt, { shouldRetry in
-                if !(shouldRetry && retry(false)) {
+                if !(shouldRetry && retry(.normal)) {
                     runCompletion()
                 }
             })
@@ -951,6 +1016,7 @@ public final class HTTPManagerParseRequest<T>: HTTPManagerRequest, HTTPManagerRe
         userInitiated = request.userInitiated
         retryBehavior = request.retryBehavior
         assumeErrorsAreJSON = request.assumeErrorsAreJSON
+        serverRequiresContentLength = request.serverRequiresContentLength
         mock = request.mock
         affectsNetworkActivityIndicator = request.affectsNetworkActivityIndicator
         headerFields = request.headerFields

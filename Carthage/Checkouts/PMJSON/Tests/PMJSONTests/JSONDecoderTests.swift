@@ -14,10 +14,7 @@
 
 import XCTest
 import PMJSON
-
-#if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
-    import struct Foundation.Decimal
-#endif
+import Foundation
 
 let bigJson: Data = {
     var s = "[\n"
@@ -30,13 +27,41 @@ let bigJson: Data = {
 
 private func readFixture(_ name: String, withExtension ext: String?) throws -> Data {
     struct NoSuchFixture: Error {}
-    guard let url = Bundle(for: JSONDecoderTests.self).url(forResource: name, withExtension: ext) else {
-        throw NoSuchFixture()
-    }
+    #if SWIFT_PACKAGE
+        // We don't have a resource bundle, so let's just look relative to our source file.
+        let url = URL(fileURLWithPath: #file, isDirectory: false).deletingLastPathComponent().appendingPathComponent(ext.map({ "\(name).\($0)" }) ?? name)
+        guard FileManager.default.fileExists(atPath: url.path) else {
+            throw NoSuchFixture()
+        }
+    #else
+        guard let url = Bundle(for: JSONDecoderTests.self).url(forResource: name, withExtension: ext) else {
+            throw NoSuchFixture()
+        }
+    #endif
     return try Data(contentsOf: url)
 }
 
-class JSONDecoderTests: XCTestCase {
+public final class JSONDecoderTests: XCTestCase {
+    public static let allLinuxTests: [(String, (JSONDecoderTests) -> () throws -> Void)] = {
+        var tests: [(String, (JSONDecoderTests) -> () throws -> Void)] = [
+            ("testBasic", testBasic),
+            ("testDouble", testDouble),
+            ("testStringEscapes", testStringEscapes),
+            ("testSurrogatePair", testSurrogatePair),
+            ("testReencode", testReencode),
+            ("testConverions", testConversions),
+            ("testDepthLimit", testBOMDetection),
+            ("testUnicodeHeuristicDetection", testUnicodeHeuristicDetection)
+        ]
+        #if swift(>=3.1)
+            tests.append(contentsOf: [
+                ("testDecimalParsing", testDecimalParsing),
+                ("testJSONErrorNSErrorDescription", testJSONErrorNSErrorDescription),
+                ])
+        #endif
+        return tests
+    }()
+    
     func testBasic() {
         assertMatchesJSON(try JSON.decode("42"), 42)
         assertMatchesJSON(try JSON.decode("\"hello\""), "hello")
@@ -45,7 +70,7 @@ class JSONDecoderTests: XCTestCase {
         assertMatchesJSON(try JSON.decode("[1, 2, 3]"), [1, 2, 3])
         assertMatchesJSON(try JSON.decode("{\"one\": 1, \"two\": 2, \"three\": 3}"), ["one": 1, "two": 2, "three": 3])
         assertMatchesJSON(try JSON.decode("[1.23, 4e7]"), [1.23, 4e7])
-        #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+        #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS) || swift(>=3.1)
             assertMatchesJSON(try JSON.decode("[1.23, 4e7]", options: [.useDecimals]), [JSON(1.23 as Decimal), JSON(4e7 as Decimal)])
         #endif
     }
@@ -53,7 +78,7 @@ class JSONDecoderTests: XCTestCase {
     func testDouble() {
         XCTAssertEqual(try JSON.decode("-5.4272823085455e-05"), -5.4272823085455e-05)
         XCTAssertEqual(try JSON.decode("-5.4272823085455e+05"), -5.4272823085455e+05)
-        #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+        #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS) || swift(>=3.1)
             XCTAssertEqual(try JSON.decode("-5.4272823085455e+05", options: [.useDecimals]), JSON(Decimal(string: "-5.4272823085455e+05")!))
         #endif
     }
@@ -67,7 +92,7 @@ class JSONDecoderTests: XCTestCase {
         assertMatchesJSON(try JSON.decode("\"emoji fun: 💩\\uD83D\\uDCA9\""), "emoji fun: 💩💩")
     }
     
-    #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+    #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS) || swift(>=3.1)
     func testDecimalParsing() throws {
         let data = try readFixture("sample", withExtension: "json")
         // Decode the data and make sure it contains no .double values
@@ -91,7 +116,7 @@ class JSONDecoderTests: XCTestCase {
                 XCTFail("Re-encoded JSON doesn't match original")
             }
         }
-        #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+        #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS) || swift(>=3.1)
             do {
                 // test again with decimals
                 let json = try JSON.decode(data, options: [.useDecimals])
@@ -111,7 +136,7 @@ class JSONDecoderTests: XCTestCase {
         XCTAssertEqual(JSON(42 as Int64), JSON.int64(42))
         XCTAssertEqual(JSON(42 as Double), JSON.double(42))
         XCTAssertEqual(JSON(42 as Int), JSON.int64(42))
-        #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+        #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS) || swift(>=3.1)
             XCTAssertEqual(JSON(42 as Decimal), JSON.decimal(42))
         #endif
         XCTAssertEqual(JSON("foo"), JSON.string("foo"))
@@ -122,7 +147,7 @@ class JSONDecoderTests: XCTestCase {
         XCTAssertEqual(JSON([[1,2,3],[4,5,6]].lazy.map(JSONArray.init)), [[1,2,3],[4,5,6]]) // Sequence of JSONArray
     }
     
-    #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
+    #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS) || swift(>=3.1)
     func testJSONErrorNSErrorDescription() throws {
         let jserror: JSONError?
         do {
@@ -198,7 +223,12 @@ class JSONDecoderTests: XCTestCase {
 }
 
 /// Tests both `JSONDecoder`'s streaming mode and `JSONStreamDecoder`.
-class JSONStreamDecoderTests: XCTestCase {
+public class JSONStreamDecoderTests: XCTestCase {
+    public static let allLinuxTests = [
+        ("testDecoderStreamingMode", testDecoderStreamingMode),
+        ("testStreamingDecoder", testStreamingDecoder)
+    ]
+    
     func testDecoderStreamingMode() {
         func decodeStream(_ input: String) throws -> [JSON] {
             let parser = JSONParser(input.unicodeScalars, options: [.streaming])
@@ -297,7 +327,19 @@ class JSONStreamDecoderTests: XCTestCase {
     }
 }
 
-class JSONBenchmarks: XCTestCase {
+public class JSONBenchmarks: XCTestCase {
+    public static let allLinuxTests: [(String, (JSONBenchmarks) -> () throws -> Void)] = [
+        ("testDecodePerformance", testDecodePerformance),
+        ("testDecodeDecimalPerformance", testDecodeDecimalPerformance),
+        ("testDecodePerformanceCocoa", testDecodePerformanceCocoa),
+        ("testEncodePerformance", testEncodePerformance),
+        ("testEncodePrettyPerformance", testEncodePrettyPerformance),
+        ("testDecodeSampleJSONPerformance", testDecodeSampleJSONPerformance),
+        ("testDecodeSampleJSONDecimalPerformance", testDecodeSampleJSONDecimalPerformance),
+        ("testDecodeSampleJSONCocoaPerformance", testDecodeSampleJSONCocoaPerformance)
+    ]
+    
+    #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
     func testCompareCocoa() {
         do {
             let json = try JSON.decode(bigJson)
@@ -310,6 +352,7 @@ class JSONBenchmarks: XCTestCase {
             XCTFail(String(describing: error))
         }
     }
+    #endif
     
     func testDecodePerformance() {
         measure { [bigJson] in
@@ -360,6 +403,7 @@ class JSONBenchmarks: XCTestCase {
         }
     }
     
+    #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
     func testEncodeCocoaPerformance() {
         do {
             let json = try JSON.decode(bigJson).ns
@@ -376,6 +420,7 @@ class JSONBenchmarks: XCTestCase {
             XCTFail("error parsing json: \(error)")
         }
     }
+    #endif
     
     func testEncodePrettyPerformance() {
         do {
@@ -390,6 +435,7 @@ class JSONBenchmarks: XCTestCase {
         }
     }
     
+    #if os(iOS) || os(OSX) || os(watchOS) || os(tvOS)
     func testEncodePrettyCocoaPerformance() {
         do {
             let json = try JSON.decode(bigJson).ns
@@ -406,6 +452,7 @@ class JSONBenchmarks: XCTestCase {
             XCTFail("error parsing json: \(error)")
         }
     }
+    #endif
     
     func testDecodeSampleJSONPerformance() throws {
         let data = try readFixture("sample", withExtension: "json")

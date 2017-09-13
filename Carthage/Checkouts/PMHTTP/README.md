@@ -1,6 +1,6 @@
 # PMHTTP
 
-[![Version](https://img.shields.io/badge/version-v3.0.2-blue.svg)](https://github.com/postmates/PMHTTP/releases/latest)
+[![Version](https://img.shields.io/badge/version-v3.0.5-blue.svg)](https://github.com/postmates/PMHTTP/releases/latest)
 ![Platforms](https://img.shields.io/badge/platforms-ios%20%7C%20osx%20%7C%20watchos%20%7C%20tvos-lightgrey.svg)
 ![Languages](https://img.shields.io/badge/languages-swift%20%7C%20objc-orange.svg)
 ![License](https://img.shields.io/badge/license-MIT%2FApache-blue.svg)
@@ -31,13 +31,13 @@ leaves the networking to `URLSession` and provides everything else. Features inc
 * Built-in request mocking support without using method swizzling.
 * Nothing uses the main thread, not even completion blocks, unless you explicitly ask it to.
 
-PMHTTP was designed specifically for the HTTP functionality that [Postmates][] needs. This means first-class REST
-support with a focus on JSON. But there's some functionality it doesn't handle (such as TLS pinning) which we
-may get around to doing at some point ([see issues](https://github.com/postmates/PMHTTP/labels/TODO)).
-Pull requests are welcome.
+PMHTTP was designed specifically for the HTTP functionality that [Postmates][] needs. This means
+first-class REST support with a focus on JSON. But there's some functionality it doesn't handle
+which we may get around to doing at some point ([see issues][]). Pull requests are welcome.
 
 [Postmates]: https://postmates.com
 [PMJSON]: https://github.com/postmates/PMJSON "postmates/PMJSON on GitHub"
+[see issues]: https://github.com/postmates/PMHTTP/labels/TODO
 
 ### Table of Contents
 
@@ -65,13 +65,16 @@ A typical GET request looks like:
 ```swift
 // https://api.example.com/v1/search?query=%s
 let task = HTTP.request(GET: "search", parameters: ["query": "cute cats"])
-    .parseAsJSON()
+    .parseAsJSON(using: { (response, json) in
+        return try JSON.map(json.getArray(), Cat.init(json:))
+    })
     .performRequest(withCompletionQueue: .main) { task, result in
         switch result {
-        case let .success(response, json):
-            // Do something with the parsed JSON.
+        case let .success(response, cats):
+            // Do something with the Cats.
         case let .error(response, error):
-            // Handle the error. This includes both network errors and JSON parse errors.
+            // Handle the error. This includes network errors, JSON parse errors,
+            // and any error thrown by Cat.init(json:).
         case .canceled:
             // The task was canceled. Ignore or handle as appropriate.
         }
@@ -85,19 +88,22 @@ A POST request might look like:
 ```swift
 // https://api.example.com/v1/submit_cat
 let task = HTTP.request(POST: "submit_cat", parameters: ["name": "Fluffles", "color": "tabby"])
-    .parseAsJSON(using: { response, json in
-        return try SubmitCatResponse(json: json)
+    .parseAsJSON(using: { result in
+        // POST parse blocks take a single `result` argument because 204 No Content is a valid
+        // response. The `result` enum vends an optional `value` property, and has a
+        // `getValue()` method that throws an error if the response was 204 No Content.
+        return try SubmitCatResponse(json: result.getValue())
     })
     .performRequest(withCompletionQueue: .main) { task, result in
         switch result {
         case let .success(response, value):
-            // value is a SubmitCatResponse
+            // value is a SubmitCatResponse.
         case let .error(response, error):
             // Handle the error. This could be a network error, a JSON parse error, or
-            // any error thrown by SubmitCatResponse.init(json:)
+            // any error thrown by SubmitCatResponse.init(json:).
         case .canceled:
             // The task was canceled.
-        }    
+        }
 }
 ```
 
@@ -107,13 +113,14 @@ A `multipart/form-data` upload might look like:
 // https://api.example.com/v1/submit_cat with photo
 let req = HTTP.request(POST: "submit_cat", parameters: ["name": "Fluffles", "color": "tabby"])!
 // We could add the image synchronously, but it's better to be asynchronous.
+// Note: There is a convenience function to do this already, this is just an example.
 req.addMultipartBody { upload in
     // This block executes on a background queue.
     if let data = UIImageJPEGRepresentation(catPhoto, 0.9) {
         upload.addMultipart(data: data, withName: "photo", mimeType: "image/jpeg")
     }
 }
-let task = req.parseAsJSON(using: { try SubmitCatResponse(json: $1) })
+let task = req.parseAsJSON(using: { try SubmitCatResponse(json: $0.getValue()) })
     .performRequest(withCompletionQueue: .main) { task, result in
         // ...
 }
@@ -401,6 +408,21 @@ Licensed under either of
 Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you shall be dual licensed as above, without any additional terms or conditions.
 
 ## Version History
+
+#### v3.0.5 (2017-09-11)
+
+* Extend `HTTPAuth` to support handling 403 Forbidden errors as well.
+
+#### v3.0.4 (2017-09-05)
+
+* Support Swift 3.2.
+* Handle `serverRequiresContentLength` correctly in `preparedURLRequest`.
+
+#### v3.0.3 (2017-08-18)
+
+* Add overloads to the request creation methods that take a `URL`. These overloads return a non-optional request.
+* Add new property `HTTPManagerRequest.serverRequiresContentLength`. This disables streaming body support (for JSON and multipart/mixed) and instead encodes the body synchronously so it can provide a `"Content-Length"` header to the server. There is a corresponding `HTTPManager.defaultServerRequiresContentLength` property as well.
+* Add a method `HTTPManagerRequest.setDefaultEnvironmentalProperties()` that sets properties to the `HTTPManager`-defined defaults that otherwise are only set if the request's path matches the environment. This is primarily intended for requests constructed using absolute paths (e.g. `HTTP.request(GET: "/foo")`) that should still use the environment defaults. Right now this method only sets `auth` and `serverRequiresContentLength`.
 
 #### v3.0.2 (2017-05-01)
 
