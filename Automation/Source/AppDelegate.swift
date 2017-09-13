@@ -134,7 +134,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                     for index in 0..<viewControllers.count {
                         let vcClass = (viewControllers[index] as UIViewController).getBaseViewControllerName()
                         if vcClass == className && currentIndex != index {
-                            swap(&viewControllers[currentIndex], &viewControllers[index])
+                            viewControllers.swapAt(currentIndex, index)
                         }
                     }
                 }
