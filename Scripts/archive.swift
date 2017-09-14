@@ -22,7 +22,7 @@ exportPath = arguments[4]
 provisioningProfileName = arguments[5]
 
 if let archives = try? FileManager.default.contentsOfDirectory(atPath: archivePath) {
-	let matches = archives.filter{$0.lowercased().hasSuffix(".xcarchive")}
+	let matches = archives.filter {$0.lowercased().hasSuffix(".xcarchive")}
 	if let archiveName = matches.first {
 		archivePath += "/" + archiveName
 	}
@@ -45,10 +45,10 @@ if let inputStream = InputStream(fileAtPath: infoPlist) {
 try? FileManager.default.createDirectory(atPath: exportPath, withIntermediateDirectories: true, attributes: nil)
 
 print("\(arguments)")
-var dict: Dictionary <String, Any> = [:]
+var dict: = [String: Any]()
 dict["compileBitcode"] = false
 if let bundleIdentifier = bundleIdentifier {
-	dict["provisioningProfiles"] = [bundleIdentifier : provisioningProfileName]
+	dict["provisioningProfiles"] = [bundleIdentifier: provisioningProfileName]
 }
 dict["method"] = exportMethod
 dict["teamID"] = teamID
@@ -57,8 +57,8 @@ if let stream = OutputStream(toFileAtPath: optionsFilePath, append: false) {
 	stream.open()
 	PropertyListSerialization.writePropertyList(dict, to: stream, format: .xml, options: 0, error: nil)
 	stream.close()
-	
-	let task = Process()
+
+    let task = Process()
 	task.launchPath = "/usr/bin/xcodebuild"
 	task.arguments = ["-exportArchive", "-archivePath", archivePath, "-exportPath", exportPath, "-exportOptionsPlist", optionsFilePath]
 	task.launch()
