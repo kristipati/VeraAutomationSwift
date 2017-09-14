@@ -7,24 +7,30 @@
 //
 
 import Foundation
-import PMJSON
 
-class VeraAuth: CustomStringConvertible {
+class VeraAuth: CustomStringConvertible, Decodable {
 
     var authToken: String?
     var authSigToken: String?
     var serverAccount: String?
     var account: String?
 
-    init(json: JSON) {
-        authToken = json["Identity"]?.string
-        authSigToken = json["IdentitySignature"]?.string
-        serverAccount = json["Server_Account"]?.string
-        account = json["PK_Account"]?.string
+    private enum CodingKeys: String, CodingKey {
+        case authToken = "Identity"
+        case authSigToken = "IdentitySignature"
+        case serverAccount = "Server_Account"
+        case account = "PK_Account"
+    }
 
-        if account == nil {
-            if let accountNumber = json["PK_Account"]?.int {
-                account = "\(accountNumber)"
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.authToken = try? container.decode(String.self, forKey: .authToken)
+        self.authSigToken = try? container.decode(String.self, forKey: .authSigToken)
+        self.serverAccount = try? container.decode(String.self, forKey: .serverAccount)
+        self.account = try? container.decode(String.self, forKey: .account)
+        if self.account == nil {
+            if let accountNumber = try? container.decode(Int.self, forKey: .account) {
+                self.account = "\(accountNumber)"
             }
         }
     }

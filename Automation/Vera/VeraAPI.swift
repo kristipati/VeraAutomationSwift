@@ -159,25 +159,16 @@ class VeraAPI {
         let hashedString = stringToHash.sha1()
         let requestString = "https://us-autha11.mios.com/autha/auth/username/\(self.username!.lowercased())?SHA1Password=\(hashedString)&PK_Oem=1"
 
-        HTTP.request(GET: requestString).parseAsJSON().performRequest(withCompletionQueue: .main) { (_, result) in
+        HTTP.request(GET: requestString).parseAsDecodable(type: VeraAuth.self).performRequest(withCompletionQueue: .main) { (_, result) in
             self.log.debug("Got a result")
             switch result {
-            case let .success(response, json):
-                self.log.debug("Success: \(response) data: \(json)")
-                if json != nil {
-                    var auth: VeraAuth?
-                    auth = VeraAuth(json: json)
-                    self.log.info("Auth response: \(json)")
-                    completionhandler(auth)
-                } else {
-                    completionhandler(nil)
-                }
-                break
+            case let .success(response, auth):
+                self.log.debug("Success: \(response) data: \(auth)")
+                completionhandler(auth)
 
             case let .error(response, error):
                 self.log.debug("Error: \(error) - \(String(describing: response))")
                 completionhandler(nil)
-                break
 
             case .canceled:
                 completionhandler(nil)
@@ -189,17 +180,12 @@ class VeraAPI {
     fileprivate func getVeraDevices(completionHandler:@escaping (_ device: String?, _ internalIP: String?, _ serverDevice: String?) -> Void) {
         if self.auth != nil && self.auth!.authToken != nil {
             if let data = Data(base64Encoded: self.auth!.authToken!, options: NSData.Base64DecodingOptions(rawValue: 0)) {
-                // swiftlint:disable force_cast
-                let decodedString = NSString(data: data, encoding: String.Encoding.utf8.rawValue)! as String
-                // swiftlint:enable force_cast
                 var tempAuth: VeraAuth?
-                if let json = try? JSON.decode(decodedString) {
-                    tempAuth = VeraAuth(json: json)
-                }
+                tempAuth = try? JSONDecoder().decode(VeraAuth.self, from: data)
+
                 if tempAuth != nil {
                     self.auth?.account = tempAuth?.account
                 }
-                log.info("JSON: \(decodedString)")
             }
 
             if self.auth?.account != nil && self.auth?.serverAccount != nil {

@@ -9,7 +9,7 @@
 import Foundation
 import PMJSON
 
-fileprivate func < <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
+private func < <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?):
         return l < r
