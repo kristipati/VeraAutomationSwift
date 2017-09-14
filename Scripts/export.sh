@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 export
 chmod +x ${WORKSPACE}/Scripts/archive.swift
 ${WORKSPACE}/Scripts/archive.swift ${EXPORT_METHOD} "${TEAM_ID}" "${WORKSPACE}/Build/" "${WORKSPACE}" "${PROVISIONING_PROFILE_NAME}"
