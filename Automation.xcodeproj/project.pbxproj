@@ -402,10 +402,10 @@
 				D21CB85519E1FEAF0054A7D4 /* AppDelegate.swift */,
 				D28002AE1A09B5C6005894C3 /* VeraUIExtension.swift */,
 				D2ED11361A15BC4D00B8F25B /* ArrayExtension.swift */,
+				D2A8178A1F6C9141005FBE67 /* NSObject+Extensions.swift */,
 				D285144D1D85BCC400162FDE /* Vera */,
 				D232108B1A07231400353F51 /* Cells */,
 				D23210741A07230500353F51 /* ViewControllers */,
-				D2A8178A1F6C9141005FBE67 /* NSObject+Extensions.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -413,10 +413,10 @@
 		D23210741A07230500353F51 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				D2D3DE381F6C8AD7000D9025 /* RoomsTableViewController.swift */,
-				D23210781A07230500353F51 /* ExcludedItemsViewController.swift */,
-				D232107D1A07230500353F51 /* SettingsViewController.swift */,
 				D232107F1A07230500353F51 /* DevicesViewController.swift */,
+				D23210781A07230500353F51 /* ExcludedItemsViewController.swift */,
+				D2D3DE381F6C8AD7000D9025 /* RoomsTableViewController.swift */,
+				D232107D1A07230500353F51 /* SettingsViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -431,8 +431,8 @@
 				D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */,
 				D2D3DE3F1F6C8B3F000D9025 /* RoomTableViewCell.swift */,
 				D27772181A0DCAF400F33568 /* SceneCell.swift */,
-				D2E3597E1A105E5500F30C32 /* ThermostatCell.swift */,
 				D28590971F6CD7CB00CEB728 /* SettingsTableViewCell.swift */,
+				D2E3597E1A105E5500F30C32 /* ThermostatCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -524,14 +524,14 @@
 		D285144E1D85BCC400162FDE /* DataModel */ = {
 			isa = PBXGroup;
 			children = (
+				D214B1A21F6AE48700BCB6F6 /* HTTPManagerDataRequest+Extensions.swift */,
+				D2EA9F941DE0ADB900C4E94A /* JSON+Extensions.swift */,
 				D285144F1D85BCC400162FDE /* VeraAuth.swift */,
 				D28514501D85BCC400162FDE /* VeraDevice.swift */,
 				D28514511D85BCC400162FDE /* VeraRoom.swift */,
 				D28514521D85BCC400162FDE /* VeraScene.swift */,
 				D28514531D85BCC400162FDE /* VeraUnit.swift */,
 				D28514541D85BCC400162FDE /* VeraUser.swift */,
-				D2EA9F941DE0ADB900C4E94A /* JSON+Extensions.swift */,
-				D214B1A21F6AE48700BCB6F6 /* HTTPManagerDataRequest+Extensions.swift */,
 			);
 			path = DataModel;
 			sourceTree = "<group>";

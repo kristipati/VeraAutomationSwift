@@ -140,7 +140,7 @@ class DevicesViewController: UIViewController, UICollectionViewDelegate, UIColle
         }
         items = DeviceItems.devices(devices: newDevices)
     }
-   
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         collectionView.reloadData()

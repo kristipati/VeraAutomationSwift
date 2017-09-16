@@ -20,7 +20,7 @@ class ExcludedItemsViewController: UITableViewController {
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 100
         tableView.tableFooterView = UIView(frame: .zero)
-        
+
         edgesForExtendedLayout = []
         extendedLayoutIncludesOpaqueBars = false
         tabBarController?.tabBar.isTranslucent = false
