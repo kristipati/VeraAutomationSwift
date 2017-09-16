@@ -9,7 +9,9 @@
 import UIKit
 
 enum RoomType {
+    //swiftlint:disable identifier_name
     case switches, audio, scenes, locks, climate, on
+    //swiftlint:enable identifier_name
 }
 
 class RoomsTableViewController: UITableViewController {
@@ -75,7 +77,7 @@ class RoomsTableViewController: UITableViewController {
                 if let roomsWithScenes = AppDelegate.appDelegate().veraAPI.roomsWithScenes() {
                     return roomsWithScenes.count
                 }
-            
+
             default:
                 break
         }
@@ -129,7 +131,7 @@ class RoomsTableViewController: UITableViewController {
                     let room = roomsWithAudio[indexPath.row]
                     vc.room = room
                 }
-            
+
             case .scenes:
                 if let roomsWithScenes = AppDelegate.appDelegate().veraAPI.roomsWithScenes() {
                     let room = roomsWithScenes[indexPath.row]

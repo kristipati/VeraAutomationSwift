@@ -63,7 +63,7 @@ class DevicesViewController: UIViewController, UICollectionViewDelegate, UIColle
             default:
                 break
         }
-        
+
         if let room = room {
             title = room.name
             switch roomType {
@@ -89,7 +89,7 @@ class DevicesViewController: UIViewController, UICollectionViewDelegate, UIColle
 
         NotificationCenter.default.addObserver(self, selector: #selector(DevicesViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
     }
-    
+
     func loadLocks() {
         var newDevices = [VeraDevice]()
         if let roomsWithLocks = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.lock) {
@@ -101,10 +101,10 @@ class DevicesViewController: UIViewController, UICollectionViewDelegate, UIColle
                 }
             }
         }
-        
+
         items = DeviceItems.devices(devices: newDevices)
     }
-    
+
     func loadThermostats () {
         var thermoDevices = [VeraDevice]()
         if let roomsWithThermostats = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.thermostat) {
@@ -116,7 +116,7 @@ class DevicesViewController: UIViewController, UICollectionViewDelegate, UIColle
                 }
             }
         }
-        
+
         items = DeviceItems.devices(devices: thermoDevices)
     }
 
@@ -138,7 +138,6 @@ class DevicesViewController: UIViewController, UICollectionViewDelegate, UIColle
         items = DeviceItems.devices(devices: newDevices)
     }
 
-
     @objc func unitInfoUpdated(_ notification: Notification) {
         var fullload = false
         if let info = (notification as NSNotification).userInfo as? [String: AnyObject] {
@@ -153,7 +152,7 @@ class DevicesViewController: UIViewController, UICollectionViewDelegate, UIColle
             title = nil
             navigationItem.leftBarButtonItem = nil
         }
-        
+
         switch roomType {
             case .locks:
                 loadLocks()
@@ -164,7 +163,7 @@ class DevicesViewController: UIViewController, UICollectionViewDelegate, UIColle
             default:
                 break
         }
-        
+
         collectionView!.reloadData()
     }
 
@@ -181,7 +180,6 @@ class DevicesViewController: UIViewController, UICollectionViewDelegate, UIColle
         }
         return 0
     }
-
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         var cellReuseIdentifier = ""
@@ -202,21 +200,20 @@ class DevicesViewController: UIViewController, UICollectionViewDelegate, UIColle
         }
 
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath) as? BaseCell {
+            cell.delegate = self
+            cell.setup()
+
             if let items = items {
                 switch items {
                     case let .devices(devices):
                         if indexPath.row < devices.count {
                             let device = devices[indexPath.row]
                             cell.device = device
-                            cell.delegate = self
-                            cell.setup()
                         }
                     case let .scenes(scenes):
                         if indexPath.row < scenes.count {
                             let scene = scenes[indexPath.row]
                             cell.scene = scene
-                            cell.delegate = self
-                            cell.setup()
                         }
                 }
             }
@@ -231,42 +228,28 @@ class DevicesViewController: UIViewController, UICollectionViewDelegate, UIColle
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch roomType {
             case .switches, .on:
-                if let items = items {
-                    switch items {
-                    case let .devices(devices):
-                        if indexPath.row < devices.count {
-                            let device = devices[indexPath.row]
-                            var newStatus = 0
-                            if let status = device.status {
-                                if status == 0 {
-                                    newStatus = 1
-                                }
-                            }
-
-                            if roomType == .on {
-                                newStatus = 0
-                            }
-
-                            AppDelegate.appDelegate().veraAPI.setDeviceStatusWithNotification(device, newDeviceStatus: newStatus, newDeviceLevel: nil)
+                if let items = items, case .devices(let devices) = items, indexPath.row < devices.count {
+                    let device = devices[indexPath.row]
+                    var newStatus = 0
+                    if let status = device.status {
+                        if status == 0 {
+                            newStatus = 1
                         }
-
-                    default:
-                        break
                     }
-                }
+
+                    if roomType == .on {
+                        newStatus = 0
+                    }
+
+                    AppDelegate.appDelegate().veraAPI.setDeviceStatusWithNotification(device, newDeviceStatus: newStatus, newDeviceLevel: nil)
+            }
 
             case .scenes:
-                if let items = items {
-                    switch items {
-                        case let .scenes(scenes):
-                            if indexPath.row < scenes.count {
-                                let scene = scenes[indexPath.row]
-                                AppDelegate.appDelegate().veraAPI.runSceneWithNotification(scene)
-                            }
-                        default:
-                            break
-                        }
-            }
+                if let items = items, case .scenes(let scenes) = items, indexPath.row < scenes.count {
+                    let scene = scenes[indexPath.row]
+                    AppDelegate.appDelegate().veraAPI.runSceneWithNotification(scene)
+                }
+
             default:
                 break
         }
