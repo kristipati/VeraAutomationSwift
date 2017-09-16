@@ -1,4 +1,5 @@
 ToDo
 -----------
-- Use Internal IP for UI7/switch to internal/external
-- Scenes for UI7 lists all of them
+- Show audio tab
+- Decodable
+

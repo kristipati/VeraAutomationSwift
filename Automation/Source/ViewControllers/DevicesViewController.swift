@@ -140,7 +140,7 @@ class DevicesViewController: UIViewController, UICollectionViewDelegate, UIColle
         }
         items = DeviceItems.devices(devices: newDevices)
     }
-    
+   
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         collectionView.reloadData()
@@ -209,7 +209,6 @@ class DevicesViewController: UIViewController, UICollectionViewDelegate, UIColle
 
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath) as? BaseCell {
             cell.delegate = self
-            cell.setup()
 
             if let items = items {
                 switch items {
@@ -225,6 +224,7 @@ class DevicesViewController: UIViewController, UICollectionViewDelegate, UIColle
                         }
                 }
             }
+            cell.setup()
             return cell
         }
 
