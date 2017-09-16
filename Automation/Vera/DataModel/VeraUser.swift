@@ -7,15 +7,21 @@
 //
 
 import Foundation
-import PMJSON
 
-class VeraUser {
+class VeraUser: Decodable {
     var units: [VeraUnit]?
 
-    init(json: JSON) {
-        units = try? json.mapArray("units", VeraUnit.init(json:))
-        if units == nil {
-            units = try? json.mapArray("Devices", VeraUnit.init(json:))
+    private enum CodingKeys: String, CodingKey {
+        case units
+        case devices = "Devices"
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.units = try? container.decode([VeraUnit].self, forKey: .units)
+        if self.units == nil {
+            self.units = try? container.decode([VeraUnit].self, forKey: .devices)
         }
     }
 }

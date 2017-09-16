@@ -40,6 +40,7 @@
 		D28590981F6CD7CB00CEB728 /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28590971F6CD7CB00CEB728 /* SettingsTableViewCell.swift */; };
 		D285909D1F6CD82300CEB728 /* ExcludedItemsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D285909B1F6CD82300CEB728 /* ExcludedItemsViewController.xib */; };
 		D28590A21F6CD85200CEB728 /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D28590A01F6CD85200CEB728 /* SettingsViewController.xib */; };
+		D299F5E71F6DC69E00C9775C /* DecodingExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D299F5E61F6DC69E00C9775C /* DecodingExtensions.swift */; };
 		D2A2A6DD1A0FFA4800BE65EE /* OnDeviceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */; };
 		D2A2A6DF1A101AF500BE65EE /* AudioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */; };
 		D2A7F0C41ECA546400D399E5 /* OnePasswordExtension.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D2A7F0C11ECA544E00D399E5 /* OnePasswordExtension.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -57,7 +58,6 @@
 		D2E11B431DD0409700701E72 /* PMJSON.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D2E11B421DD0409700701E72 /* PMJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2E3597D1A104A0F00F30C32 /* LockCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E3597C1A104A0F00F30C32 /* LockCell.swift */; };
 		D2E3597F1A105E5500F30C32 /* ThermostatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E3597E1A105E5500F30C32 /* ThermostatCell.swift */; };
-		D2EA9F951DE0ADB900C4E94A /* JSON+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2EA9F941DE0ADB900C4E94A /* JSON+Extensions.swift */; };
 		D2ED11371A15BC4D00B8F25B /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2ED11361A15BC4D00B8F25B /* ArrayExtension.swift */; };
 /* End PBXBuildFile section */
 
@@ -338,6 +338,7 @@
 		D285909C1F6CD82300CEB728 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ExcludedItemsViewController.xib; sourceTree = "<group>"; };
 		D28590A11F6CD85200CEB728 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SettingsViewController.xib; sourceTree = "<group>"; };
 		D29867E81A15B628000E99E7 /* ReleaseNotes.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReleaseNotes.txt; sourceTree = "<group>"; };
+		D299F5E61F6DC69E00C9775C /* DecodingExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodingExtensions.swift; sourceTree = "<group>"; };
 		D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnDeviceCell.swift; sourceTree = "<group>"; };
 		D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioCell.swift; sourceTree = "<group>"; };
 		D2A7F0BC1ECA544E00D399E5 /* OnePasswordExtension.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OnePasswordExtension.xcodeproj; path = "Carthage/Checkouts/onepassword-extension/OnePasswordExtension.xcodeproj"; sourceTree = "<group>"; };
@@ -363,7 +364,6 @@
 		D2E11B451DD0432C00701E72 /* XCGLogger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = XCGLogger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2E3597C1A104A0F00F30C32 /* LockCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockCell.swift; sourceTree = "<group>"; };
 		D2E3597E1A105E5500F30C32 /* ThermostatCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThermostatCell.swift; sourceTree = "<group>"; };
-		D2EA9F941DE0ADB900C4E94A /* JSON+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "JSON+Extensions.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		D2ED11361A15BC4D00B8F25B /* ArrayExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
 		D2EE377C19EB0BE900630C86 /* CurrentRelease.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CurrentRelease.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -403,6 +403,7 @@
 				D28002AE1A09B5C6005894C3 /* VeraUIExtension.swift */,
 				D2ED11361A15BC4D00B8F25B /* ArrayExtension.swift */,
 				D2A8178A1F6C9141005FBE67 /* NSObject+Extensions.swift */,
+				D299F5E61F6DC69E00C9775C /* DecodingExtensions.swift */,
 				D285144D1D85BCC400162FDE /* Vera */,
 				D232108B1A07231400353F51 /* Cells */,
 				D23210741A07230500353F51 /* ViewControllers */,
@@ -525,7 +526,6 @@
 			isa = PBXGroup;
 			children = (
 				D214B1A21F6AE48700BCB6F6 /* HTTPManagerDataRequest+Extensions.swift */,
-				D2EA9F941DE0ADB900C4E94A /* JSON+Extensions.swift */,
 				D285144F1D85BCC400162FDE /* VeraAuth.swift */,
 				D28514501D85BCC400162FDE /* VeraDevice.swift */,
 				D28514511D85BCC400162FDE /* VeraRoom.swift */,
@@ -964,7 +964,7 @@
 				D21CB85C19E1FEAF0054A7D4 /* AppDelegate.swift in Sources */,
 				D28514561D85BCC400162FDE /* VeraAuth.swift in Sources */,
 				D285145A1D85BCC400162FDE /* VeraUnit.swift in Sources */,
-				D2EA9F951DE0ADB900C4E94A /* JSON+Extensions.swift in Sources */,
+				D299F5E71F6DC69E00C9775C /* DecodingExtensions.swift in Sources */,
 				D2A2A6DD1A0FFA4800BE65EE /* OnDeviceCell.swift in Sources */,
 				D2ED11371A15BC4D00B8F25B /* ArrayExtension.swift in Sources */,
 				D214B1A31F6AE48700BCB6F6 /* HTTPManagerDataRequest+Extensions.swift in Sources */,

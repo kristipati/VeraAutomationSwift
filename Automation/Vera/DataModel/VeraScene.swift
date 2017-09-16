@@ -6,25 +6,32 @@
 //  Copyright (c) 2014 Gruby Solutions. All rights reserved.
 //
 
-import PMJSON
-
-class VeraScene: CustomStringConvertible {
-    // swiftlint:disable variable_name
-    var id: Int?
-    // swiftlint:enable variable_name
+class VeraScene: CustomStringConvertible, Decodable {
+    var id: Int? // swiftlint:disable:this variable_name
     var active: Bool?
     var state: Int?
     var name: String?
     var roomID: Int?
     var comment: String?
 
-    init(json: JSON) {
-        id = json["id"]?.int
-        active = json["active"]?.veraBoolean
-        state = json["state"]?.veraInteger
-        name = json["name"]?.string
-        roomID = json["room"]?.veraInteger
-        comment = json["comment"]?.string
+    private enum CodingKeys: String, CodingKey {
+        case id // swiftlint:disable:this variable_name
+        case active
+        case state
+        case name
+        case roomID = "room"
+        case comment
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.id = try? container.decode(Int.self, forKey: .id)
+        self.active = container.decodeAsBoolean(key: .active)
+        self.state = container.decodeAsInteger(key: .state)
+        self.roomID = container.decodeAsInteger(key: .roomID)
+        self.name = try? container.decode(String.self, forKey: .name)
+        self.comment = try? container.decode(String.self, forKey: .comment)
     }
 
     var description: String {

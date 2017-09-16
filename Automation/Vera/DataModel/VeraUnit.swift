@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import PMJSON
 
 private func < <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
@@ -20,7 +19,7 @@ private func < <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
     }
 }
 
-class VeraUnit: CustomStringConvertible {
+class VeraUnit: CustomStringConvertible, Decodable {
 
     var serialNumber: String?
     var firmwareVersion: String?
@@ -38,34 +37,56 @@ class VeraUnit: CustomStringConvertible {
     var serverDevice: String?
     var serverRelay: String?
 
-    init(json: JSON) {
-        serialNumber = json["serialNumber"]?.string
-        firmwareVersion = json["FirmwareVersion"]?.string
-        name = json["name"]?.string
-        ipAddress = json["ipAddress"]?.string
-//        users = try? json.mapArray("users", String.init(json:))
-        activeServer = json["active_server"]?.string
-        rooms = try? json.mapArray("rooms", VeraRoom.init(json:))
-        fullload = json["full"]?.veraBoolean
-        devices = try? json.mapArray("devices", VeraDevice.init(json:))
-        scenes = try? json.mapArray("scenes", VeraScene.init(json:))
-        loadtime = json["loadtime"]?.int ?? 0
-        dataversion = json["dataversion"]?.int ?? 0
+    private enum CodingKeys: String, CodingKey {
+        case serialNumber
+        case firmwareVersion = "FirmwareVersion"
+        case name
+        case ipAddress
+        case externalIPAddress = "ExternalIP"
+        case users
+        case activeServer = "active_server"
+        case loadtime
+        case dataversion
+        case fullload = "full"
+        case rooms
+        case devices
+        case scenes
+        case serverDevice = "Server_Device"
+        case serverRelay = "Server_Relay"
+        case pkDevice = "PK_Device"
+        case internalIP = "InternalIP"
+    }
 
-        if serialNumber == nil {
-            serialNumber = json["PK_Device"]?.string
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.serialNumber = try? container.decode(String.self, forKey: .serialNumber)
+        self.firmwareVersion = try? container.decode(String.self, forKey: .firmwareVersion)
+        self.name = try? container.decode(String.self, forKey: .name)
+        self.ipAddress = try? container.decode(String.self, forKey: .ipAddress)
+        self.activeServer = try? container.decode(String.self, forKey: .activeServer)
+        self.fullload = container.decodeAsBoolean(key: .fullload)
+        self.loadtime = (try? container.decode(Int.self, forKey: .loadtime)) ?? 0
+        self.dataversion = (try? container.decode(Int.self, forKey: .dataversion)) ?? 0
+
+        self.externalIPAddress = try? container.decode(String.self, forKey: .externalIPAddress)
+        self.serverRelay = try? container.decode(String.self, forKey: .serverRelay)
+        self.serverDevice = try? container.decode(String.self, forKey: .serverDevice)
+
+        if self.serialNumber == nil {
+            self.serialNumber = try? container.decode(String.self, forKey: .pkDevice)
         }
 
-        if ipAddress == nil {
-            ipAddress = json["InternalIP"]?.string
+        if self.ipAddress == nil {
+            self.ipAddress = try? container.decode(String.self, forKey: .internalIP)
         }
 
-        externalIPAddress = json["ExternalIP"]?.string
-        serverDevice = json["Server_Device"]?.string
-        serverRelay = json["Server_Relay"]?.string
-}
+        self.rooms = try? container.decode([VeraRoom].self, forKey: .rooms)
+        self.devices = try? container.decode([VeraDevice].self, forKey: .devices)
+        self.scenes = try? container.decode([VeraScene].self, forKey: .scenes)
+    }
 
-    var description: String {
+   var description: String {
         var desc: String = "Name: "
         if name != nil {
             desc += name!

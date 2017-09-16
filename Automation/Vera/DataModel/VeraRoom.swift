@@ -6,17 +6,20 @@
 //  Copyright (c) 2014 Gruby Solutions. All rights reserved.
 //
 
-import PMJSON
-
-struct VeraRoom: CustomStringConvertible, Hashable {
+struct VeraRoom: CustomStringConvertible, Hashable, Decodable {
     var name: String?
-    // swiftlint:disable variable_name
-    var id: Int?
-    // swiftlint:enable variable_name
+    var id: Int? // swiftlint:disable:this variable_name
 
-    init(json: JSON) {
-        id = json["id"]?.int
-        name = json["name"]?.string
+    private enum CodingKeys: String, CodingKey {
+        case name
+        case id // swiftlint:disable:this variable_name
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.id = try? container.decode(Int.self, forKey: .id)
+        self.name = try? container.decode(String.self, forKey: .name)
     }
 
     static func == (lhs: VeraRoom, rhs: VeraRoom) -> Bool {

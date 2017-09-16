@@ -196,14 +196,12 @@ class VeraAPI {
                         let req = HTTP.request(GET: requestString)
                         req?.__objc_setValue(token!, forHeaderField: "MMSSession")
 
-                        req?.parseAsJSON().performRequest(withCompletionQueue: .main) { (_, result) in
+                        req?.parseAsDecodable(type: VeraUser.self).performRequest(withCompletionQueue: .main) { (_, result) in
 
                                 switch result {
-                                case let .success(_, json):
-                                    self.log.info("Response for locator: \(json)")
-                                    if json != nil {
-                                        self.user = VeraUser(json: json)
-                                    }
+                                case let .success(_, user):
+                                    self.log.info("Response for locator: \(user)")
+                                    self.user = user
 
                                     // Grab the device info
 
@@ -216,11 +214,10 @@ class VeraAPI {
                                                     let req = HTTP.request(GET: requestString)
                                                     req?.__objc_setValue(token!, forHeaderField: "MMSSession")
 
-                                                    req?.parseAsJSON().performRequest(withCompletionQueue: .main) { (_, result) in
+                                                    req?.parseAsDecodable(type: VeraUnit.self).performRequest(withCompletionQueue: .main) { (_, result) in
                                                             switch result {
-                                                                case let .success(response, json):
-                                                                    self.log.debug("Success: \(response) data: \(json)")
-                                                                        let tempUnit = VeraUnit(json: json)
+                                                                case let .success(response, tempUnit):
+                                                                    self.log.debug("Success: \(response) data: \(unit)")
                                                                         unit.ipAddress = tempUnit.ipAddress
                                                                         unit.externalIPAddress = tempUnit.externalIPAddress
                                                                         unit.serverRelay = tempUnit.serverRelay
@@ -295,13 +292,13 @@ class VeraAPI {
         let requestString = "https://sta\(server).mios.com/locator_json.php?username=\(self.username!)"
         log.info("Request: \(requestString)")
 
-        HTTP.request(GET: requestString).parseAsJSON().performRequest(withCompletionQueue: .main) { (_, result) in
+        HTTP.request(GET: requestString).parseAsDecodable(type: VeraUser.self).performRequest(withCompletionQueue: .main) { (_, result) in
             self.log.debug("Got a result")
             switch result {
-            case let .success(response, json):
+            case let .success(response, user):
                 self.log.info("Response: \(response)")
-                self.log.info("ResponseString: \(json)")
-                self.user = VeraUser(json: json)
+                self.log.info("ResponseString: \(user)")
+                self.user = user
                 if let units = self.user?.units {
                     for unit in units {
                         self.log.info("Unit: \(unit)")
@@ -428,12 +425,11 @@ class VeraAPI {
                     }
                 }
 
-                req?.parseAsJSON().performRequest(withCompletionQueue: .main) { (_, result) in
+                req?.parseAsDecodable(type: VeraUnit.self).performRequest(withCompletionQueue: .main) { (_, result) in
                     self.log.debug("Got a result")
                     switch result {
-                    case let .success(response, json):
-                        self.log.debug("Success: \(response) data: \(json)")
-                        let newUnit = VeraUnit(json: json)
+                    case let .success(response, newUnit):
+                        self.log.debug("Success: \(response) data: \(newUnit)")
                         var fullload = false
                         unit.dataversion = newUnit.dataversion
                         unit.loadtime = newUnit.loadtime

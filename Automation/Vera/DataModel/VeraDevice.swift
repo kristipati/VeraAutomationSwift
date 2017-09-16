@@ -6,9 +6,7 @@
 //  Copyright (c) 2014 Gruby Solutions. All rights reserved.
 //
 
-import PMJSON
-
-class VeraDevice: CustomStringConvertible {
+class VeraDevice: CustomStringConvertible, Decodable {
     enum HVACMode {
         case off
         case heat
@@ -87,9 +85,7 @@ class VeraDevice: CustomStringConvertible {
         }
     }
 
-    // swiftlint:disable variable_name
-    var id: Int?
-    // swiftlint:enable variable_name
+    var id: Int? // swiftlint:disable:this variable_name
     var parentID: Int?
     var category: Category?
     var subcategory: Int?
@@ -107,9 +103,7 @@ class VeraDevice: CustomStringConvertible {
     var tripped: Bool?
     var lastTripped: String?
     var level: Int?
-    // swiftlint:disable variable_name
-    var ip: String?
-    // swiftlint:enable variable_name
+    var ip: String? // swiftlint:disable:this variable_name
     var vendorStatusCode: String?
     var vendorStatusData: String?
     var vendorStatus: String?
@@ -129,53 +123,98 @@ class VeraDevice: CustomStringConvertible {
     var hvacState: String?
     var altID: Int?
 
-    init(json: JSON) {
-        id = json["id"]?.veraInteger
-        parentID = json["parent"]?.veraInteger
-        subcategory = json["subcategory"]?.veraInteger
-        status = json["status"]?.veraInteger
-        state = json["state"]?.veraInteger
-        name = json["name"]?.string
-        comment = json["comment"]?.string
-        roomID = json["room"]?.veraInteger
-        armed = json["armed"]?.veraBoolean
-        temperature = json["temperature"]?.veraDouble
-        humidity = json["humidity"]?.veraInteger
-        batteryLevel = json["batterylevel"]?.veraInteger
-        pinCodes = json["pincodes"]?.string
-        tripped = json["tripped"]?.veraBoolean
-        lastTripped = json["lasttrip"]?.string
-        level = json["level"]?.veraInteger
-        ip = json["ip"]?.string
-        vendorStatusCode = json["vendorstatuscode"]?.string
-        vendorStatusData = json["vendorstatusdata"]?.string
-        vendorStatus = json["vendorstatus"]?.string
-        memoryUsed = json["memoryUsed"]?.string
-        memoryFree = json["memoryFree"]?.string
-        memoryAvailable = json["memoryAvailable"]?.string
-        objectStatusMap = json["objectstatusmap"]?.string
-        systemVeraRestart = json["systemVeraRestart"]?.string
-        systemLuupRestart = json["systemLuupRestart"]?.string
-        heatTemperatureSetPoint = json["heatsp"]?.veraDouble
-        coolTemperatureSetPoint = json["coolsp"]?.veraDouble
+    private enum CodingKeys: String, CodingKey {
+        case id // swiftlint:disable:this variable_name
+        case parentID = "parent"
+        case subcategory
+        case status
+        case state
+        case name
+        case comment
+        case roomID = "room"
+        case armed
+        case temperature
+        case humidity
+        case batteryLevel
+        case pinCodes = "pincodes"
+        case tripped
+        case lastTripped = "lasttrip"
+        case level
+        case ip // swiftlint:disable:this variable_name
+        case vendorStatusCode = "vendorstatuscode"
+        case vendorStatusData = "vendorstatusdata"
+        case vendorStatus = "vendorstatus"
+        case memoryUsed
+        case memoryFree
+        case memoryAvailable
+        case objectStatusMap = "objectstatusmap"
+        case systemVeraRestart
+        case systemLuupRestart
+        case heatTemperatureSetPoint = "heatsp"
+        case coolTemperatureSetPoint = "coolsp"
+        case locked
+        case conditionSatisfied = "conditionsatisfied"
+        case detailedArmMode = "detailedarmmode"
+        case armMode = "armmode"
+        case hvacState = "hvacstate"
+        case altID = "altid"
+        case heat
+        case cool
+        case category
+        case mode
+        case fanmode
+    }
 
-        if let heat = json["heat"]?.veraDouble {
-            heatTemperatureSetPoint = heat
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.id = container.decodeAsInteger(key: .id)
+        self.parentID = container.decodeAsInteger(key: .parentID)
+        self.subcategory = container.decodeAsInteger(key: .subcategory)
+        self.status = container.decodeAsInteger(key: .status)
+        self.state = container.decodeAsInteger(key: .state)
+        self.name = try? container.decode(String.self, forKey: .name)
+        self.comment = try? container.decode(String.self, forKey: .comment)
+        self.roomID = container.decodeAsInteger(key: .roomID)
+        self.armed = container.decodeAsBoolean(key: .armed)
+        self.temperature = container.decodeAsDouble(key: .temperature)
+        self.humidity = container.decodeAsInteger(key: .humidity)
+        self.batteryLevel = container.decodeAsInteger(key: .batteryLevel)
+        self.pinCodes = try? container.decode(String.self, forKey: .pinCodes)
+        self.tripped = container.decodeAsBoolean(key: .tripped)
+        self.lastTripped = try? container.decode(String.self, forKey: .lastTripped)
+        self.level = container.decodeAsInteger(key: .level)
+        self.ip = try? container.decode(String.self, forKey: .ip)
+        self.vendorStatusCode = try? container.decode(String.self, forKey: .vendorStatusCode)
+        self.vendorStatusData = try? container.decode(String.self, forKey: .vendorStatusData)
+        self.vendorStatus = try? container.decode(String.self, forKey: .vendorStatus)
+        self.memoryUsed = try? container.decode(String.self, forKey: .memoryUsed)
+        self.memoryFree = try? container.decode(String.self, forKey: .memoryFree)
+        self.memoryAvailable = try? container.decode(String.self, forKey: .memoryAvailable)
+        self.objectStatusMap = try? container.decode(String.self, forKey: .objectStatusMap)
+        self.memoryAvailable = try? container.decode(String.self, forKey: .memoryAvailable)
+        self.systemVeraRestart = try? container.decode(String.self, forKey: .systemVeraRestart)
+        self.systemLuupRestart = try? container.decode(String.self, forKey: .systemLuupRestart)
+        self.heatTemperatureSetPoint = container.decodeAsDouble(key: .heatTemperatureSetPoint)
+        self.coolTemperatureSetPoint = container.decodeAsDouble(key: .coolTemperatureSetPoint)
+
+        if let heat = container.decodeAsDouble(key: .heat) {
+            self.heatTemperatureSetPoint = heat
         }
 
-        if let cool = json["cool"]?.veraDouble {
-            coolTemperatureSetPoint = cool
+        if let cool = container.decodeAsDouble(key: .cool) {
+            self.coolTemperatureSetPoint = cool
         }
 
-        locked = json["locked"]?.veraBoolean
+        self.locked = container.decodeAsBoolean(key: .locked)
+        self.conditionSatisfied = try? container.decode(String.self, forKey: .conditionSatisfied)
+        self.detailedArmMode = try? container.decode(String.self, forKey: .detailedArmMode)
+        self.armMode = try? container.decode(String.self, forKey: .armMode)
+        self.hvacState = try? container.decode(String.self, forKey: .hvacState)
+        self.detailedArmMode = try? container.decode(String.self, forKey: .detailedArmMode)
+        self.altID = container.decodeAsInteger(key: .altID)
 
-        conditionSatisfied = json["conditionsatisfied"]?.string
-        detailedArmMode = json["detailedarmmode"]?.string
-        armMode = json["armmode"]?.string
-        hvacState = json["hvacstate"]?.string
-        altID = json["altid"]?.veraInteger
-
-        if let tempCategory = json["category"]?.veraInteger {
+        if let tempCategory = container.decodeAsInteger(key: .category) {
             category = Category(rawValue: tempCategory)
 
             if tempCategory == 0 {
@@ -187,27 +226,27 @@ class VeraDevice: CustomStringConvertible {
             }
         }
 
-        if let mode = json["mode"]?.string {
+        if let mode = try? container.decode(String.self, forKey: .mode) {
             switch mode.lowercased() {
-                case "off":
-                    hvacMode = .off
-                case "heaton":
-                    hvacMode = .heat
-                case "coolon":
-                    hvacMode = .cool
-                case "autochangeover":
-                    hvacMode = .auto
-                default:
-                    hvacMode = nil
+            case "off":
+                hvacMode = .off
+            case "heaton":
+                hvacMode = .heat
+            case "coolon":
+                hvacMode = .cool
+            case "autochangeover":
+                hvacMode = .auto
+            default:
+                hvacMode = nil
             }
         }
 
-        if let mode = json["fanmode"]?.string {
+        if let mode = try? container.decode(String.self, forKey: .mode) {
             switch mode.lowercased() {
-                case "auto":
-                    fanMode = .auto
-                default:
-                    fanMode = .on
+            case "auto":
+                fanMode = .auto
+            default:
+                fanMode = .on
             }
         }
     }
