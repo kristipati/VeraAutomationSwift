@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum RoomType {
+enum RoomType: String {
     //swiftlint:disable identifier_name
     case switches, audio, scenes, locks, climate, on
     //swiftlint:enable identifier_name

@@ -435,7 +435,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             for index in 0..<newViewControllerArray!.count {
                 let viewController = newViewControllerArray![index]
                 let baseViewController = viewController.getBaseViewController()
-                if let devicesController = baseViewController as? DevicesViewController, devicesController.roomType == .audio {
+                if let devicesController = baseViewController as? RoomsTableViewController, devicesController.roomType == .audio {
                     indexToRemove = index
                     break
                 }
@@ -447,7 +447,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             } else if indexToRemove == nil && show == true {
                 for viewController in initialTabViewControllers {
                     let baseViewController = viewController.getBaseViewController()
-                    if let devicesController = baseViewController as? DevicesViewController, devicesController.roomType == .audio {
+                    if let devicesController = baseViewController as? RoomsTableViewController, devicesController.roomType == .audio {
                         newViewControllerArray?.append(viewController)
                         tabbarController.viewControllers = newViewControllerArray
                         tabbarController.moreNavigationController.view.setNeedsDisplay()
@@ -546,6 +546,11 @@ extension UIViewController {
 
     func getBaseViewControllerName() -> String {
         let baseViewController = getBaseViewController()
+        if let rooms = baseViewController as? RoomsTableViewController {
+            return rooms.roomType.rawValue
+        } else if let devices = baseViewController as? DevicesViewController {
+            return devices.roomType.rawValue
+        }
         return String(describing: type(of: baseViewController))
     }
 }
