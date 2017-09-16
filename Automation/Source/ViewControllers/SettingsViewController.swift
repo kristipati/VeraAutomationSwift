@@ -14,7 +14,15 @@ class SettingsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+        tableView.register(UINib(nibName: SettingsTableViewCell.className(), bundle: nil), forCellReuseIdentifier: SettingsTableViewCell.className())
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 100
+        tableView.tableFooterView = UIView(frame: .zero)
+        
+        edgesForExtendedLayout = []
+        extendedLayoutIncludesOpaqueBars = false
+        tabBarController?.tabBar.isTranslucent = false
+        navigationController?.navigationBar.isTranslucent = false
     }
 
     // MARK: - Table view data source
@@ -36,7 +44,19 @@ class SettingsViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 1 {
+        if indexPath.section == 0 {
+            if indexPath.row == 0 {
+                let vc = ExcludedItemsViewController()
+                vc.title = NSLocalizedString("EXCLUDED_DEVICES_TITLE", comment: "")
+                vc.showScenes = false
+                navigationController?.pushViewController(vc, animated: true)
+            } else if indexPath.row == 1 {
+                let vc = ExcludedItemsViewController()
+                vc.title = NSLocalizedString("EXCLUDED_SCENES_TITLE", comment: "")
+                vc.showScenes = true
+                navigationController?.pushViewController(vc, animated: true)
+            }
+        } else if indexPath.section == 1 {
             AppDelegate.appDelegate().logout()
         }
     }
@@ -44,41 +64,37 @@ class SettingsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
             case 0:
+                let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.className(), for: indexPath)
+                cell.accessoryType = .disclosureIndicator
+                cell.selectionStyle = .default
                 switch indexPath.row {
-                case 0:
-                    let cell = tableView.dequeueReusableCell(withIdentifier: "ExcludedDevicesCellIdentifier", for: indexPath)
-                    cell.textLabel!.text = NSLocalizedString("EXCLUDED_DEVICES_TITLE", comment: "")
-                    cell.accessoryView = nil
-                    cell.accessoryType = .disclosureIndicator
-                    cell.selectionStyle = .default
-                    return cell
+                    case 0:
+                        cell.textLabel!.text = NSLocalizedString("EXCLUDED_DEVICES_TITLE", comment: "")
+                        cell.accessoryView = nil
 
-                case 1:
-                    let cell = tableView.dequeueReusableCell(withIdentifier: "ExcludedScenesCellIdentifier", for: indexPath)
-                    cell.textLabel!.text = NSLocalizedString("EXCLUDED_SCENES_TITLE", comment: "")
-                    cell.accessoryView = nil
-                    cell.accessoryType = .disclosureIndicator
-                    cell.selectionStyle = .default
-                    return cell
+                    case 1:
+                        cell.textLabel!.text = NSLocalizedString("EXCLUDED_SCENES_TITLE", comment: "")
+                        cell.accessoryView = nil
 
-                case 2:
-                    let cell = tableView.dequeueReusableCell(withIdentifier: "ToggleCellIdentifier", for: indexPath)
-                    cell.accessoryType = .none
-                    cell.accessoryView = audioSwitch
-                    audioSwitch.isOn = UserDefaults.standard.bool(forKey: kShowAudioTabDefault)
-                    audioSwitch.addTarget(self, action: #selector(SettingsViewController.audioTabChanged), for: .valueChanged)
-                    cell.textLabel!.text = NSLocalizedString("SHOW_AUDIO_TAB", comment: "")
-                    cell.selectionStyle = .none
-                    return cell
+                    case 2:
+                        cell.accessoryType = .none
+                        cell.accessoryView = audioSwitch
+                        audioSwitch.isOn = UserDefaults.standard.bool(forKey: kShowAudioTabDefault)
+                        audioSwitch.addTarget(self, action: #selector(SettingsViewController.audioTabChanged), for: .valueChanged)
+                        cell.textLabel!.text = NSLocalizedString("SHOW_AUDIO_TAB", comment: "")
+                        cell.selectionStyle = .none
+                        return cell
 
-                default:
-                    return UITableViewCell()
-            }
+                    default:
+                        return UITableViewCell()
+                }
+
+                return cell
 
         case 1:
             switch indexPath.row {
             case 0:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "LogoutCellIdentifier", for: indexPath)
+                let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.className(), for: indexPath)
                 cell.textLabel!.text = NSLocalizedString("LOGOUT_LABEL", comment: "")
                 cell.accessoryView = nil
                 cell.accessoryType = .none
@@ -99,28 +115,4 @@ class SettingsViewController: UITableViewController {
         UserDefaults.standard.synchronize()
         AppDelegate.appDelegate().showHideAudioTab()
     }
-
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-        if let destVC = segue.destination as? ExcludedItemsViewController {
-            if let identifier = segue.identifier {
-                switch identifier {
-                    case "ExcludedScenesSegue":
-                        destVC.title = NSLocalizedString("EXCLUDED_SCENES_TITLE", comment: "")
-                        destVC.showScenes = true
-                    case "ExcludedDevicesSegue":
-                        destVC.title = NSLocalizedString("EXCLUDED_DEVICES_TITLE", comment: "")
-                        destVC.showScenes = false
-                    default:
-                        destVC.title = ""
-                }
-            }
-
-        }
-    }
-
 }

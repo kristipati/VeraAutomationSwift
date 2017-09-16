@@ -13,7 +13,6 @@
 		D21CB85A19E1FEAF0054A7D4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D21CB85219E1FEAF0054A7D4 /* Images.xcassets */; };
 		D21CB85C19E1FEAF0054A7D4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21CB85519E1FEAF0054A7D4 /* AppDelegate.swift */; };
 		D21CB86219E1FF970054A7D4 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D21CB86119E1FF970054A7D4 /* Settings.bundle */; };
-		D21CB87B19E20BF60054A7D4 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D21CB87919E20BF60054A7D4 /* Settings.storyboard */; };
 		D21CB88219E20CDB0054A7D4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D21CB88019E20CDB0054A7D4 /* Localizable.strings */; };
 		D23210831A07230500353F51 /* ExcludedItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23210781A07230500353F51 /* ExcludedItemsViewController.swift */; };
 		D23210881A07230500353F51 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D232107D1A07230500353F51 /* SettingsViewController.swift */; };
@@ -37,6 +36,10 @@
 		D285145C1D85BCC400162FDE /* VeraAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28514551D85BCC400162FDE /* VeraAPI.swift */; };
 		D28514931D85BDCA00162FDE /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D28514921D85BDCA00162FDE /* Reachability.m */; };
 		D28590921F6CCB9F00CEB728 /* OnDeviceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D28590901F6CCB9F00CEB728 /* OnDeviceCell.xib */; };
+		D28590961F6CD79700CEB728 /* SettingsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D28590941F6CD79700CEB728 /* SettingsTableViewCell.xib */; };
+		D28590981F6CD7CB00CEB728 /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28590971F6CD7CB00CEB728 /* SettingsTableViewCell.swift */; };
+		D285909D1F6CD82300CEB728 /* ExcludedItemsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D285909B1F6CD82300CEB728 /* ExcludedItemsViewController.xib */; };
+		D28590A21F6CD85200CEB728 /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D28590A01F6CD85200CEB728 /* SettingsViewController.xib */; };
 		D2A2A6DD1A0FFA4800BE65EE /* OnDeviceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */; };
 		D2A2A6DF1A101AF500BE65EE /* AudioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */; };
 		D2A7F0C41ECA546400D399E5 /* OnePasswordExtension.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D2A7F0C11ECA544E00D399E5 /* OnePasswordExtension.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -306,7 +309,6 @@
 		D21CB85519E1FEAF0054A7D4 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D21CB85F19E1FF0E0054A7D4 /* Defines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Defines.h; path = Automation/Defines.h; sourceTree = "<group>"; };
 		D21CB86119E1FF970054A7D4 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
-		D21CB87A19E20BF60054A7D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Settings.storyboard; sourceTree = "<group>"; };
 		D21CB88119E20CDB0054A7D4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D23210781A07230500353F51 /* ExcludedItemsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ExcludedItemsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		D232107D1A07230500353F51 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SettingsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -331,6 +333,10 @@
 		D28514911D85BDCA00162FDE /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		D28514921D85BDCA00162FDE /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = Reachability.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		D28590901F6CCB9F00CEB728 /* OnDeviceCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OnDeviceCell.xib; sourceTree = "<group>"; };
+		D28590941F6CD79700CEB728 /* SettingsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingsTableViewCell.xib; sourceTree = "<group>"; };
+		D28590971F6CD7CB00CEB728 /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
+		D285909C1F6CD82300CEB728 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ExcludedItemsViewController.xib; sourceTree = "<group>"; };
+		D28590A11F6CD85200CEB728 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SettingsViewController.xib; sourceTree = "<group>"; };
 		D29867E81A15B628000E99E7 /* ReleaseNotes.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReleaseNotes.txt; sourceTree = "<group>"; };
 		D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnDeviceCell.swift; sourceTree = "<group>"; };
 		D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioCell.swift; sourceTree = "<group>"; };
@@ -380,11 +386,12 @@
 				D21CB85219E1FEAF0054A7D4 /* Images.xcassets */,
 				D2D3DE3A1F6C8B17000D9025 /* Cells */,
 				D2A8179C1F6C9887005FBE67 /* DevicesViewController.xib */,
+				D285909B1F6CD82300CEB728 /* ExcludedItemsViewController.xib */,
 				D21CB84E19E1FEAF0054A7D4 /* LaunchScreen.xib */,
-				D2D3DE211F6C8ABA000D9025 /* RoomsTableViewController.xib */,
 				D21CB88019E20CDB0054A7D4 /* Localizable.strings */,
 				D21CB85019E1FEAF0054A7D4 /* Main.storyboard */,
-				D243AEE81F6CA69F003C8383 /* To Fix */,
+				D2D3DE211F6C8ABA000D9025 /* RoomsTableViewController.xib */,
+				D28590A01F6CD85200CEB728 /* SettingsViewController.xib */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -425,16 +432,9 @@
 				D2D3DE3F1F6C8B3F000D9025 /* RoomTableViewCell.swift */,
 				D27772181A0DCAF400F33568 /* SceneCell.swift */,
 				D2E3597E1A105E5500F30C32 /* ThermostatCell.swift */,
+				D28590971F6CD7CB00CEB728 /* SettingsTableViewCell.swift */,
 			);
 			path = Cells;
-			sourceTree = "<group>";
-		};
-		D243AEE81F6CA69F003C8383 /* To Fix */ = {
-			isa = PBXGroup;
-			children = (
-				D21CB87919E20BF60054A7D4 /* Settings.storyboard */,
-			);
-			path = "To Fix";
 			sourceTree = "<group>";
 		};
 		D25D95C71EE8B4A300A71B69 /* Products */ = {
@@ -600,13 +600,14 @@
 		D2D3DE3A1F6C8B17000D9025 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				D2D3DE3C1F6C8B26000D9025 /* RoomTableViewCell.xib */,
-				D2A817921F6C96C4005FBE67 /* DeviceCell.xib */,
-				D2A817A01F6C9EF1005FBE67 /* SceneCell.xib */,
 				D2A817A41F6CA29E005FBE67 /* AudioCell.xib */,
+				D2A817921F6C96C4005FBE67 /* DeviceCell.xib */,
 				D27177FC1F6CAC29004B802E /* LockCell.xib */,
-				D27178141F6CC911004B802E /* ThermostatCell.xib */,
 				D28590901F6CCB9F00CEB728 /* OnDeviceCell.xib */,
+				D2D3DE3C1F6C8B26000D9025 /* RoomTableViewCell.xib */,
+				D2A817A01F6C9EF1005FBE67 /* SceneCell.xib */,
+				D28590941F6CD79700CEB728 /* SettingsTableViewCell.xib */,
+				D27178141F6CC911004B802E /* ThermostatCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -899,10 +900,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D2A817A61F6CA29E005FBE67 /* AudioCell.xib in Resources */,
+				D28590A21F6CD85200CEB728 /* SettingsViewController.xib in Resources */,
+				D285909D1F6CD82300CEB728 /* ExcludedItemsViewController.xib in Resources */,
 				D2D3DE3E1F6C8B26000D9025 /* RoomTableViewCell.xib in Resources */,
 				D21CB88219E20CDB0054A7D4 /* Localizable.strings in Resources */,
 				D2A8179E1F6C9887005FBE67 /* DevicesViewController.xib in Resources */,
-				D21CB87B19E20BF60054A7D4 /* Settings.storyboard in Resources */,
 				D27177FE1F6CAC29004B802E /* LockCell.xib in Resources */,
 				D2D3DE231F6C8ABA000D9025 /* RoomsTableViewController.xib in Resources */,
 				D21CB86219E1FF970054A7D4 /* Settings.bundle in Resources */,
@@ -912,6 +914,7 @@
 				D21CB85A19E1FEAF0054A7D4 /* Images.xcassets in Resources */,
 				D2A817941F6C96C4005FBE67 /* DeviceCell.xib in Resources */,
 				D28590921F6CCB9F00CEB728 /* OnDeviceCell.xib in Resources */,
+				D28590961F6CD79700CEB728 /* SettingsTableViewCell.xib in Resources */,
 				D27178161F6CC911004B802E /* ThermostatCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -970,6 +973,7 @@
 				D28514931D85BDCA00162FDE /* Reachability.m in Sources */,
 				D2E3597F1A105E5500F30C32 /* ThermostatCell.swift in Sources */,
 				D27772191A0DCAF400F33568 /* SceneCell.swift in Sources */,
+				D28590981F6CD7CB00CEB728 /* SettingsTableViewCell.swift in Sources */,
 				D2E3597D1A104A0F00F30C32 /* LockCell.swift in Sources */,
 				D28514571D85BCC400162FDE /* VeraDevice.swift in Sources */,
 				D2A2A6DF1A101AF500BE65EE /* AudioCell.swift in Sources */,
@@ -1038,20 +1042,28 @@
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		D21CB87919E20BF60054A7D4 /* Settings.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D21CB87A19E20BF60054A7D4 /* Base */,
-			);
-			name = Settings.storyboard;
-			sourceTree = "<group>";
-		};
 		D21CB88019E20CDB0054A7D4 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				D21CB88119E20CDB0054A7D4 /* en */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		D285909B1F6CD82300CEB728 /* ExcludedItemsViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D285909C1F6CD82300CEB728 /* Base */,
+			);
+			name = ExcludedItemsViewController.xib;
+			sourceTree = "<group>";
+		};
+		D28590A01F6CD85200CEB728 /* SettingsViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D28590A11F6CD85200CEB728 /* Base */,
+			);
+			name = SettingsViewController.xib;
 			sourceTree = "<group>";
 		};
 		D2A8179C1F6C9887005FBE67 /* DevicesViewController.xib */ = {

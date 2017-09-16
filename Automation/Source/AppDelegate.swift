@@ -60,8 +60,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
         log.setup(level: .verbose, showThreadName: true, showLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil, fileLevel: .debug)
 
-        let settingsStoryboard = UIStoryboard(name: "Settings", bundle: nil)
-
         var viewControllers = [UIViewController]()
 
         let switchesSplitViewController = UISplitViewController()
@@ -125,12 +123,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let climateNavController = UINavigationController(rootViewController: climateViewController)
         viewControllers.append(climateNavController)
 
-        if let settingsViewController = settingsStoryboard.instantiateInitialViewController() {
-            settingsViewController.tabBarItem.image = UIImage(named: "gear")
-            settingsViewController.tabBarItem.title = NSLocalizedString("SETTINGS_TITLE", comment:"")
-            settingsViewController.getBaseViewController().title = settingsViewController.tabBarItem.title
-            viewControllers.append(settingsViewController)
-        }
+        let settingsViewController = SettingsViewController()
+        settingsViewController.tabBarItem.image = UIImage(named: "gear")
+        settingsViewController.tabBarItem.title = NSLocalizedString("SETTINGS_TITLE", comment:"")
+        settingsViewController.getBaseViewController().title = settingsViewController.tabBarItem.title
+        let settingsNavController = UINavigationController(rootViewController: settingsViewController)
+        viewControllers.append(settingsNavController)
 
         if let orderedArray = UserDefaults.standard.array(forKey: kTabOrderDefault) {
             var currentIndex = 0
@@ -187,6 +185,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         }
     }
 
+    func splitViewController(_ splitViewController: UISplitViewController, showDetail vc: UIViewController, sender: Any?) -> Bool {
+        if splitViewController.viewControllers.count == 2 {
+            if let navController = splitViewController.viewControllers.last as? UINavigationController {
+                navController.viewControllers = [vc]
+            }
+        } else if let navController = splitViewController.viewControllers.first as? UINavigationController {
+            navController.pushViewController(vc, animated: true)
+        }
+        return true
+    }
+    
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
         if let secondaryAsNavController = secondaryViewController as? UINavigationController {
             if let topAsDetailController = secondaryAsNavController.topViewController as? DevicesViewController {

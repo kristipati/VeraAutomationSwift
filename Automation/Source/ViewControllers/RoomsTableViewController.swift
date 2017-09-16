@@ -25,6 +25,8 @@ class RoomsTableViewController: UITableViewController {
             preferredContentSize = CGSize(width: 320.0, height: 600.0)
         }
 
+        navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+
         tableView.register(UINib(nibName: RoomTableViewCell.className(), bundle: nil), forCellReuseIdentifier: RoomTableViewCell.className())
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 100
@@ -142,10 +144,6 @@ class RoomsTableViewController: UITableViewController {
                 break
         }
 
-        if splitViewController != nil {
-            splitViewController?.showDetailViewController(vc, sender: self)
-        } else {
-            navigationController?.pushViewController(vc, animated: true)
-        }
+        splitViewController?.showDetailViewController(vc, sender: self)
     }
 }

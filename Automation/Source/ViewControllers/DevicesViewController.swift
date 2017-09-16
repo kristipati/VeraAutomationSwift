@@ -39,6 +39,9 @@ class DevicesViewController: UIViewController, UICollectionViewDelegate, UIColle
         collectionView.register(UINib(nibName: ThermostatCell.className(), bundle: nil), forCellWithReuseIdentifier: ThermostatCell.className())
         collectionView.register(UINib(nibName: OnDeviceCell.className(), bundle: nil), forCellWithReuseIdentifier: OnDeviceCell.className())
 
+        navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+        navigationItem.leftItemsSupplementBackButton = true
+
         if let cellLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             switch roomType {
                 case .audio:
@@ -136,6 +139,11 @@ class DevicesViewController: UIViewController, UICollectionViewDelegate, UIColle
             }
         }
         items = DeviceItems.devices(devices: newDevices)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        collectionView.reloadData()
     }
 
     @objc func unitInfoUpdated(_ notification: Notification) {

@@ -16,8 +16,15 @@ class ExcludedItemsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.estimatedRowHeight = 44
+        tableView.register(UINib(nibName: SettingsTableViewCell.className(), bundle: nil), forCellReuseIdentifier: SettingsTableViewCell.className())
         tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 100
+        tableView.tableFooterView = UIView(frame: .zero)
+        
+        edgesForExtendedLayout = []
+        extendedLayoutIncludesOpaqueBars = false
+        tabBarController?.tabBar.isTranslucent = false
+        navigationController?.navigationBar.isTranslucent = false
 
         if showScenes == true {
             if let scenes = AppDelegate.appDelegate().veraAPI.excludedScenes {
@@ -86,7 +93,7 @@ class ExcludedItemsViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "DeviceCellIdentifier", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.className(), for: indexPath)
         cell.accessoryType = .none
 
         let room = roomList[indexPath.section] as VeraRoom
