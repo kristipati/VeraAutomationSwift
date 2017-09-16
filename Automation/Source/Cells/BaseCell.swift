@@ -9,6 +9,10 @@
 import UIKit
 
 class BaseCell: UICollectionViewCell {
+    weak var delegate: DeviceCellProtocol?
+    var device: VeraDevice?
+    var scene: VeraScene?
+
     var layerAdded = false
     func setup() {
         if layerAdded == false {

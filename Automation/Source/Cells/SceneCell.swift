@@ -10,8 +10,6 @@ import UIKit
 
 class SceneCell: BaseCell {
 
-    var scene: VeraScene?
-
     @IBOutlet weak var titleLabel: UILabel!
 
     override func setup() {

@@ -18,9 +18,6 @@ class ThermostatCell: BaseCell {
     @IBOutlet weak var heatSetLabel: UILabel!
     @IBOutlet weak var coolSetLabel: UILabel!
 
-    weak var delegate: ThermostatProtocol?
-    var device: VeraDevice?
-
     override func setup() {
         super.setup()
         if let device = device {

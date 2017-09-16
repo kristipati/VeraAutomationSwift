@@ -13,26 +13,16 @@ enum DeviceItems {
     case scenes(devices: [VeraScene])
 }
 
-protocol AudioProtocol: class {
+protocol DeviceCellProtocol: class {
     func setDevicePower(_ device: VeraDevice, turnOn: Bool)
     func changeDeviceVolume(_ device: VeraDevice, increase: Bool)
     func setDeviceServer(_ device: VeraDevice, server: Int)
-}
-
-protocol SwitchProtocol: class {
     func changeDeviceLevel(_ device: VeraDevice, level: Int)
-}
-
-protocol LockProtocol: class {
     func setDeviceLocked(_ device: VeraDevice, locked: Bool)
-}
-
-protocol ThermostatProtocol: class {
     func changeHVAC(_ device: VeraDevice, fanMode: VeraDevice.FanMode?, hvacMode: VeraDevice.HVACMode?, coolTemp: Int?, heatTemp: Int?)
 }
 
-
-class DevicesViewController: UIViewController, SwitchProtocol, UICollectionViewDelegate, UICollectionViewDataSource, AudioProtocol, LockProtocol, ThermostatProtocol {
+class DevicesViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, DeviceCellProtocol {
     var room: VeraRoom?
     var items: DeviceItems?
     var roomType: RoomType = .switches
@@ -193,86 +183,27 @@ class DevicesViewController: UIViewController, SwitchProtocol, UICollectionViewD
     }
 
 
-    // swiftlint:disable cyclomatic_complexity
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        var cellReuseIdentifier = ""
+
         switch roomType {
             case .switches:
-                if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DeviceCell.className(), for: indexPath) as? DeviceCell {
-                    if let items = items {
-                        switch items {
-                            case let .devices(devices):
-                                if indexPath.row < devices.count {
-                                    let device = devices[indexPath.row]
-                                    cell.device = device
-                                    cell.delegate = self
-                                    cell.setup()
-                            }
-
-                            default:
-                                break
-                        }
-                    }
-                    return cell
-                }
-
-        case .on:
-            if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OnDeviceCell.className(), for: indexPath) as? OnDeviceCell {
-                if let items = items {
-                    switch items {
-                    case let .devices(devices):
-                        if indexPath.row < devices.count {
-                            let device = devices[indexPath.row]
-                            cell.device = device
-                            cell.setup()
-                        }
-                        
-                    default:
-                        break
-                    }
-                }
-                return cell
-            }
-
+                cellReuseIdentifier = DeviceCell.className()
+            case .on:
+                cellReuseIdentifier = OnDeviceCell.className()
             case .locks:
-                if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LockCell.className(), for: indexPath) as? LockCell {
-                    if let items = items {
-                        switch items {
-                        case let .devices(devices):
-                            if indexPath.row < devices.count {
-                                let device = devices[indexPath.row]
-                                cell.device = device
-                                cell.delegate = self
-                                cell.setup()
-                            }
-                            
-                        default:
-                            break
-                        }
-                    }
-                    return cell
-                }
-
+                cellReuseIdentifier = LockCell.className()
+            case .climate:
+                cellReuseIdentifier = ThermostatCell.className()
+            case .audio:
+                cellReuseIdentifier = AudioCell.className()
             case .scenes:
-                if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SceneCell.className(), for: indexPath) as? SceneCell {
-                    if let items = items {
-                        switch items {
-                            case let .scenes(scenes):
-                                if indexPath.row < scenes.count {
-                                    let scene = scenes[indexPath.row]
-                                    cell.scene = scene
-                                    cell.setup()
-                                }
-                            default:
-                                break
-                        }
-                    }
-                    return cell
-            }
-            
-        case .climate:
-            if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ThermostatCell.className(), for: indexPath) as? ThermostatCell {
-                if let items = items {
-                    switch items {
+                cellReuseIdentifier = SceneCell.className()
+        }
+
+        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath) as? BaseCell {
+            if let items = items {
+                switch items {
                     case let .devices(devices):
                         if indexPath.row < devices.count {
                             let device = devices[indexPath.row]
@@ -280,37 +211,20 @@ class DevicesViewController: UIViewController, SwitchProtocol, UICollectionViewD
                             cell.delegate = self
                             cell.setup()
                         }
-                        
-                    default:
-                        break
-                    }
-                }
-                return cell
-            }
-
-        case .audio:
-                if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AudioCell.className(), for: indexPath) as? AudioCell {
-                    if let items = items {
-                        switch items {
-                        case let .devices(devices):
-                            if indexPath.row < devices.count {
-                                let device = devices[indexPath.row]
-                                cell.device = device
-                                cell.delegate = self
-                                cell.setup()
-                            }
-                            
-                        default:
-                            break
+                    case let .scenes(scenes):
+                        if indexPath.row < scenes.count {
+                            let scene = scenes[indexPath.row]
+                            cell.scene = scene
+                            cell.delegate = self
+                            cell.setup()
                         }
-                    }
-                    return cell
+                }
             }
+            return cell
         }
 
         return UICollectionViewCell(frame: .zero)
     }
-    // swiftlint:enable cyclomatic_complexity
 
     // MARK: UICollectionViewDelegate
 
@@ -332,10 +246,10 @@ class DevicesViewController: UIViewController, SwitchProtocol, UICollectionViewD
                             if roomType == .on {
                                 newStatus = 0
                             }
-                            
+
                             AppDelegate.appDelegate().veraAPI.setDeviceStatusWithNotification(device, newDeviceStatus: newStatus, newDeviceLevel: nil)
                         }
-                        
+
                     default:
                         break
                     }
@@ -352,7 +266,6 @@ class DevicesViewController: UIViewController, SwitchProtocol, UICollectionViewD
                         default:
                             break
                         }
-                    
             }
             default:
                 break
@@ -366,11 +279,11 @@ class DevicesViewController: UIViewController, SwitchProtocol, UICollectionViewD
     func setDevicePower(_ device: VeraDevice, turnOn: Bool) {
         AppDelegate.appDelegate().veraAPI.setAudioPowerWithNotification(device, on:turnOn)
     }
-    
+
     func changeDeviceVolume(_ device: VeraDevice, increase: Bool) {
         AppDelegate.appDelegate().veraAPI.changeAudioVolumeWithNotification(device, increase:increase)
     }
-    
+
     func setDeviceServer(_ device: VeraDevice, server: Int) {
         AppDelegate.appDelegate().veraAPI.setAudioInputWithNotification(device, input:server)
     }

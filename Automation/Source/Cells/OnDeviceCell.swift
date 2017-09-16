@@ -11,7 +11,6 @@ import UIKit
 class OnDeviceCell: BaseCell {
 
     @IBOutlet weak var titleLabel: UILabel!
-    var device: VeraDevice?
 
     override func setup() {
         super.setup()

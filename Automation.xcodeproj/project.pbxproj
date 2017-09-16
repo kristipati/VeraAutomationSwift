@@ -15,7 +15,6 @@
 		D21CB86219E1FF970054A7D4 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D21CB86119E1FF970054A7D4 /* Settings.bundle */; };
 		D21CB87B19E20BF60054A7D4 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D21CB87919E20BF60054A7D4 /* Settings.storyboard */; };
 		D21CB88219E20CDB0054A7D4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D21CB88019E20CDB0054A7D4 /* Localizable.strings */; };
-		D23210821A07230500353F51 /* ClimateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23210771A07230500353F51 /* ClimateViewController.swift */; };
 		D23210831A07230500353F51 /* ExcludedItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23210781A07230500353F51 /* ExcludedItemsViewController.swift */; };
 		D23210881A07230500353F51 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D232107D1A07230500353F51 /* SettingsViewController.swift */; };
 		D232108A1A07230500353F51 /* DevicesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D232107F1A07230500353F51 /* DevicesViewController.swift */; };
@@ -309,7 +308,6 @@
 		D21CB86119E1FF970054A7D4 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		D21CB87A19E20BF60054A7D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Settings.storyboard; sourceTree = "<group>"; };
 		D21CB88119E20CDB0054A7D4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		D23210771A07230500353F51 /* ClimateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ClimateViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		D23210781A07230500353F51 /* ExcludedItemsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ExcludedItemsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		D232107D1A07230500353F51 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SettingsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		D232107F1A07230500353F51 /* DevicesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DevicesViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -409,7 +407,6 @@
 			isa = PBXGroup;
 			children = (
 				D2D3DE381F6C8AD7000D9025 /* RoomsTableViewController.swift */,
-				D23210771A07230500353F51 /* ClimateViewController.swift */,
 				D23210781A07230500353F51 /* ExcludedItemsViewController.swift */,
 				D232107D1A07230500353F51 /* SettingsViewController.swift */,
 				D232107F1A07230500353F51 /* DevicesViewController.swift */,
@@ -965,7 +962,6 @@
 				D28514561D85BCC400162FDE /* VeraAuth.swift in Sources */,
 				D285145A1D85BCC400162FDE /* VeraUnit.swift in Sources */,
 				D2EA9F951DE0ADB900C4E94A /* JSON+Extensions.swift in Sources */,
-				D23210821A07230500353F51 /* ClimateViewController.swift in Sources */,
 				D2A2A6DD1A0FFA4800BE65EE /* OnDeviceCell.swift in Sources */,
 				D2ED11371A15BC4D00B8F25B /* ArrayExtension.swift in Sources */,
 				D214B1A31F6AE48700BCB6F6 /* HTTPManagerDataRequest+Extensions.swift in Sources */,
