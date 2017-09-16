@@ -45,7 +45,7 @@ if let inputStream = InputStream(fileAtPath: infoPlist) {
 try? FileManager.default.createDirectory(atPath: exportPath, withIntermediateDirectories: true, attributes: nil)
 
 print("\(arguments)")
-var dict: = [String: Any]()
+var dict = [String: Any]()
 dict["compileBitcode"] = false
 if let bundleIdentifier = bundleIdentifier {
 	dict["provisioningProfiles"] = [bundleIdentifier: provisioningProfileName]
