@@ -53,15 +53,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         veraAPI.excludedScenes = UserDefaults.standard.array(forKey: kExcludedScenes) as? [Int]
 
         // swiftlint:disable force_cast
+        window?.rootViewController = UITabBarController()
         let tabbarController = window!.rootViewController as! UITabBarController
         // swiftlint:enable force_cast
         tabbarController.delegate = self
 
         log.setup(level: .verbose, showThreadName: true, showLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil, fileLevel: .debug)
 
-        let switchesStoryboard = UIStoryboard(name: "Switches", bundle: nil)
-        let audioStoryboard = UIStoryboard(name: "Audio", bundle: nil)
-        let scenesStoryboard = UIStoryboard(name: "Scenes", bundle: nil)
         let onStoryboard = UIStoryboard(name: "On", bundle: nil)
         let locksStoryboard = UIStoryboard(name: "Locks", bundle: nil)
         let climateStoryboard = UIStoryboard(name: "Climate", bundle: nil)
@@ -69,19 +67,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
         var viewControllers = [UIViewController]()
 
-        // swiftlint:disable force_cast
-        let switchesSplitViewController = switchesStoryboard.instantiateInitialViewController() as! UISplitViewController
-        // swiftlint:enable force_cast
-       switchesSplitViewController.tabBarItem.image = UIImage(named: "lightbulb")
+        let switchesSplitViewController = UISplitViewController()
+        let navController = UINavigationController(rootViewController: RoomsTableViewController())
+        let detailNavController = UINavigationController(rootViewController: DevicesViewController())
+        switchesSplitViewController.viewControllers = [navController, detailNavController]
+        switchesSplitViewController.tabBarItem.image = UIImage(named: "lightbulb")
         switchesSplitViewController.tabBarItem.title = NSLocalizedString("SWITCHES_TITLE", comment:"")
         switchesSplitViewController.delegate = self
         switchesSplitViewController.preferredDisplayMode = .allVisible
         switchesSplitViewController.getBaseViewController().title = switchesSplitViewController.tabBarItem.title
         viewControllers.append(switchesSplitViewController)
 
-        // swiftlint:disable force_cast
-        let audioSplitViewController = audioStoryboard.instantiateInitialViewController() as! UISplitViewController
-        // swiftlint:enable force_cast
+        let audioSplitViewController = UISplitViewController()
+        let audioViewController = RoomsTableViewController()
+        audioViewController.roomType = .audio
+        let detailAudioNavController = UINavigationController(rootViewController: DevicesViewController())
+        let audioNavController = UINavigationController(rootViewController: audioViewController)
+        audioSplitViewController.viewControllers = [audioNavController, detailAudioNavController]
         audioSplitViewController.tabBarItem.image = UIImage(named: "radio")
         audioSplitViewController.tabBarItem.title = NSLocalizedString("AUDIO_TITLE", comment:"")
         audioSplitViewController.delegate = self
@@ -89,9 +91,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         audioSplitViewController.getBaseViewController().title = audioSplitViewController.tabBarItem.title
         viewControllers.append(audioSplitViewController)
 
-        // swiftlint:disable force_cast
-        let scenesSplitViewController = scenesStoryboard.instantiateInitialViewController() as! UISplitViewController
-        // swiftlint:enable force_cast
+        let scenesSplitViewController = UISplitViewController()
+        let sceneViewController = RoomsTableViewController()
+        sceneViewController.roomType = .scenes
+        let detailSceneNavController = UINavigationController(rootViewController: DevicesViewController())
+        let sceneNavController = UINavigationController(rootViewController: sceneViewController)
+        scenesSplitViewController.viewControllers = [sceneNavController, detailSceneNavController]
         scenesSplitViewController.tabBarItem.image = UIImage(named: "scene")
         scenesSplitViewController.tabBarItem.title = NSLocalizedString("SCENES_TITLE", comment:"")
         scenesSplitViewController.delegate = self
@@ -184,17 +189,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
         if let secondaryAsNavController = secondaryViewController as? UINavigationController {
-            if let topAsDetailController = secondaryAsNavController.topViewController as? SwitchesViewController {
-                if topAsDetailController.room == nil {
-                    // Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
-                    return true
-                }
-            } else if let topAsDetailController = secondaryAsNavController.topViewController as? ScenesViewController {
-                if topAsDetailController.room == nil {
-                    // Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
-                    return true
-                }
-            } else if let topAsDetailController = secondaryAsNavController.topViewController as? AudioViewController {
+            if let topAsDetailController = secondaryAsNavController.topViewController as? DevicesViewController {
                 if topAsDetailController.room == nil {
                     // Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
                     return true
@@ -430,7 +425,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             var indexToRemove: Int?
             for index in 0..<newViewControllerArray!.count {
                 let viewController = newViewControllerArray![index]
-                if viewController.getBaseViewController().isKind(of: AudioListViewController.self) {
+                let baseViewController = viewController.getBaseViewController()
+                if let devicesController = baseViewController as? DevicesViewController, devicesController.roomType == .audio {
                     indexToRemove = index
                     break
                 }
@@ -441,7 +437,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                 tabbarController.viewControllers = newViewControllerArray
             } else if indexToRemove == nil && show == true {
                 for viewController in initialTabViewControllers {
-                    if viewController.getBaseViewController().isKind(of: AudioListViewController.self) {
+                    let baseViewController = viewController.getBaseViewController()
+                    if let devicesController = baseViewController as? DevicesViewController, devicesController.roomType == .audio {
                         newViewControllerArray?.append(viewController)
                         tabbarController.viewControllers = newViewControllerArray
                         tabbarController.moreNavigationController.view.setNeedsDisplay()

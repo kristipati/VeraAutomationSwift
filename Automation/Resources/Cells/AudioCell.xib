@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AudioCell" id="4S9-37-LVM" customClass="AudioCell" customModule="Automation" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="310" height="200"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="310" height="200"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="310" translatesAutoresizingMaskIntoConstraints="NO" id="1YQ-DL-JNF">
+                        <rect key="frame" x="0.0" y="20" width="310" height="21"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bEP-Hu-cut">
+                        <rect key="frame" x="78" y="49" width="30" height="30"/>
+                        <state key="normal" title="Off">
+                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </state>
+                        <connections>
+                            <action selector="turnOff:" destination="4S9-37-LVM" eventType="touchUpInside" id="rY0-ru-KfT"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rly-LB-K6p">
+                        <rect key="frame" x="208" y="49" width="30" height="30"/>
+                        <state key="normal" title="On">
+                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </state>
+                        <connections>
+                            <action selector="turnOn:" destination="4S9-37-LVM" eventType="touchUpInside" id="39B-Te-AoB"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" tag="4" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="75i-ia-D4y">
+                        <rect key="frame" x="38" y="139" width="58" height="30"/>
+                        <state key="normal" title="Server 1">
+                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </state>
+                        <connections>
+                            <action selector="servver1Action:" destination="4S9-37-LVM" eventType="touchUpInside" id="SBt-nu-jIe"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JNF-dG-4t1">
+                        <rect key="frame" x="126" y="139" width="58" height="30"/>
+                        <state key="normal" title="Server 2">
+                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </state>
+                        <connections>
+                            <action selector="server2Action:" destination="4S9-37-LVM" eventType="touchUpInside" id="OKt-gy-JdW"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RHt-VC-s4d">
+                        <rect key="frame" x="214" y="139" width="58" height="30"/>
+                        <state key="normal" title="Server 3">
+                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </state>
+                        <connections>
+                            <action selector="server3Action:" destination="4S9-37-LVM" eventType="touchUpInside" id="XSO-7k-nNL"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" tag="3" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I96-5b-EJZ">
+                        <rect key="frame" x="167" y="95" width="113" height="30"/>
+                        <state key="normal" title="Increase Volume">
+                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </state>
+                        <connections>
+                            <action selector="increaseVolume:" destination="4S9-37-LVM" eventType="touchUpInside" id="SC9-nM-t9y"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" tag="2" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g6f-NZ-Ju4">
+                        <rect key="frame" x="34" y="95" width="119" height="30"/>
+                        <state key="normal" title="Decrease Volume">
+                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </state>
+                        <connections>
+                            <action selector="decreaseVolume:" destination="4S9-37-LVM" eventType="touchUpInside" id="nIe-WX-OXm"/>
+                        </connections>
+                    </button>
+                </subviews>
+            </view>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="75i-ia-D4y" firstAttribute="leading" secondItem="4S9-37-LVM" secondAttribute="leading" constant="38" id="0Zz-Vp-PS0"/>
+                <constraint firstItem="1YQ-DL-JNF" firstAttribute="leading" secondItem="4S9-37-LVM" secondAttribute="leading" id="3uw-OL-Qei"/>
+                <constraint firstItem="1YQ-DL-JNF" firstAttribute="top" secondItem="4S9-37-LVM" secondAttribute="top" constant="20" id="6Fe-p2-hAs"/>
+                <constraint firstAttribute="trailing" secondItem="rly-LB-K6p" secondAttribute="trailing" constant="72" id="9Mo-QH-2Ct"/>
+                <constraint firstItem="1YQ-DL-JNF" firstAttribute="centerX" secondItem="JNF-dG-4t1" secondAttribute="centerX" id="Jim-5j-s13"/>
+                <constraint firstItem="JNF-dG-4t1" firstAttribute="top" secondItem="g6f-NZ-Ju4" secondAttribute="bottom" constant="14" id="Mno-JI-FEk"/>
+                <constraint firstItem="bEP-Hu-cut" firstAttribute="top" secondItem="1YQ-DL-JNF" secondAttribute="bottom" constant="8" id="TW1-sh-fXQ"/>
+                <constraint firstItem="I96-5b-EJZ" firstAttribute="centerX" secondItem="rly-LB-K6p" secondAttribute="centerX" constant="0.5" id="bPC-RD-bBJ"/>
+                <constraint firstItem="I96-5b-EJZ" firstAttribute="top" secondItem="rly-LB-K6p" secondAttribute="bottom" constant="16" id="d9W-Oc-YHb"/>
+                <constraint firstItem="bEP-Hu-cut" firstAttribute="leading" secondItem="4S9-37-LVM" secondAttribute="leading" constant="78" id="dYZ-s4-qEd"/>
+                <constraint firstAttribute="trailing" secondItem="1YQ-DL-JNF" secondAttribute="trailing" id="k8u-Wb-9p0"/>
+                <constraint firstItem="RHt-VC-s4d" firstAttribute="top" secondItem="I96-5b-EJZ" secondAttribute="bottom" constant="14" id="kSR-Yv-UpZ"/>
+                <constraint firstItem="g6f-NZ-Ju4" firstAttribute="top" secondItem="bEP-Hu-cut" secondAttribute="bottom" constant="16" id="pCF-Zo-MSv"/>
+                <constraint firstItem="75i-ia-D4y" firstAttribute="top" secondItem="g6f-NZ-Ju4" secondAttribute="bottom" constant="14" id="qvA-v4-QNw"/>
+                <constraint firstItem="bEP-Hu-cut" firstAttribute="centerX" secondItem="g6f-NZ-Ju4" secondAttribute="centerX" constant="-0.5" id="rCH-5d-zhr"/>
+                <constraint firstItem="rly-LB-K6p" firstAttribute="top" secondItem="1YQ-DL-JNF" secondAttribute="bottom" constant="8" id="tIG-Zf-YOQ"/>
+                <constraint firstAttribute="trailing" secondItem="RHt-VC-s4d" secondAttribute="trailing" constant="38" id="ukn-bl-nHV"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="v5M-8x-7fK"/>
+            <connections>
+                <outlet property="decreaseVolumeButton" destination="g6f-NZ-Ju4" id="IYI-qp-Jqe"/>
+                <outlet property="increaseVolumeButton" destination="I96-5b-EJZ" id="egF-2h-Byp"/>
+                <outlet property="server1Button" destination="75i-ia-D4y" id="tcJ-QB-P74"/>
+                <outlet property="server2Button" destination="JNF-dG-4t1" id="xiO-Hv-GEo"/>
+                <outlet property="server3Button" destination="RHt-VC-s4d" id="r35-3t-MIQ"/>
+                <outlet property="titleLabel" destination="1YQ-DL-JNF" id="ug5-EP-wCb"/>
+            </connections>
+        </collectionViewCell>
+    </objects>
+</document>

@@ -13,25 +13,17 @@
 		D21CB85A19E1FEAF0054A7D4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D21CB85219E1FEAF0054A7D4 /* Images.xcassets */; };
 		D21CB85C19E1FEAF0054A7D4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21CB85519E1FEAF0054A7D4 /* AppDelegate.swift */; };
 		D21CB86219E1FF970054A7D4 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D21CB86119E1FF970054A7D4 /* Settings.bundle */; };
-		D21CB86919E2058E0054A7D4 /* Switches.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D21CB86719E2058E0054A7D4 /* Switches.storyboard */; };
-		D21CB86C19E20BBE0054A7D4 /* Audio.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D21CB86A19E20BBE0054A7D4 /* Audio.storyboard */; };
-		D21CB86F19E20BCA0054A7D4 /* Scenes.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D21CB86D19E20BCA0054A7D4 /* Scenes.storyboard */; };
 		D21CB87219E20BD60054A7D4 /* On.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D21CB87019E20BD60054A7D4 /* On.storyboard */; };
 		D21CB87519E20BE10054A7D4 /* Locks.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D21CB87319E20BE10054A7D4 /* Locks.storyboard */; };
 		D21CB87819E20BEB0054A7D4 /* Climate.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D21CB87619E20BEB0054A7D4 /* Climate.storyboard */; };
 		D21CB87B19E20BF60054A7D4 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D21CB87919E20BF60054A7D4 /* Settings.storyboard */; };
 		D21CB88219E20CDB0054A7D4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D21CB88019E20CDB0054A7D4 /* Localizable.strings */; };
-		D23210801A07230500353F51 /* AudioListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23210751A07230500353F51 /* AudioListViewController.swift */; };
-		D23210811A07230500353F51 /* AudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23210761A07230500353F51 /* AudioViewController.swift */; };
 		D23210821A07230500353F51 /* ClimateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23210771A07230500353F51 /* ClimateViewController.swift */; };
 		D23210831A07230500353F51 /* ExcludedItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23210781A07230500353F51 /* ExcludedItemsViewController.swift */; };
 		D23210841A07230500353F51 /* LocksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23210791A07230500353F51 /* LocksViewController.swift */; };
 		D23210851A07230500353F51 /* OnViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D232107A1A07230500353F51 /* OnViewController.swift */; };
-		D23210861A07230500353F51 /* ScenesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D232107B1A07230500353F51 /* ScenesListViewController.swift */; };
-		D23210871A07230500353F51 /* ScenesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D232107C1A07230500353F51 /* ScenesViewController.swift */; };
 		D23210881A07230500353F51 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D232107D1A07230500353F51 /* SettingsViewController.swift */; };
-		D23210891A07230500353F51 /* SwitchesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D232107E1A07230500353F51 /* SwitchesListViewController.swift */; };
-		D232108A1A07230500353F51 /* SwitchesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D232107F1A07230500353F51 /* SwitchesViewController.swift */; };
+		D232108A1A07230500353F51 /* DevicesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D232107F1A07230500353F51 /* DevicesViewController.swift */; };
 		D232108D1A07232600353F51 /* DeviceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D232108C1A07232600353F51 /* DeviceCell.swift */; };
 		D237DB391F69ACCD00C7546B /* ObjcExceptionBridging.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D25D95F11EE8B4A300A71B69 /* ObjcExceptionBridging.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D25D95FA1EE8B4E200A71B69 /* XCGLogger.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D25D95E11EE8B4A300A71B69 /* XCGLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -51,6 +43,15 @@
 		D2A2A6DD1A0FFA4800BE65EE /* OnDeviceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */; };
 		D2A2A6DF1A101AF500BE65EE /* AudioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */; };
 		D2A7F0C41ECA546400D399E5 /* OnePasswordExtension.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D2A7F0C11ECA544E00D399E5 /* OnePasswordExtension.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D2A8178B1F6C9141005FBE67 /* NSObject+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A8178A1F6C9141005FBE67 /* NSObject+Extensions.swift */; };
+		D2A817941F6C96C4005FBE67 /* DeviceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2A817921F6C96C4005FBE67 /* DeviceCell.xib */; };
+		D2A8179E1F6C9887005FBE67 /* DevicesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2A8179C1F6C9887005FBE67 /* DevicesViewController.xib */; };
+		D2A817A21F6C9EF1005FBE67 /* SceneCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2A817A01F6C9EF1005FBE67 /* SceneCell.xib */; };
+		D2A817A61F6CA29E005FBE67 /* AudioCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2A817A41F6CA29E005FBE67 /* AudioCell.xib */; };
+		D2D3DE231F6C8ABA000D9025 /* RoomsTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2D3DE211F6C8ABA000D9025 /* RoomsTableViewController.xib */; };
+		D2D3DE391F6C8AD7000D9025 /* RoomsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D3DE381F6C8AD7000D9025 /* RoomsTableViewController.swift */; };
+		D2D3DE3E1F6C8B26000D9025 /* RoomTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2D3DE3C1F6C8B26000D9025 /* RoomTableViewCell.xib */; };
+		D2D3DE401F6C8B3F000D9025 /* RoomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D3DE3F1F6C8B3F000D9025 /* RoomTableViewCell.swift */; };
 		D2E11B3D1DD0406E00701E72 /* PMHTTP.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D2E11B3C1DD0406E00701E72 /* PMHTTP.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2E11B411DD0408100701E72 /* KeychainSwift.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D2E11B401DD0408100701E72 /* KeychainSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D2E11B431DD0409700701E72 /* PMJSON.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D2E11B421DD0409700701E72 /* PMJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -308,25 +309,17 @@
 		D21CB85519E1FEAF0054A7D4 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D21CB85F19E1FF0E0054A7D4 /* Defines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Defines.h; path = Automation/Defines.h; sourceTree = "<group>"; };
 		D21CB86119E1FF970054A7D4 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
-		D21CB86819E2058E0054A7D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Switches.storyboard; sourceTree = "<group>"; };
-		D21CB86B19E20BBE0054A7D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Audio.storyboard; sourceTree = "<group>"; };
-		D21CB86E19E20BCA0054A7D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Scenes.storyboard; sourceTree = "<group>"; };
 		D21CB87119E20BD60054A7D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/On.storyboard; sourceTree = "<group>"; };
 		D21CB87419E20BE10054A7D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Locks.storyboard; sourceTree = "<group>"; };
 		D21CB87719E20BEB0054A7D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Climate.storyboard; sourceTree = "<group>"; };
 		D21CB87A19E20BF60054A7D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Settings.storyboard; sourceTree = "<group>"; };
 		D21CB88119E20CDB0054A7D4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		D23210751A07230500353F51 /* AudioListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AudioListViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		D23210761A07230500353F51 /* AudioViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AudioViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		D23210771A07230500353F51 /* ClimateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ClimateViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		D23210781A07230500353F51 /* ExcludedItemsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ExcludedItemsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		D23210791A07230500353F51 /* LocksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = LocksViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		D232107A1A07230500353F51 /* OnViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = OnViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		D232107B1A07230500353F51 /* ScenesListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ScenesListViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		D232107C1A07230500353F51 /* ScenesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ScenesViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		D232107D1A07230500353F51 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SettingsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		D232107E1A07230500353F51 /* SwitchesListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SwitchesListViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		D232107F1A07230500353F51 /* SwitchesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SwitchesViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		D232107F1A07230500353F51 /* DevicesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DevicesViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		D232108C1A07232600353F51 /* DeviceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceCell.swift; sourceTree = "<group>"; };
 		D25D95C61EE8B4A300A71B69 /* XCGLogger.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = XCGLogger.xcodeproj; path = Carthage/Checkouts/XCGLogger/XCGLogger.xcodeproj; sourceTree = "<group>"; };
 		D25D95FB1EE8B68200A71B69 /* SHA1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SHA1.swift; path = External/SHA1.swift; sourceTree = SOURCE_ROOT; };
@@ -348,12 +341,21 @@
 		D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnDeviceCell.swift; sourceTree = "<group>"; };
 		D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioCell.swift; sourceTree = "<group>"; };
 		D2A7F0BC1ECA544E00D399E5 /* OnePasswordExtension.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OnePasswordExtension.xcodeproj; path = "Carthage/Checkouts/onepassword-extension/OnePasswordExtension.xcodeproj"; sourceTree = "<group>"; };
+		D2A8178A1F6C9141005FBE67 /* NSObject+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Extensions.swift"; sourceTree = "<group>"; };
+		D2A817921F6C96C4005FBE67 /* DeviceCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeviceCell.xib; sourceTree = "<group>"; };
+		D2A8179D1F6C9887005FBE67 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/DevicesViewController.xib; sourceTree = "<group>"; };
+		D2A817A01F6C9EF1005FBE67 /* SceneCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SceneCell.xib; sourceTree = "<group>"; };
+		D2A817A41F6CA29E005FBE67 /* AudioCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AudioCell.xib; sourceTree = "<group>"; };
 		D2A87DCD1D848BA000D2E5FD /* Automation.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Automation.entitlements; sourceTree = "<group>"; };
 		D2BA9C841DF5C20E00154FD5 /* KeychainSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = KeychainSwift.xcodeproj; path = "Carthage/Checkouts/keychain-swift/KeychainSwift.xcodeproj"; sourceTree = "<group>"; };
 		D2BA9CA01DF5C21400154FD5 /* PMHTTP.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PMHTTP.xcodeproj; path = Carthage/Checkouts/PMHTTP/PMHTTP.xcodeproj; sourceTree = "<group>"; };
 		D2BA9CA91DF5C21A00154FD5 /* PMJSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PMJSON.xcodeproj; path = Carthage/Checkouts/PMJSON/PMJSON.xcodeproj; sourceTree = "<group>"; };
 		D2BB40EE1BAC7EC4009BB9E3 /* Automation-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Automation-Bridging-Header.h"; sourceTree = "<group>"; };
 		D2CEE4C319F8AA4D00D59BAF /* ToDo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ToDo.txt; sourceTree = "<group>"; };
+		D2D3DE221F6C8ABA000D9025 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/RoomsTableViewController.xib; sourceTree = "<group>"; };
+		D2D3DE381F6C8AD7000D9025 /* RoomsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomsTableViewController.swift; sourceTree = "<group>"; };
+		D2D3DE3C1F6C8B26000D9025 /* RoomTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RoomTableViewCell.xib; sourceTree = "<group>"; };
+		D2D3DE3F1F6C8B3F000D9025 /* RoomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomTableViewCell.swift; sourceTree = "<group>"; };
 		D2E11B3C1DD0406E00701E72 /* PMHTTP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PMHTTP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2E11B3E1DD0407800701E72 /* CryptoSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CryptoSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2E11B401DD0408100701E72 /* KeychainSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = KeychainSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -380,18 +382,15 @@
 		D21CB84D19E1FEAF0054A7D4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				D21CB84E19E1FEAF0054A7D4 /* LaunchScreen.xib */,
-				D21CB85019E1FEAF0054A7D4 /* Main.storyboard */,
-				D21CB86719E2058E0054A7D4 /* Switches.storyboard */,
-				D21CB86A19E20BBE0054A7D4 /* Audio.storyboard */,
-				D21CB86D19E20BCA0054A7D4 /* Scenes.storyboard */,
-				D21CB87019E20BD60054A7D4 /* On.storyboard */,
-				D21CB87319E20BE10054A7D4 /* Locks.storyboard */,
-				D21CB87619E20BEB0054A7D4 /* Climate.storyboard */,
-				D21CB87919E20BF60054A7D4 /* Settings.storyboard */,
-				D21CB85219E1FEAF0054A7D4 /* Images.xcassets */,
 				D21CB86119E1FF970054A7D4 /* Settings.bundle */,
+				D21CB85219E1FEAF0054A7D4 /* Images.xcassets */,
+				D2D3DE3A1F6C8B17000D9025 /* Cells */,
+				D2A8179C1F6C9887005FBE67 /* DevicesViewController.xib */,
+				D21CB84E19E1FEAF0054A7D4 /* LaunchScreen.xib */,
+				D2D3DE211F6C8ABA000D9025 /* RoomsTableViewController.xib */,
 				D21CB88019E20CDB0054A7D4 /* Localizable.strings */,
+				D21CB85019E1FEAF0054A7D4 /* Main.storyboard */,
+				D243AEE81F6CA69F003C8383 /* To Fix */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -405,6 +404,7 @@
 				D285144D1D85BCC400162FDE /* Vera */,
 				D232108B1A07231400353F51 /* Cells */,
 				D23210741A07230500353F51 /* ViewControllers */,
+				D2A8178A1F6C9141005FBE67 /* NSObject+Extensions.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -412,17 +412,13 @@
 		D23210741A07230500353F51 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				D23210751A07230500353F51 /* AudioListViewController.swift */,
-				D23210761A07230500353F51 /* AudioViewController.swift */,
+				D2D3DE381F6C8AD7000D9025 /* RoomsTableViewController.swift */,
 				D23210771A07230500353F51 /* ClimateViewController.swift */,
 				D23210781A07230500353F51 /* ExcludedItemsViewController.swift */,
 				D23210791A07230500353F51 /* LocksViewController.swift */,
 				D232107A1A07230500353F51 /* OnViewController.swift */,
-				D232107B1A07230500353F51 /* ScenesListViewController.swift */,
-				D232107C1A07230500353F51 /* ScenesViewController.swift */,
 				D232107D1A07230500353F51 /* SettingsViewController.swift */,
-				D232107E1A07230500353F51 /* SwitchesListViewController.swift */,
-				D232107F1A07230500353F51 /* SwitchesViewController.swift */,
+				D232107F1A07230500353F51 /* DevicesViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -430,15 +426,27 @@
 		D232108B1A07231400353F51 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				D232108C1A07232600353F51 /* DeviceCell.swift */,
-				D27772181A0DCAF400F33568 /* SceneCell.swift */,
-				D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */,
 				D2A2A6DE1A101AF500BE65EE /* AudioCell.swift */,
-				D2E3597C1A104A0F00F30C32 /* LockCell.swift */,
-				D2E3597E1A105E5500F30C32 /* ThermostatCell.swift */,
 				D27B15AC1A0730B5003790CE /* BaseCell.swift */,
+				D232108C1A07232600353F51 /* DeviceCell.swift */,
+				D2E3597C1A104A0F00F30C32 /* LockCell.swift */,
+				D2A2A6DC1A0FFA4800BE65EE /* OnDeviceCell.swift */,
+				D2D3DE3F1F6C8B3F000D9025 /* RoomTableViewCell.swift */,
+				D27772181A0DCAF400F33568 /* SceneCell.swift */,
+				D2E3597E1A105E5500F30C32 /* ThermostatCell.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		D243AEE81F6CA69F003C8383 /* To Fix */ = {
+			isa = PBXGroup;
+			children = (
+				D21CB87019E20BD60054A7D4 /* On.storyboard */,
+				D21CB87319E20BE10054A7D4 /* Locks.storyboard */,
+				D21CB87619E20BEB0054A7D4 /* Climate.storyboard */,
+				D21CB87919E20BF60054A7D4 /* Settings.storyboard */,
+			);
+			path = "To Fix";
 			sourceTree = "<group>";
 		};
 		D25D95C71EE8B4A300A71B69 /* Products */ = {
@@ -599,6 +607,17 @@
 				D25D95FB1EE8B68200A71B69 /* SHA1.swift */,
 			);
 			name = External;
+			sourceTree = "<group>";
+		};
+		D2D3DE3A1F6C8B17000D9025 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				D2D3DE3C1F6C8B26000D9025 /* RoomTableViewCell.xib */,
+				D2A817921F6C96C4005FBE67 /* DeviceCell.xib */,
+				D2A817A01F6C9EF1005FBE67 /* SceneCell.xib */,
+				D2A817A41F6CA29E005FBE67 /* AudioCell.xib */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		D2E11B441DD0423100701E72 /* Frameworks */ = {
@@ -888,18 +907,21 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2A817A61F6CA29E005FBE67 /* AudioCell.xib in Resources */,
+				D2D3DE3E1F6C8B26000D9025 /* RoomTableViewCell.xib in Resources */,
 				D21CB87519E20BE10054A7D4 /* Locks.storyboard in Resources */,
 				D21CB88219E20CDB0054A7D4 /* Localizable.strings in Resources */,
-				D21CB86F19E20BCA0054A7D4 /* Scenes.storyboard in Resources */,
+				D2A8179E1F6C9887005FBE67 /* DevicesViewController.xib in Resources */,
 				D21CB87B19E20BF60054A7D4 /* Settings.storyboard in Resources */,
 				D21CB87219E20BD60054A7D4 /* On.storyboard in Resources */,
+				D2D3DE231F6C8ABA000D9025 /* RoomsTableViewController.xib in Resources */,
 				D21CB86219E1FF970054A7D4 /* Settings.bundle in Resources */,
 				D21CB85819E1FEAF0054A7D4 /* LaunchScreen.xib in Resources */,
-				D21CB86919E2058E0054A7D4 /* Switches.storyboard in Resources */,
-				D21CB86C19E20BBE0054A7D4 /* Audio.storyboard in Resources */,
 				D21CB85919E1FEAF0054A7D4 /* Main.storyboard in Resources */,
+				D2A817A21F6C9EF1005FBE67 /* SceneCell.xib in Resources */,
 				D21CB87819E20BEB0054A7D4 /* Climate.storyboard in Resources */,
 				D21CB85A19E1FEAF0054A7D4 /* Images.xcassets in Resources */,
+				D2A817941F6C96C4005FBE67 /* DeviceCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -944,6 +966,7 @@
 			files = (
 				D285145C1D85BCC400162FDE /* VeraAPI.swift in Sources */,
 				D28514581D85BCC400162FDE /* VeraRoom.swift in Sources */,
+				D2D3DE391F6C8AD7000D9025 /* RoomsTableViewController.swift in Sources */,
 				D21CB85C19E1FEAF0054A7D4 /* AppDelegate.swift in Sources */,
 				D28514561D85BCC400162FDE /* VeraAuth.swift in Sources */,
 				D285145A1D85BCC400162FDE /* VeraUnit.swift in Sources */,
@@ -953,14 +976,11 @@
 				D2ED11371A15BC4D00B8F25B /* ArrayExtension.swift in Sources */,
 				D214B1A31F6AE48700BCB6F6 /* HTTPManagerDataRequest+Extensions.swift in Sources */,
 				D23210851A07230500353F51 /* OnViewController.swift in Sources */,
-				D232108A1A07230500353F51 /* SwitchesViewController.swift in Sources */,
+				D232108A1A07230500353F51 /* DevicesViewController.swift in Sources */,
 				D27B15AD1A0730B5003790CE /* BaseCell.swift in Sources */,
 				D28514931D85BDCA00162FDE /* Reachability.m in Sources */,
 				D2E3597F1A105E5500F30C32 /* ThermostatCell.swift in Sources */,
-				D23210871A07230500353F51 /* ScenesViewController.swift in Sources */,
-				D23210891A07230500353F51 /* SwitchesListViewController.swift in Sources */,
 				D27772191A0DCAF400F33568 /* SceneCell.swift in Sources */,
-				D23210811A07230500353F51 /* AudioViewController.swift in Sources */,
 				D2E3597D1A104A0F00F30C32 /* LockCell.swift in Sources */,
 				D23210841A07230500353F51 /* LocksViewController.swift in Sources */,
 				D28514571D85BCC400162FDE /* VeraDevice.swift in Sources */,
@@ -968,11 +988,11 @@
 				D232108D1A07232600353F51 /* DeviceCell.swift in Sources */,
 				D28002AF1A09B5C6005894C3 /* VeraUIExtension.swift in Sources */,
 				D28002B11A09D23A005894C3 /* SFSwiftNotification.swift in Sources */,
-				D23210861A07230500353F51 /* ScenesListViewController.swift in Sources */,
+				D2A8178B1F6C9141005FBE67 /* NSObject+Extensions.swift in Sources */,
 				D23210881A07230500353F51 /* SettingsViewController.swift in Sources */,
 				D28514591D85BCC400162FDE /* VeraScene.swift in Sources */,
 				D285145B1D85BCC400162FDE /* VeraUser.swift in Sources */,
-				D23210801A07230500353F51 /* AudioListViewController.swift in Sources */,
+				D2D3DE401F6C8B3F000D9025 /* RoomTableViewCell.swift in Sources */,
 				D25D95FC1EE8B68200A71B69 /* SHA1.swift in Sources */,
 				D23210831A07230500353F51 /* ExcludedItemsViewController.swift in Sources */,
 			);
@@ -1030,30 +1050,6 @@
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		D21CB86719E2058E0054A7D4 /* Switches.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D21CB86819E2058E0054A7D4 /* Base */,
-			);
-			name = Switches.storyboard;
-			sourceTree = "<group>";
-		};
-		D21CB86A19E20BBE0054A7D4 /* Audio.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D21CB86B19E20BBE0054A7D4 /* Base */,
-			);
-			name = Audio.storyboard;
-			sourceTree = "<group>";
-		};
-		D21CB86D19E20BCA0054A7D4 /* Scenes.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D21CB86E19E20BCA0054A7D4 /* Base */,
-			);
-			name = Scenes.storyboard;
-			sourceTree = "<group>";
-		};
 		D21CB87019E20BD60054A7D4 /* On.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1092,6 +1088,22 @@
 				D21CB88119E20CDB0054A7D4 /* en */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		D2A8179C1F6C9887005FBE67 /* DevicesViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D2A8179D1F6C9887005FBE67 /* Base */,
+			);
+			name = DevicesViewController.xib;
+			sourceTree = "<group>";
+		};
+		D2D3DE211F6C8ABA000D9025 /* RoomsTableViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D2D3DE221F6C8ABA000D9025 /* Base */,
+			);
+			name = RoomsTableViewController.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
