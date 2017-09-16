@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ThermostatCell" id="ka1-xo-SXU" customClass="ThermostatCell" customModule="Automation" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="300" height="250"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="300" height="250"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="nw7-2C-4Wh">
+                        <rect key="frame" x="20" y="69" width="260" height="29"/>
+                        <segments>
+                            <segment title="Off"/>
+                            <segment title="Auto"/>
+                            <segment title="Cool"/>
+                            <segment title="Heat"/>
+                        </segments>
+                        <connections>
+                            <action selector="hvacStateChanged:" destination="ka1-xo-SXU" eventType="valueChanged" id="7Q7-gi-h2B"/>
+                        </connections>
+                    </segmentedControl>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fan" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AbY-H0-jaF">
+                        <rect key="frame" x="20" y="116" width="27.5" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wTc-5s-JDC">
+                        <rect key="frame" x="108.5" y="15" width="85" height="43"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="36"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="60" minimumValue="50" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="fhc-Zp-vLu">
+                        <rect key="frame" x="186" y="159" width="94" height="29"/>
+                        <connections>
+                            <action selector="heatStepperChanged:" destination="ka1-xo-SXU" eventType="valueChanged" id="pDo-SJ-aFa"/>
+                        </connections>
+                    </stepper>
+                    <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="60" minimumValue="50" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="EuT-ZW-W5N">
+                        <rect key="frame" x="186" y="201" width="94" height="29"/>
+                        <connections>
+                            <action selector="coolStepperChanged:" destination="ka1-xo-SXU" eventType="valueChanged" id="m1j-dj-61m"/>
+                        </connections>
+                    </stepper>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Au5-YZ-gBx">
+                        <rect key="frame" x="20" y="163" width="42" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.75" green="0.17768313290000001" blue="0.1678045068" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PxO-m4-ds3">
+                        <rect key="frame" x="20" y="205" width="42" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.083451323209999997" green="0.39370208979999999" blue="0.97864079479999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ulM-j9-skv">
+                        <rect key="frame" x="186" y="113" width="94" height="29"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="94" id="Hbc-lU-FMt"/>
+                        </constraints>
+                        <segments>
+                            <segment title="Auto"/>
+                            <segment title="On"/>
+                        </segments>
+                        <connections>
+                            <action selector="fanChanged:" destination="ka1-xo-SXU" eventType="valueChanged" id="RjA-7Y-cSO"/>
+                        </connections>
+                    </segmentedControl>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstItem="nw7-2C-4Wh" firstAttribute="top" secondItem="wTc-5s-JDC" secondAttribute="bottom" constant="11" id="2eK-fE-8mW"/>
+                <constraint firstAttribute="centerX" secondItem="wTc-5s-JDC" secondAttribute="centerX" constant="-0.5" id="98c-Vz-1xI"/>
+                <constraint firstItem="EuT-ZW-W5N" firstAttribute="top" secondItem="fhc-Zp-vLu" secondAttribute="bottom" constant="13" id="BEk-aA-6OL"/>
+                <constraint firstItem="EuT-ZW-W5N" firstAttribute="centerY" secondItem="PxO-m4-ds3" secondAttribute="centerY" id="BzS-eX-gyY"/>
+                <constraint firstItem="AbY-H0-jaF" firstAttribute="leading" secondItem="Au5-YZ-gBx" secondAttribute="leading" id="DUS-7h-YQZ"/>
+                <constraint firstItem="ulM-j9-skv" firstAttribute="trailing" secondItem="nw7-2C-4Wh" secondAttribute="trailing" id="Q4F-X8-ecZ"/>
+                <constraint firstItem="nw7-2C-4Wh" firstAttribute="leading" secondItem="AbY-H0-jaF" secondAttribute="leading" id="U0a-2i-TBk"/>
+                <constraint firstAttribute="trailing" secondItem="nw7-2C-4Wh" secondAttribute="trailing" constant="20" id="Uhq-Xd-DbY"/>
+                <constraint firstItem="fhc-Zp-vLu" firstAttribute="centerY" secondItem="Au5-YZ-gBx" secondAttribute="centerY" id="V8v-GG-DLR"/>
+                <constraint firstItem="nw7-2C-4Wh" firstAttribute="leading" secondItem="ka1-xo-SXU" secondAttribute="leading" constant="20" id="V9j-Oh-61e"/>
+                <constraint firstItem="fhc-Zp-vLu" firstAttribute="trailing" secondItem="ulM-j9-skv" secondAttribute="trailing" id="ZIM-Vg-f5d"/>
+                <constraint firstItem="PxO-m4-ds3" firstAttribute="leading" secondItem="Au5-YZ-gBx" secondAttribute="leading" id="giA-P4-ZPV"/>
+                <constraint firstItem="wTc-5s-JDC" firstAttribute="top" secondItem="ka1-xo-SXU" secondAttribute="top" constant="15" id="kLA-tx-BT3"/>
+                <constraint firstItem="fhc-Zp-vLu" firstAttribute="trailing" secondItem="EuT-ZW-W5N" secondAttribute="trailing" id="oDE-d4-mAb"/>
+                <constraint firstItem="ulM-j9-skv" firstAttribute="centerY" secondItem="AbY-H0-jaF" secondAttribute="centerY" constant="0.5" id="qmb-a0-0sn"/>
+                <constraint firstItem="fhc-Zp-vLu" firstAttribute="top" secondItem="ulM-j9-skv" secondAttribute="bottom" constant="18" id="rv7-Ad-o4Z"/>
+                <constraint firstItem="ulM-j9-skv" firstAttribute="top" secondItem="nw7-2C-4Wh" secondAttribute="bottom" constant="16" id="uKy-Hs-FbQ"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="LCL-Up-7q7"/>
+            <connections>
+                <outlet property="coolSetLabel" destination="PxO-m4-ds3" id="vhD-H9-570"/>
+                <outlet property="coolStepper" destination="EuT-ZW-W5N" id="YrT-8C-vX4"/>
+                <outlet property="currentTemperature" destination="wTc-5s-JDC" id="hu5-0n-7tI"/>
+                <outlet property="fanSegmentedControl" destination="ulM-j9-skv" id="bR6-SK-x9Q"/>
+                <outlet property="heatSetLabel" destination="Au5-YZ-gBx" id="TMb-xv-TAe"/>
+                <outlet property="heatStepper" destination="fhc-Zp-vLu" id="yA7-du-ymZ"/>
+                <outlet property="hvacSegmentedControl" destination="nw7-2C-4Wh" id="h1d-by-K1e"/>
+            </connections>
+        </collectionViewCell>
+    </objects>
+</document>

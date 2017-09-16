@@ -23,7 +23,16 @@ protocol SwitchProtocol: class {
     func changeDeviceLevel(_ device: VeraDevice, level: Int)
 }
 
-class DevicesViewController: UIViewController, SwitchProtocol, UICollectionViewDelegate, UICollectionViewDataSource, AudioProtocol {
+protocol LockProtocol: class {
+    func setDeviceLocked(_ device: VeraDevice, locked: Bool)
+}
+
+protocol ThermostatProtocol: class {
+    func changeHVAC(_ device: VeraDevice, fanMode: VeraDevice.FanMode?, hvacMode: VeraDevice.HVACMode?, coolTemp: Int?, heatTemp: Int?)
+}
+
+
+class DevicesViewController: UIViewController, SwitchProtocol, UICollectionViewDelegate, UICollectionViewDataSource, AudioProtocol, LockProtocol, ThermostatProtocol {
     var room: VeraRoom?
     var items: DeviceItems?
     var roomType: RoomType = .switches
@@ -36,18 +45,35 @@ class DevicesViewController: UIViewController, SwitchProtocol, UICollectionViewD
         collectionView.register(UINib(nibName: DeviceCell.className(), bundle: nil), forCellWithReuseIdentifier: DeviceCell.className())
         collectionView.register(UINib(nibName: SceneCell.className(), bundle: nil), forCellWithReuseIdentifier: SceneCell.className())
         collectionView.register(UINib(nibName: AudioCell.className(), bundle: nil), forCellWithReuseIdentifier: AudioCell.className())
+        collectionView.register(UINib(nibName: LockCell.className(), bundle: nil), forCellWithReuseIdentifier: LockCell.className())
+        collectionView.register(UINib(nibName: ThermostatCell.className(), bundle: nil), forCellWithReuseIdentifier: ThermostatCell.className())
+        collectionView.register(UINib(nibName: OnDeviceCell.className(), bundle: nil), forCellWithReuseIdentifier: OnDeviceCell.className())
 
         if let cellLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            if roomType == .audio {
-                cellLayout.itemSize = CGSize(width: 310, height: 200)
-            } else {
-                cellLayout.itemSize = CGSize(width: 150, height: 150)
+            switch roomType {
+                case .audio:
+                    cellLayout.itemSize = CGSize(width: 310, height: 200)
+                case .climate:
+                    cellLayout.itemSize = CGSize(width: 300, height: 250)
+                case .locks, .scenes, .switches, .on:
+                    cellLayout.itemSize = CGSize(width: 150, height: 150)
             }
             cellLayout.minimumLineSpacing = 10
             cellLayout.minimumInteritemSpacing = 10
             cellLayout.sectionInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
         }
 
+        switch roomType {
+            case .locks:
+                loadLocks()
+            case .climate:
+                loadThermostats()
+            case .on:
+                loadOnDevices()
+            default:
+                break
+        }
+        
         if let room = room {
             title = room.name
             switch roomType {
@@ -60,7 +86,10 @@ class DevicesViewController: UIViewController, SwitchProtocol, UICollectionViewD
                     if let devices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room: room, categories: .audio) {
                         items = DeviceItems.devices(devices: devices)
                     }
-                    
+
+                case .locks, .climate, .on:
+                    break
+
                 case .scenes:
                         if let scenes = AppDelegate.appDelegate().veraAPI.scenesForRoom(room: room) {
                             items = DeviceItems.scenes(devices: scenes)
@@ -70,6 +99,55 @@ class DevicesViewController: UIViewController, SwitchProtocol, UICollectionViewD
 
         NotificationCenter.default.addObserver(self, selector: #selector(DevicesViewController.unitInfoUpdated(_:)), name: NSNotification.Name(rawValue: VeraUnitInfoUpdated), object: nil)
     }
+    
+    func loadLocks() {
+        var newDevices = [VeraDevice]()
+        if let roomsWithLocks = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.lock) {
+            for room in roomsWithLocks {
+                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room: room, showExcluded: false, categories: VeraDevice.Category.lock) {
+                    for device in roomDevices {
+                        newDevices.append(device)
+                    }
+                }
+            }
+        }
+        
+        items = DeviceItems.devices(devices: newDevices)
+    }
+    
+    func loadThermostats () {
+        var thermoDevices = [VeraDevice]()
+        if let roomsWithThermostats = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.thermostat) {
+            for room in roomsWithThermostats {
+                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room: room, showExcluded: false, categories: VeraDevice.Category.thermostat) {
+                    for device in roomDevices {
+                        thermoDevices.append(device)
+                    }
+                }
+            }
+        }
+        
+        items = DeviceItems.devices(devices: thermoDevices)
+    }
+
+    func loadOnDevices () {
+        var newDevices = [VeraDevice]()
+        if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.switch, VeraDevice.Category.dimmableLight) {
+            for room in roomsWithSwitches {
+                if let roomDevices = AppDelegate.appDelegate().veraAPI.devicesForRoom(room: room, showExcluded: false, categories: VeraDevice.Category.switch, VeraDevice.Category.dimmableLight) {
+                    for device in roomDevices {
+                        if let status = device.status {
+                            if status == 1 {
+                                newDevices.append(device)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        items = DeviceItems.devices(devices: newDevices)
+    }
+
 
     @objc func unitInfoUpdated(_ notification: Notification) {
         var fullload = false
@@ -85,6 +163,18 @@ class DevicesViewController: UIViewController, SwitchProtocol, UICollectionViewD
             title = nil
             navigationItem.leftBarButtonItem = nil
         }
+        
+        switch roomType {
+            case .locks:
+                loadLocks()
+            case .climate:
+                loadThermostats()
+            case .on:
+                loadOnDevices()
+            default:
+                break
+        }
+        
         collectionView!.reloadData()
     }
 
@@ -102,6 +192,8 @@ class DevicesViewController: UIViewController, SwitchProtocol, UICollectionViewD
         return 0
     }
 
+
+    // swiftlint:disable cyclomatic_complexity
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch roomType {
             case .switches:
@@ -118,6 +210,43 @@ class DevicesViewController: UIViewController, SwitchProtocol, UICollectionViewD
 
                             default:
                                 break
+                        }
+                    }
+                    return cell
+                }
+
+        case .on:
+            if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OnDeviceCell.className(), for: indexPath) as? OnDeviceCell {
+                if let items = items {
+                    switch items {
+                    case let .devices(devices):
+                        if indexPath.row < devices.count {
+                            let device = devices[indexPath.row]
+                            cell.device = device
+                            cell.setup()
+                        }
+                        
+                    default:
+                        break
+                    }
+                }
+                return cell
+            }
+
+            case .locks:
+                if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LockCell.className(), for: indexPath) as? LockCell {
+                    if let items = items {
+                        switch items {
+                        case let .devices(devices):
+                            if indexPath.row < devices.count {
+                                let device = devices[indexPath.row]
+                                cell.device = device
+                                cell.delegate = self
+                                cell.setup()
+                            }
+                            
+                        default:
+                            break
                         }
                     }
                     return cell
@@ -140,7 +269,26 @@ class DevicesViewController: UIViewController, SwitchProtocol, UICollectionViewD
                     return cell
             }
             
-            case .audio:
+        case .climate:
+            if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ThermostatCell.className(), for: indexPath) as? ThermostatCell {
+                if let items = items {
+                    switch items {
+                    case let .devices(devices):
+                        if indexPath.row < devices.count {
+                            let device = devices[indexPath.row]
+                            cell.device = device
+                            cell.delegate = self
+                            cell.setup()
+                        }
+                        
+                    default:
+                        break
+                    }
+                }
+                return cell
+            }
+
+        case .audio:
                 if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AudioCell.className(), for: indexPath) as? AudioCell {
                     if let items = items {
                         switch items {
@@ -162,12 +310,13 @@ class DevicesViewController: UIViewController, SwitchProtocol, UICollectionViewD
 
         return UICollectionViewCell(frame: .zero)
     }
+    // swiftlint:enable cyclomatic_complexity
 
     // MARK: UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch roomType {
-            case .switches:
+            case .switches, .on:
                 if let items = items {
                     switch items {
                     case let .devices(devices):
@@ -180,6 +329,10 @@ class DevicesViewController: UIViewController, SwitchProtocol, UICollectionViewD
                                 }
                             }
 
+                            if roomType == .on {
+                                newStatus = 0
+                            }
+                            
                             AppDelegate.appDelegate().veraAPI.setDeviceStatusWithNotification(device, newDeviceStatus: newStatus, newDeviceLevel: nil)
                         }
                         
@@ -220,5 +373,13 @@ class DevicesViewController: UIViewController, SwitchProtocol, UICollectionViewD
     
     func setDeviceServer(_ device: VeraDevice, server: Int) {
         AppDelegate.appDelegate().veraAPI.setAudioInputWithNotification(device, input:server)
+    }
+
+    func setDeviceLocked(_ device: VeraDevice, locked: Bool) {
+        AppDelegate.appDelegate().veraAPI.setLockStateWithNotification(device, locked:locked)
+    }
+
+    func changeHVAC(_ device: VeraDevice, fanMode: VeraDevice.FanMode?, hvacMode: VeraDevice.HVACMode?, coolTemp: Int?, heatTemp: Int?) {
+        AppDelegate.appDelegate().veraAPI.changeHVACWithNotification(device, fanMode: fanMode, hvacMode: hvacMode, coolTemp: coolTemp, heatTemp: heatTemp)
     }
 }

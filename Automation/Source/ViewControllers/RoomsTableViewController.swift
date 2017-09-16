@@ -9,7 +9,7 @@
 import UIKit
 
 enum RoomType {
-    case switches, audio, scenes
+    case switches, audio, scenes, locks, climate, on
 }
 
 class RoomsTableViewController: UITableViewController {
@@ -75,6 +75,9 @@ class RoomsTableViewController: UITableViewController {
                 if let roomsWithScenes = AppDelegate.appDelegate().veraAPI.roomsWithScenes() {
                     return roomsWithScenes.count
                 }
+            
+            default:
+                break
         }
         return 0
     }
@@ -100,6 +103,9 @@ class RoomsTableViewController: UITableViewController {
                     if let roomsWithScenes = AppDelegate.appDelegate().veraAPI.roomsWithScenes() {
                         cell.room = roomsWithScenes[indexPath.row].name
                     }
+
+                default:
+                    break
             }
             return cell
         }
@@ -129,6 +135,9 @@ class RoomsTableViewController: UITableViewController {
                     let room = roomsWithScenes[indexPath.row]
                     vc.room = room
                 }
+
+            default:
+                break
         }
 
         if splitViewController != nil {

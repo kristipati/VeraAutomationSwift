@@ -60,9 +60,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
         log.setup(level: .verbose, showThreadName: true, showLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil, fileLevel: .debug)
 
-        let onStoryboard = UIStoryboard(name: "On", bundle: nil)
-        let locksStoryboard = UIStoryboard(name: "Locks", bundle: nil)
-        let climateStoryboard = UIStoryboard(name: "Climate", bundle: nil)
         let settingsStoryboard = UIStoryboard(name: "Settings", bundle: nil)
 
         var viewControllers = [UIViewController]()
@@ -104,26 +101,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         scenesSplitViewController.getBaseViewController().title = scenesSplitViewController.tabBarItem.title
         viewControllers.append(scenesSplitViewController)
 
-        if let onViewController = onStoryboard.instantiateInitialViewController() {
-            onViewController.tabBarItem.image = UIImage(named: "power")
-            onViewController.tabBarItem.title = NSLocalizedString("ON_TITLE", comment:"")
-            onViewController.getBaseViewController().title = onViewController.tabBarItem.title
-            viewControllers.append(onViewController)
-        }
+        let onViewController = DevicesViewController()
+        onViewController.roomType = .on
+        onViewController.tabBarItem.image = UIImage(named: "power")
+        onViewController.tabBarItem.title = NSLocalizedString("ON_TITLE", comment:"")
+        onViewController.getBaseViewController().title = onViewController.tabBarItem.title
+        let onNavController = UINavigationController(rootViewController: onViewController)
+        viewControllers.append(onNavController)
 
-        if let locksViewController = locksStoryboard.instantiateInitialViewController() {
-            locksViewController.tabBarItem.image = UIImage(named: "lock")
-            locksViewController.tabBarItem.title = NSLocalizedString("LOCK_TITLE", comment:"")
-            locksViewController.getBaseViewController().title = locksViewController.tabBarItem.title
-            viewControllers.append(locksViewController)
-        }
+        let locksViewController = DevicesViewController()
+        locksViewController.roomType = .locks
+        locksViewController.tabBarItem.image = UIImage(named: "lock")
+        locksViewController.tabBarItem.title = NSLocalizedString("LOCK_TITLE", comment:"")
+        locksViewController.getBaseViewController().title = locksViewController.tabBarItem.title
+        let locksNavController = UINavigationController(rootViewController: locksViewController)
+        viewControllers.append(locksNavController)
 
-        if let climateViewController = climateStoryboard.instantiateInitialViewController() {
-            climateViewController.tabBarItem.image = UIImage(named: "climate")
-            climateViewController.tabBarItem.title = NSLocalizedString("CLIMATE_TITLE", comment:"")
-            climateViewController.getBaseViewController().title = climateViewController.tabBarItem.title
-            viewControllers.append(climateViewController)
-        }
+        let climateViewController = DevicesViewController()
+        climateViewController.roomType = .climate
+        climateViewController.tabBarItem.image = UIImage(named: "climate")
+        climateViewController.tabBarItem.title = NSLocalizedString("CLIMATE_TITLE", comment:"")
+        climateViewController.getBaseViewController().title = climateViewController.tabBarItem.title
+        let climateNavController = UINavigationController(rootViewController: climateViewController)
+        viewControllers.append(climateNavController)
 
         if let settingsViewController = settingsStoryboard.instantiateInitialViewController() {
             settingsViewController.tabBarItem.image = UIImage(named: "gear")
