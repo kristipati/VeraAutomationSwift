@@ -1,3 +1,12 @@
+Release Notes for Automation 1.0.13 - Build 13
+
+Changes from Automation-1.0.12-12-20170917095133
+----------------------------------------------
+% Fixed display issue when showing excluded devices-(14e8613)
+
+
+=================================================================================================
+
 Release Notes for Automation 1.0.12 - Build 12
 
 Changes from Automation-1.0.11-11-20170917085623
