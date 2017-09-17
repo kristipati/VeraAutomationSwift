@@ -1,3 +1,12 @@
+Release Notes for Automation 1.0.12 - Build 12
+
+Changes from Automation-1.0.11-11-20170917085623
+----------------------------------------------
+% Worked on fixing display issues-(30da2c6)
+
+
+=================================================================================================
+
 1.0.0 Build 5
 --------------
 - Fixed font on scenes tab for rooms
