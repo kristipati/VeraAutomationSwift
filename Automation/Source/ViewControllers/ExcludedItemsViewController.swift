@@ -21,9 +21,6 @@ class ExcludedItemsViewController: UITableViewController {
         tableView.estimatedRowHeight = 100
         tableView.tableFooterView = UIView(frame: .zero)
 
-        edgesForExtendedLayout = []
-        extendedLayoutIncludesOpaqueBars = false
-        tabBarController?.tabBar.isTranslucent = false
         navigationController?.navigationBar.isTranslucent = false
 
         if showScenes == true {
