@@ -19,10 +19,9 @@ class SettingsViewController: UITableViewController {
         tableView.estimatedRowHeight = 100
         tableView.tableFooterView = UIView(frame: .zero)
 
-        edgesForExtendedLayout = []
-        extendedLayoutIncludesOpaqueBars = false
-        tabBarController?.tabBar.isTranslucent = false
         navigationController?.navigationBar.isTranslucent = false
+
+        tableView.reloadData()
     }
 
     // MARK: - Table view data source

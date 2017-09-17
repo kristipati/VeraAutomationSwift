@@ -94,6 +94,7 @@ class DevicesViewController: UIViewController, UICollectionViewDelegate, UIColle
     }
 
     func loadLocks() {
+        title = NSLocalizedString("LOCK_TITLE", comment: "")
         var newDevices = [VeraDevice]()
         if let roomsWithLocks = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.lock) {
             for room in roomsWithLocks {
@@ -109,6 +110,7 @@ class DevicesViewController: UIViewController, UICollectionViewDelegate, UIColle
     }
 
     func loadThermostats () {
+        title = NSLocalizedString("CLIMATE_TITLE", comment: "")
         var thermoDevices = [VeraDevice]()
         if let roomsWithThermostats = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.thermostat) {
             for room in roomsWithThermostats {
@@ -124,6 +126,7 @@ class DevicesViewController: UIViewController, UICollectionViewDelegate, UIColle
     }
 
     func loadOnDevices () {
+        title = NSLocalizedString("ON_TITLE", comment: "")
         var newDevices = [VeraDevice]()
         if let roomsWithSwitches = AppDelegate.appDelegate().veraAPI.roomsWithDevices(categories: VeraDevice.Category.switch, VeraDevice.Category.dimmableLight) {
             for room in roomsWithSwitches {

@@ -126,7 +126,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let settingsViewController = SettingsViewController()
         settingsViewController.tabBarItem.image = UIImage(named: "gear")
         settingsViewController.tabBarItem.title = NSLocalizedString("SETTINGS_TITLE", comment:"")
-        settingsViewController.getBaseViewController().title = settingsViewController.tabBarItem.title
+        settingsViewController.title = settingsViewController.tabBarItem.title
         let settingsNavController = UINavigationController(rootViewController: settingsViewController)
         viewControllers.append(settingsNavController)
 
