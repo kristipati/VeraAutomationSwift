@@ -307,7 +307,6 @@
 		D21CB85219E1FEAF0054A7D4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D21CB85319E1FEAF0054A7D4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		D21CB85519E1FEAF0054A7D4 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		D21CB85F19E1FF0E0054A7D4 /* Defines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Defines.h; path = Automation/Defines.h; sourceTree = "<group>"; };
 		D21CB86119E1FF970054A7D4 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		D21CB88119E20CDB0054A7D4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D23210781A07230500353F51 /* ExcludedItemsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ExcludedItemsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -348,6 +347,7 @@
 		D2A817A01F6C9EF1005FBE67 /* SceneCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SceneCell.xib; sourceTree = "<group>"; };
 		D2A817A41F6CA29E005FBE67 /* AudioCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AudioCell.xib; sourceTree = "<group>"; };
 		D2A87DCD1D848BA000D2E5FD /* Automation.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Automation.entitlements; sourceTree = "<group>"; };
+		D2B418471F6ED19F00F925ED /* Defines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
 		D2BA9C841DF5C20E00154FD5 /* KeychainSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = KeychainSwift.xcodeproj; path = "Carthage/Checkouts/keychain-swift/KeychainSwift.xcodeproj"; sourceTree = "<group>"; };
 		D2BA9CA01DF5C21400154FD5 /* PMHTTP.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PMHTTP.xcodeproj; path = Carthage/Checkouts/PMHTTP/PMHTTP.xcodeproj; sourceTree = "<group>"; };
 		D2BA9CA91DF5C21A00154FD5 /* PMJSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PMJSON.xcodeproj; path = Carthage/Checkouts/PMJSON/PMJSON.xcodeproj; sourceTree = "<group>"; };
@@ -476,7 +476,7 @@
 				D2EE377C19EB0BE900630C86 /* CurrentRelease.txt */,
 				D29867E81A15B628000E99E7 /* ReleaseNotes.txt */,
 				D2CEE4C319F8AA4D00D59BAF /* ToDo.txt */,
-				D21CB85F19E1FF0E0054A7D4 /* Defines.h */,
+				D2B418471F6ED19F00F925ED /* Defines.h */,
 				D2843B3819E0E798007CC520 /* Automation */,
 				D2E11B441DD0423100701E72 /* Frameworks */,
 				D2843B3719E0E798007CC520 /* Products */,
@@ -1198,7 +1198,7 @@
 					"${BUILT_PRODUCTS_DIR}",
 				);
 				INFOPLIST_FILE = Automation/Resources/Info.plist;
-				INFOPLIST_PREFIX_HEADER = Automation/Defines.h;
+				INFOPLIST_PREFIX_HEADER = Defines.h;
 				INFOPLIST_PREPROCESS = YES;
 				INFOPLIST_PREPROCESSOR_DEFINITIONS = "INFO_PLIST=1";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1226,7 +1226,7 @@
 					"${BUILT_PRODUCTS_DIR}",
 				);
 				INFOPLIST_FILE = Automation/Resources/Info.plist;
-				INFOPLIST_PREFIX_HEADER = Automation/Defines.h;
+				INFOPLIST_PREFIX_HEADER = Defines.h;
 				INFOPLIST_PREPROCESS = YES;
 				INFOPLIST_PREPROCESSOR_DEFINITIONS = "INFO_PLIST=1";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
